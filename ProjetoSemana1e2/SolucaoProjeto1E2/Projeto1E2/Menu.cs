@@ -4,7 +4,10 @@
 
  Cores: Classe utilitária, que possui a função de aplicar cores ao Menu
  */
-
+using Projeto1E2.Controller;
+using Projeto1E2.Model;
+using Projeto1E2.Repository;
+using Projeto1E2.Utils;
 class Menu
 {
     
