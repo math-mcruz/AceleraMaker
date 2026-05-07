@@ -1,4 +1,5 @@
 ﻿using Projeto1E2.Contas;
+using Projeto1E2.Exceptions;
 using Projeto1E2.Repository;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,7 @@ internal class ContaController: IContaRepository
     
     public void Cadastrar(Conta conta)
     {
+        //analisar aqui se precisa tratar
         if (BuscarNaCollection(conta.GetNumero()) != null)
         {
             Console.WriteLine("Conta já cadastrada.");
@@ -65,91 +67,75 @@ internal class ContaController: IContaRepository
     public void Atualizar(Conta conta)
     {
         var contaBuscada = BuscarNaCollection(conta.GetNumero());
-        if (contaBuscada != null)
+        if (contaBuscada == null)
         {
-            contas.Remove(contaBuscada);
+            throw new ContaNaoEncontradaException($"A conta de número {conta.GetNumero()} não existe no sistema.");
+        }
+        contas.Remove(contaBuscada);
 
             //Pode pedir para escolher o  que quer atualizar -------------------------------------------------------------------------------------*****
 
-            Console.WriteLine("Digite o nome do titular");
-            string? novoTitular = Console.ReadLine();
+        Console.WriteLine("Digite o nome do titular");
+        string? novoTitular = Console.ReadLine();
 
-            Console.WriteLine("\nDigite o número da agência");
-            var novaAgencia = Convert.ToInt32(Console.ReadLine());
+        Console.WriteLine("\nDigite o número da agência");
+        var novaAgencia = Convert.ToInt32(Console.ReadLine());
 
-            Console.WriteLine("\n[1] - Corrente\t[2] - Poupança\n\nDigite qual o tipo da Conta");
+        Console.WriteLine("\n[1] - Corrente\t[2] - Poupança\n\nDigite qual o tipo da Conta");
             //tratamento de erro para o tipo da conta
 
-            byte novoTipo = Convert.ToByte(Console.ReadLine());
+        byte novoTipo = Convert.ToByte(Console.ReadLine());
 
-            var numeroConta = GerarNumero();
+        var numeroConta = GerarNumero();
 
-            float novolimite = 0;
+        float novolimite = 0;
 
-            int novoAniversario = DateTime.Now.Day;
+        int novoAniversario = DateTime.Now.Day;
 
-            Conta novaConta = null;
+        Conta novaConta = null;
 
-            if (novoTipo == 1)
-            {
-                novaConta = new ContaCorrente(numero: numeroConta, agencia: novaAgencia, tipo: novoTipo, titular: novoTitular, limite: novolimite);
-            }
-            else
-            {
-                novaConta = new ContaPoupanca(numero: numeroConta, agencia: novaAgencia, tipo: novoTipo, titular: novoTitular, aniversario: novoAniversario);
-            }
-            contas.Add(novaConta);
-            Console.WriteLine($"Seu novo número de conta é: {numeroConta}");
+        if (novoTipo == 1)
+        {
+            novaConta = new ContaCorrente(numero: numeroConta, agencia: novaAgencia, tipo: novoTipo, titular: novoTitular, limite: novolimite);
         }
         else
         {
-            Console.WriteLine("Conta não encontrada.");
+        novaConta = new ContaPoupanca(numero: numeroConta, agencia: novaAgencia, tipo: novoTipo, titular: novoTitular, aniversario: novoAniversario);
         }
+        contas.Add(novaConta);
+        Console.WriteLine($"Seu novo número de conta é: {numeroConta}");
+        
     }
     public void Deletar(int numero) 
     {
         var contaBuscada = BuscarNaCollection(numero);
-        if (contaBuscada != null)
+        if (contaBuscada == null)
         {
-            contas.Remove(contaBuscada);
+            throw new ContaNaoEncontradaException($"A conta de número {numero} não existe no sistema.");
         }
-        else
-        {
-            Console.WriteLine("Não existe conta cadastrada!");
-        }
+        contas.Remove(contaBuscada);
     }
     public void Sacar(int numero, float valor) 
     {
         Conta contaBuscada = BuscarNaCollection(numero);
-        if (contaBuscada != null)
+        if (contaBuscada == null)
         {
-            if (contaBuscada.Sacar(valor))
-            {
-                Console.WriteLine("Saque realizado com sucesso.");
-            }
-            else
-            {
-                Console.WriteLine("Saldo insuficiente para realizar o saque.");
-            }
+            throw new ContaNaoEncontradaException($"A conta de número {numero} não existe no sistema.");
         }
-        else
+        
+        if (contaBuscada.Sacar(valor))
         {
-            Console.WriteLine("Conta não encontrada.");
-            //fazer tratamento de exceção para quando a conta não for encontrada
+            Console.WriteLine($"Saque no valor: {valor} realizado com sucesso.");
         }
     }
     public void Depositar(int numero, float valor) 
     {
         Conta contaBuscada = BuscarNaCollection(numero);
-        if (contaBuscada != null)
+        if (contaBuscada == null)
         {
-            contaBuscada.Depositar(valor);
+            throw new ContaNaoEncontradaException($"A conta de número {numero} não existe no sistema.");
         }
-        else
-        {
-            Console.WriteLine("Conta não encontrada.");
-            //fazer tratamento de exceção para quando a conta não for encontrada
-        }
+        contaBuscada.Depositar(valor);
     }
         
     
@@ -157,22 +143,25 @@ internal class ContaController: IContaRepository
     {
         Conta contaOrigem = BuscarNaCollection(numeroOrigem);
         Conta contaDestino = BuscarNaCollection(numeroDestino);
-        if(contaOrigem != null && contaDestino != null)
+        if (contaOrigem == null)
         {
-            if (contaOrigem.Sacar(valor))
-            {
-                contaDestino.Depositar(valor);
-            }
-            else
-            {
-                Console.WriteLine("Saldo insuficiente.");
-            }
+            throw new ContaNaoEncontradaException($"A conta de número {numeroOrigem} não existe no sistema.");
+        }
+
+        if (contaDestino == null)
+        {
+            throw new ContaNaoEncontradaException($"A conta de número {numeroDestino} não existe no sistema.");
+        }
+
+        if (contaOrigem.Sacar(valor))
+        {
+           contaDestino.Depositar(valor);
         }
         else
         {
-            Console.WriteLine("Conta não encontrada.");
+           throw new SaldoInsuficienteException($"Saldo insuficiente para realizar a transferência de R${valor} da conta {numeroOrigem} para a conta {numeroDestino}.");
         }
-        //fazer tratamento de exceção para quando a conta não for encontrada
+        
     }
     public int GerarNumero()
     {
@@ -185,6 +174,7 @@ internal class ContaController: IContaRepository
     {
         //pode ser feito de uma forma simples com foreach e uma forma mais eficiente com find
         //caso não ache o numero da conta ele retorna o valor padrão que vai ser null nesse caso
+
         return contas.FirstOrDefault(c => c.GetNumero() == numero);//coloquei qualquer coisa por enquanto
 
         //FAZER TRATAMENTO COM EXCEÇÃO PARA QUANDO A CONTA NÃO FOR ENCONTRADA

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Projeto1E2.Controller;
+using Projeto1E2.Exceptions;
+using Projeto1E2.Repository;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Projeto1E2.Controller;
-using Projeto1E2.Repository;
 
 namespace Projeto1E2.Contas;
 /*
@@ -69,17 +70,28 @@ public abstract class Conta
     }
     public void Depositar(float valor)
     {
+        if(valor <= 0)
+        {
+            throw new ValorInvalidoException($"Valor inválido para depósito: {valor}.\nO valor deve ser maior do que zero. ");
+        }
         SetSaldo(_saldo + valor);
     }
     //Método virtual PODE ser sobrescrito, neste caso, a ContaCorrente vai sobrescrever o método Sacar
     public virtual bool Sacar(float valor)
     {
+        if(valor <= 0)
+        {
+            throw new ValorInvalidoException($"Valor inválido para saque: {valor}.\nO valor deve ser maior do que zero. ");
+        }
         if (valor <= _saldo)
         {
             SetSaldo(_saldo - valor);
             return true;
         }
-        return false;
+        else
+        {
+            throw new SaldoInsuficienteException($"Saldo: {_saldo} insuficiente para sacar: {valor}.");
+        }
     }
     //Método abstrato que TODOS devem implementar, para mostrar as informações da conta com suas características específicas
     public abstract void Visualizar();
