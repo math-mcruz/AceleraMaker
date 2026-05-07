@@ -21,7 +21,8 @@ internal class ContaController: IContaRepository
                 Console.WriteLine($"\nTitular da conta: {conta.GetTitular()}");
                 Console.WriteLine($"Número da conta: {conta.GetNumero()}");
                 Console.WriteLine($"Agência: {conta.GetAgencia()}");
-                Console.WriteLine($"Tipo: {conta.GetTipo()}");
+                string tipoString = conta.GetTipo() == 1 ? "Corrente" : "Poupança";
+                Console.WriteLine($"Tipo: {tipoString}");
                 return;
             }
             //chamar o visualizar da conta para mostrar as informações da conta encontrada
@@ -35,10 +36,11 @@ internal class ContaController: IContaRepository
             Console.WriteLine("\nContas cadastradas:");
             foreach(var conta in contas)
             {
-                Console.WriteLine($"\nTitular da conta: {conta.GetNumero()}");
+                Console.WriteLine($"\nTitular da conta: {conta.GetTitular()}");
                 Console.WriteLine($"\nNúmero da conta: {conta.GetNumero()}");
                 Console.WriteLine($"\nAgência: {conta.GetAgencia()}");
-                Console.WriteLine($"\nTipo: {conta.GetTipo()}");
+                string tipoString = conta.GetTipo() == 1 ? "Corrente" : "Poupança";
+                Console.WriteLine($"\nTipo: {tipoString}");
             }
       //  }
       //  else
@@ -66,7 +68,38 @@ internal class ContaController: IContaRepository
         if (contaBuscada != null)
         {
             contas.Remove(contaBuscada);
-            contas.Add(conta);
+
+            //Pode pedir para escolher o  que quer atualizar -------------------------------------------------------------------------------------*****
+
+            Console.WriteLine("Digite o nome do titular");
+            string? novoTitular = Console.ReadLine();
+
+            Console.WriteLine("\nDigite o número da agência");
+            var novaAgencia = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("\n[1] - Corrente\t[2] - Poupança\n\nDigite qual o tipo da Conta");
+            //tratamento de erro para o tipo da conta
+
+            byte novoTipo = Convert.ToByte(Console.ReadLine());
+
+            var numeroConta = GerarNumero();
+
+            float novolimite = 0;
+
+            int novoAniversario = DateTime.Now.Day;
+
+            Conta novaConta = null;
+
+            if (novoTipo == 1)
+            {
+                novaConta = new ContaCorrente(numero: numeroConta, agencia: novaAgencia, tipo: novoTipo, titular: novoTitular, limite: novolimite);
+            }
+            else
+            {
+                novaConta = new ContaPoupanca(numero: numeroConta, agencia: novaAgencia, tipo: novoTipo, titular: novoTitular, aniversario: novoAniversario);
+            }
+            contas.Add(novaConta);
+            Console.WriteLine($"Seu novo número de conta é: {numeroConta}");
         }
         else
         {

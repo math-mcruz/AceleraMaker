@@ -29,7 +29,21 @@ public class ContaPoupanca: Conta
 
     public override void Visualizar()
     {
+        if (this != null)
+        {
+            Console.WriteLine($"\nTitular da conta: {this.GetTitular()}");
+            Console.WriteLine($"Número da conta: {this.GetNumero()}");
+            Console.WriteLine($"Agência: {this.GetAgencia()}");
+            string tipoString = this.GetTipo() == 1 ? "Corrente" : "Poupança";
+            Console.WriteLine($"Tipo: {tipoString}");
+            Console.WriteLine($"Aniversário: {this.GetAniversario()}");
+            Console.WriteLine($"Saldo: {this.GetSaldo()}");
 
+        }
+        else
+        {
+            Console.WriteLine("Conta não encontrada.");
+        }
     }
  
 }

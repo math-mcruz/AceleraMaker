@@ -41,7 +41,21 @@ public class ContaCorrente: Conta
     }
     public override void Visualizar()
     {
-        Console.WriteLine("isso");
+        if (this != null)
+        {
+            Console.WriteLine($"\nTitular da conta: {this.GetTitular()}");
+            Console.WriteLine($"Número da conta: {this.GetNumero()}");
+            Console.WriteLine($"Agência: {this.GetAgencia()}");
+            string tipoString = this.GetTipo() == 1 ? "Corrente" : "Poupança";
+            Console.WriteLine($"Tipo: {tipoString}");
+            Console.WriteLine($"Limite: {this.GetLimite()}");
+            Console.WriteLine($"Saldo: {this.GetSaldo()}");
+
+        }
+        else
+        {
+            Console.WriteLine("Conta não encontrada.");
+        }
     }
    
 }
