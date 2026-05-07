@@ -1,43 +1,159 @@
-﻿using Projeto1E2.Model;
+﻿using Projeto1E2.Contas;
 using Projeto1E2.Repository;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Projeto1E2.Controller;
 
 internal class ContaController: IContaRepository
 {
     private List<Conta> contas = new List<Conta>();
-    public void ProcurarPorNumeros(int numero)
-    {}
-    public void ListarTodas() //da pra por static aqui?
-    { }
-    public void Cadastrar(Conta contas)
+    public void ProcurarPorNumero(int numero)
     {
-        //contas.Add(contas);
+        foreach (var conta in contas)
+        {
+            if (conta.GetNumero() == numero)
+            {
+                Console.WriteLine($"\nTitular da conta: {conta.GetTitular()}");
+                Console.WriteLine($"Número da conta: {conta.GetNumero()}");
+                Console.WriteLine($"Agência: {conta.GetAgencia()}");
+                Console.WriteLine($"Tipo: {conta.GetTipo()}");
+                return;
+            }
+            //chamar o visualizar da conta para mostrar as informações da conta encontrada
+        }
+
     }
-    public void Atualizar(Conta contas)
+    public void ListarTodas()
     {
-        
+       // if(contas.Count != 0)
+        //{
+            Console.WriteLine("\nContas cadastradas:");
+            foreach(var conta in contas)
+            {
+                Console.WriteLine($"\nTitular da conta: {conta.GetNumero()}");
+                Console.WriteLine($"\nNúmero da conta: {conta.GetNumero()}");
+                Console.WriteLine($"\nAgência: {conta.GetAgencia()}");
+                Console.WriteLine($"\nTipo: {conta.GetTipo()}");
+            }
+      //  }
+      //  else
+      //  {
+       //     Console.WriteLine("Não existem contas cadastradas.");
+      //  }
+            
+    }
+    
+    public void Cadastrar(Conta conta)
+    {
+        if (BuscarNaCollection(conta.GetNumero()) != null)
+        {
+            Console.WriteLine("Conta já cadastrada.");
+        }
+        else
+        {
+            contas.Add(conta);
+        }
+
+    }
+    public void Atualizar(Conta conta)
+    {
+        var contaBuscada = BuscarNaCollection(conta.GetNumero());
+        if (contaBuscada != null)
+        {
+            contas.Remove(contaBuscada);
+            contas.Add(conta);
+        }
+        else
+        {
+            Console.WriteLine("Conta não encontrada.");
+        }
     }
     public void Deletar(int numero) 
-    { }
+    {
+        var contaBuscada = BuscarNaCollection(numero);
+        if (contaBuscada != null)
+        {
+            contas.Remove(contaBuscada);
+        }
+        else
+        {
+            Console.WriteLine("Não existe conta cadastrada!");
+        }
+    }
     public void Sacar(int numero, float valor) 
-    { }
+    {
+        Conta contaBuscada = BuscarNaCollection(numero);
+        if (contaBuscada != null)
+        {
+            if (contaBuscada.Sacar(valor))
+            {
+                Console.WriteLine("Saque realizado com sucesso.");
+            }
+            else
+            {
+                Console.WriteLine("Saldo insuficiente para realizar o saque.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Conta não encontrada.");
+            //fazer tratamento de exceção para quando a conta não for encontrada
+        }
+    }
     public void Depositar(int numero, float valor) 
-    { }
+    {
+        Conta contaBuscada = BuscarNaCollection(numero);
+        if (contaBuscada != null)
+        {
+            contaBuscada.Depositar(valor);
+        }
+        else
+        {
+            Console.WriteLine("Conta não encontrada.");
+            //fazer tratamento de exceção para quando a conta não for encontrada
+        }
+    }
+        
+    
     public void Transferir(int numeroOrigem, int numeroDestino, float valor) 
-    { }
+    {
+        Conta contaOrigem = BuscarNaCollection(numeroOrigem);
+        Conta contaDestino = BuscarNaCollection(numeroDestino);
+        if(contaOrigem != null && contaDestino != null)
+        {
+            if (contaOrigem.Sacar(valor))
+            {
+                contaDestino.Depositar(valor);
+            }
+            else
+            {
+                Console.WriteLine("Saldo insuficiente.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Conta não encontrada.");
+        }
+        //fazer tratamento de exceção para quando a conta não for encontrada
+    }
     public int GerarNumero()
     {
         Random random = new Random();
-        return random.Next(1000, 9999);
+        return random.Next(1, 1000);
     }
 
 
     public Conta BuscarNaCollection(int numero)
-    { 
-        return contas.Find(c => c.GetNumero() == numero);//coloquei qualquer coisa por enquanto
+    {
+        //pode ser feito de uma forma simples com foreach e uma forma mais eficiente com find
+        //caso não ache o numero da conta ele retorna o valor padrão que vai ser null nesse caso
+        return contas.FirstOrDefault(c => c.GetNumero() == numero);//coloquei qualquer coisa por enquanto
+
+        //FAZER TRATAMENTO COM EXCEÇÃO PARA QUANDO A CONTA NÃO FOR ENCONTRADA
     }
 }
