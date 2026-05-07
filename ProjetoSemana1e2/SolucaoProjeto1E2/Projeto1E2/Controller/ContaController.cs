@@ -1,6 +1,7 @@
 ﻿using Projeto1E2.Contas;
 using Projeto1E2.Exceptions;
 using Projeto1E2.Repository;
+using Projeto1E2.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -54,50 +55,99 @@ public class ContaController: IContaRepository
         else
         {
             contas.Add(conta);
-            Console.WriteLine($"Conta cadastrada com sucesso, numero da conta é: {conta.GetNumero}");
+            Console.WriteLine($"Conta cadastrada com sucesso, numero da conta é: {conta.GetNumero()}");
         }
 
     }
     public void Atualizar(Conta conta)
     {
-        var contaBuscada = BuscarNaCollection(conta.GetNumero());
-        if (contaBuscada == null)
+        var contaAntiga = BuscarNaCollection(conta.GetNumero());
+        if (contaAntiga == null)
         {
             throw new ContaNaoEncontradaException($"A conta de número {conta.GetNumero()} não existe no sistema.");
         }
-        contas.Remove(contaBuscada);
 
-            //Pode pedir para escolher o  que quer atualizar -------------------------------------------------------------------------------------*****
-
-        Console.WriteLine("Digite o nome do titular");
-        string? novoTitular = Console.ReadLine();
-
-        Console.WriteLine("\nDigite o número da agência");
-        var novaAgencia = Convert.ToInt32(Console.ReadLine());
-
-        Console.WriteLine("\n[1] - Corrente\t[2] - Poupança\n\nDigite qual o tipo da Conta");
-            //tratamento de erro para o tipo da conta
-
-        byte novoTipo = Convert.ToByte(Console.ReadLine());
-
-        var numeroConta = GerarNumero();
-
-        float novolimite = 0;
-
-        int novoAniversario = DateTime.Now.Day;
-
-        Conta novaConta = null;
-
-        if (novoTipo == 1)
+        Conta contaAtualizada = null;
+        bool saidaAtualizar = false;
+        while (!saidaAtualizar)
         {
-            novaConta = new ContaCorrente(numero: numeroConta, agencia: novaAgencia, tipo: novoTipo, titular: novoTitular, limite: novolimite);
+            //Exibe menu de operações
+            byte opcaoOperacao = ExibirMenu.Atualizar();
+            switch (opcaoOperacao)
+            {
+                case 1:// atualizar titular --------------------------------------------------------------------> OK
+                    string? atualizarTitular = ValidacaoHelper.TextoMenu("\nDigite o nome novo do titular:\n");
+
+                    //buscar qual tipo de conta 
+                    if (contaAntiga is ContaCorrente cc1)
+                    {
+                        contaAtualizada = new ContaCorrente(numero: contaAntiga.GetNumero(), agencia: contaAntiga.GetAgencia(), tipo: 1, titular: atualizarTitular, limite: cc1.GetLimite());
+                    }
+                    else if (contaAntiga is ContaPoupanca cp1)
+                    {
+                        contaAtualizada = new ContaPoupanca(numero: contaAntiga.GetNumero(), agencia: contaAntiga.GetAgencia(), tipo: 1, titular: atualizarTitular, aniversario: cp1.GetAniversario());
+
+                    }
+
+                    Console.Clear();
+                    saidaAtualizar = true;
+                    break;
+
+                case 2: //atualizar agencia ----------------------------------------------------------------------------> OK
+                    int atualizarAgencia = ValidacaoHelper.ValorPositivo("\nDigite o número da nova agência:\n");
+
+                    //buscar qual tipo de conta
+                    if (contaAntiga is ContaCorrente cc2)
+                    {
+                        contaAtualizada = new ContaCorrente(numero: contaAntiga.GetNumero(), agencia: atualizarAgencia, tipo: 1, titular: contaAntiga.GetTitular(), limite: cc2.GetLimite());
+
+                    }
+                    else if (contaAntiga is ContaPoupanca cp2)
+                    {
+                        contaAtualizada = new ContaPoupanca(numero: contaAntiga.GetNumero(), agencia: atualizarAgencia, tipo: 1, titular: contaAntiga.GetTitular(), aniversario: cp2.GetAniversario());
+
+                    }
+
+                    Console.Clear();
+                    saidaAtualizar = true;
+                    break;
+
+                case 3: // atualizar tipo  --------------------------------------------------------> OK
+                    byte atualizarTipo = ValidacaoHelper.OpcaoRestricao("\n[1] - Corrente\t[2] - Poupança\n\nDigite qual o novo da tipo da Conta:", 1, 2);
+                    if (atualizarTipo == 1)
+                    {
+                        Console.WriteLine("Digite o novo limite:\n");
+                        float atualizarLimite = ValidacaoHelper.ValorPositivoFloat("Digite o número da nova agência:\n");
+
+                        contaAtualizada = new ContaCorrente(numero: contaAntiga.GetNumero(), agencia: contaAntiga.GetAgencia(), tipo: 1, titular: contaAntiga.GetTitular(), limite: atualizarLimite);
+                    }
+                    else
+                    {
+                        int atualizarAniversario = DateTime.Now.Day;
+                        contaAtualizada = new ContaPoupanca(numero: contaAntiga.GetNumero(), agencia: contaAntiga.GetAgencia(), tipo: 2, titular: contaAntiga.GetTitular(), aniversario: atualizarAniversario);
+
+                    }
+
+                    Console.Clear();
+                    saidaAtualizar = true;
+                    break;
+
+                case 4: //nenhuma das opções (cancelar) ----------------------------------> OK
+                    Console.WriteLine("Voltando para o menu principal.");
+                    Console.Clear();
+                    saidaAtualizar = true;
+                    break;
+
+                default: //numero errado --------------------------------------------------> OK
+
+                    Console.WriteLine("Opção inválida, digite outra.");
+                    break;
+            }
         }
-        else
-        {
-        novaConta = new ContaPoupanca(numero: numeroConta, agencia: novaAgencia, tipo: novoTipo, titular: novoTitular, aniversario: novoAniversario);
-        }
-        contas.Add(novaConta);
-        Console.WriteLine($"Seu novo número de conta é: {numeroConta}");
+
+        contas.Remove(contaAntiga);
+        contas.Add(contaAtualizada);
+        Console.WriteLine($"Seu novo número de conta é: {contaAtualizada.GetNumero()}");
         
     }
     public void Deletar(int numero) 
@@ -172,6 +222,12 @@ public class ContaController: IContaRepository
         //caso não ache o numero da conta ele retorna o valor padrão que vai ser null nesse caso
 
         return contas.FirstOrDefault(c => c.GetNumero() == numero);//coloquei qualquer coisa por enquanto
+
+        //FAZER TRATAMENTO COM EXCEÇÃO PARA QUANDO A CONTA NÃO FOR ENCONTRADA
+    }
+    public Conta BuscarNaCollectionTipo(int tipo)
+    {
+        return contas.FirstOrDefault(c => c.GetTipo() == tipo);//coloquei qualquer coisa por enquanto
 
         //FAZER TRATAMENTO COM EXCEÇÃO PARA QUANDO A CONTA NÃO FOR ENCONTRADA
     }

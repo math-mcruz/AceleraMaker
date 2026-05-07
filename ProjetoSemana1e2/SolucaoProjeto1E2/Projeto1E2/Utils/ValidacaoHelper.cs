@@ -79,6 +79,31 @@ public static class ValidacaoHelper
             }
         }
     }
+    public static float ValorPositivoFloat(string texto)
+    {
+        while (true)
+        {
+            try
+            {
+                Console.WriteLine(texto);
+                float valor = Convert.ToSingle(Console.ReadLine());
+
+                if (valor > 0.0)
+                {
+                    return valor;
+                }
+                else
+                {
+                    Console.WriteLine("Digite um valor positivo.");
+                }
+            }
+            catch (FormatException)
+            {
+                // Se o usuário digitar string
+                Console.WriteLine("Digite apenas números.\n");
+            }
+        }
+    }
 
     public static Conta ExisteCadastro(ContaController controller, string texto, out int numeroDeletar)
     {

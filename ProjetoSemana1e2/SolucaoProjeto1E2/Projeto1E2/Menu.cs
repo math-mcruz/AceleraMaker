@@ -25,11 +25,11 @@ class Menu
                 {
                     case 1:             //cadastrar ------------------------------------------------------>   OK
 
-                        string? novoTitular = ValidacaoHelper.TextoMenu("Digite o nome do titular");
+                        string? novoTitular = ValidacaoHelper.TextoMenu("\nDigite o nome do titular:\n");
 
-                        int novaAgencia = ValidacaoHelper.ValorPositivo("Digite o número da agência");
+                        int novaAgencia = ValidacaoHelper.ValorPositivo("\nDigite o número da agência:\n");
 
-                        byte novoTipo = ValidacaoHelper.OpcaoRestricao("\n[1] - Corrente\t[2] - Poupança\n\nDigite qual o tipo da Conta", 1, 2);
+                        byte novoTipo = ValidacaoHelper.OpcaoRestricao("\n[1] - Corrente\t[2] - Poupança\n\nDigite qual o tipo da Conta\n", 1, 2);
 
                         var numeroConta = controller.GerarNumero();
 
@@ -52,18 +52,19 @@ class Menu
                        
                         break;
 
-                    case 2:             //listar todas as contas --------------------------------------------------->   OK
+                    case 2:             //listar todas as contas --------------------------------------------------------------------------------------->   OK
 
                         controller.ListarTodas();
                         break;
 
-                    case 3:             
-                        //da para melhorar atualizando só um tipo de dado ----------------------------------------------------------***************************
-                        var contaAtualizar = ValidacaoHelper.ExisteCadastro(controller, "Digite o número da conta que deseja atualizar:", out numeroConta);
-                        if (contaAtualizar != null)
-                        {
-                            controller.Atualizar(contaAtualizar);
-                            Console.WriteLine($"Conta atualizada com sucesso, nova conta: {contaAtualizar.GetNumero()}, conta: {numeroConta}, excluida.");
+                    case 3:             //Atualizar conta ---------------------------------------------------------------------------------------------->   OK
+                        var contaAntiga = ValidacaoHelper.ExisteCadastro(controller, "\nDigite o número da conta que deseja atualizar:\n", out numeroConta);
+                        if (contaAntiga != null)
+                        { 
+                            controller.Atualizar(contaAntiga);
+
+                            Console.WriteLine("Conta atualizada com sucesso");
+                            contaAntiga.Visualizar();
                         }
                         break;
 
@@ -78,8 +79,8 @@ class Menu
                         break;
 
                     case 5://realizar operações fazer esse sub menu em Utils para não poluir o menu principal
-                        bool saida = false;
-                        while (!saida)
+                        bool saidaOperacoes = false;
+                        while (!saidaOperacoes)
                         {
                             //Exibe menu de operações
                             byte opcaoOperacao = ExibirMenu.Operacoes();
@@ -133,7 +134,7 @@ class Menu
 
                                     Console.WriteLine("Voltando para o menu principal");
                                     Console.Clear();
-                                    saida = true;
+                                    saidaOperacoes = true;
                                     break;
 
                                 default:        //Opção invalida ------------------------------------------------------> OK

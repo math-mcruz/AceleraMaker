@@ -36,4 +36,18 @@ public static class ExibirMenu
 
         return Convert.ToByte(Console.ReadLine());
     }
+
+    public static byte Atualizar()
+    //byte pois o numero é muito pequeno e economiza memória
+    {
+        Console.Clear();
+        Console.WriteLine("\tDeseja atualizar qual dado? \n");
+        Console.WriteLine("[1] - Titular");
+        Console.WriteLine("[2] - Agência");
+        Console.WriteLine("[3] - Tipo da conta");
+        Console.WriteLine("[4] - Nenhuma das opções (cancelar)");
+        Console.WriteLine("\nDigite a opção desejada: ");
+
+        return Convert.ToByte(Console.ReadLine());
+    }
 }
