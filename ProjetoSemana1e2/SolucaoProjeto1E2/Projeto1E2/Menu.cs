@@ -2,7 +2,6 @@
  Menu: Classe principal, que conterá o Método main, responsável por criar o Menu inicial da aplicação com todas as 
  funcionalidades do sistema
 
- Cores: Classe utilitária, que possui a função de aplicar cores ao Menu
  */
 using Projeto1E2.Controller;
 using Projeto1E2.Contas;
@@ -20,23 +19,11 @@ class Menu
         {
             try
             {
-                //criar uma classe para aplicar cores no menu para não poluir o código principal
-                Console.WriteLine("    Sistema Bancário");
-                Console.WriteLine("\n\tMenu:\n");
-                Console.WriteLine("[1] - Cadastrar");
-                Console.WriteLine("[2] - Listar todas as contas");
-                Console.WriteLine("[3] - Atualizar conta");
-                Console.WriteLine("[4] - Deletar conta");
-                //posso fazer um segundo menu para gerenciar as operações
-                Console.WriteLine("[5] - Realizar operações");
-                Console.WriteLine("[6] - Sair\n");
-                //byte pois o numero é muito pequeno e economiza memória
-                byte opcao = Convert.ToByte(Console.ReadLine());
-
+                //Exibe menu principal
+                byte opcao = ExibirMenu.Principal();
                 switch (opcao)
                 {
-                    case 1://cadastrar
-
+                    case 1:             //cadastrar ------------------------------------------------------>   OK
 
                         string? novoTitular = ValidacaoHelper.TextoMenu("Digite o nome do titular");
 
@@ -62,38 +49,31 @@ class Menu
                         }
                         
                         controller.Cadastrar(novaConta);
-                        Console.WriteLine($"Conta cadastrada com sucesso, numero da conta é: {numeroConta}");
+                       
                         break;
 
-                    case 2://listar todas as contas
+                    case 2:             //listar todas as contas --------------------------------------------------->   OK
+
                         controller.ListarTodas();
                         break;
 
-                    case 3://atualizar conta
-                        //Validar na ValidaçãoHelper -------------------------------------------------------****************************************
-                        Console.WriteLine("Digite o número da conta que deseja atualizar:");
-                        int numeroContaAtualizar = Convert.ToInt32(Console.ReadLine());
-                        if (controller.BuscarNaCollection(numeroContaAtualizar) != null)
+                    case 3:             
+                        //da para melhorar atualizando só um tipo de dado ----------------------------------------------------------***************************
+                        var contaAtualizar = ValidacaoHelper.ExisteCadastro(controller, "Digite o número da conta que deseja atualizar:", out numeroConta);
+                        if (contaAtualizar != null)
                         {
-                            controller.Atualizar(controller.BuscarNaCollection(numeroContaAtualizar));
-                            Console.WriteLine($"Conta atualizada com sucesso, nova conta: {controller.BuscarNaCollection(numeroContaAtualizar).GetNumero()}, conta: {numeroContaAtualizar} foi excluida ");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Conta não encontrada");
+                            controller.Atualizar(contaAtualizar);
+                            Console.WriteLine($"Conta atualizada com sucesso, nova conta: {contaAtualizar.GetNumero()}, conta: {numeroConta}, excluida.");
                         }
                         break;
 
-                    case 4://deletar conta
-                        Console.WriteLine("Digite o número da conta que deseja deletar:");
-                        int numeroContaDeletar = Convert.ToInt32(Console.ReadLine());
-                        if (controller.BuscarNaCollection(numeroContaDeletar) != null)
+                    case 4:             //deletar conta ----------------------------------------------------------->   OK
+
+                        var contaDeletar = ValidacaoHelper.ExisteCadastro(controller,"Digite o número da conta que deseja atualizar:", out int numeroDeletar);
+                        if (contaDeletar != null)
                         {
-                            controller.Deletar(numeroContaDeletar);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Conta não encontrada");
+                            controller.Deletar(numeroDeletar);
+                            Console.WriteLine($"Conta deletada com sucesso.");
                         }
                         break;
 
@@ -101,89 +81,63 @@ class Menu
                         bool saida = false;
                         while (!saida)
                         {
-                            Console.Clear();
-                            Console.WriteLine("\tOPERAÇÕES BANCÁRIAS\n");
-                            Console.WriteLine("[1] - Sacar");
-                            Console.WriteLine("[2] - Depositar");
-                            Console.WriteLine("[3] - Transferir");
-                            Console.WriteLine("[4] - Visualizar dados da conta");
-                            Console.WriteLine("[5] - Voltar para o menu principal");
-                            Console.WriteLine("\nDigite a operação desejada: ");
-                            byte subOpcao = Convert.ToByte(Console.ReadLine());
-                            switch (subOpcao)
+                            //Exibe menu de operações
+                            byte opcaoOperacao = ExibirMenu.Operacoes();
+                            switch (opcaoOperacao)
                             {
-                                case 1: //sacar
-                                    try
+                                case 1:             //Sacar ---------------------------------------------------------------------> OK
+
+                                    var contaSaque = ValidacaoHelper.ExisteCadastro(controller, "Digite o número da conta que deseja sacar: ", out int numeroSaque);
+                                    if (contaSaque != null)
                                     {
-                                        Console.WriteLine("Digite o número da conta:");
-                                        int numeroSaque = Convert.ToInt32(Console.ReadLine());
-
-                                        Console.WriteLine("Digite o valor do saque:");
-                                        float valorSaque = Convert.ToSingle(Console.ReadLine());
-
+                                        float valorSaque = ValidacaoHelper.ValorPositivo("Digite o valor do depósito: ");
                                         controller.Sacar(numeroSaque, valorSaque);
-                                        Console.WriteLine($"Saque realizado com sucesso, saldo atual: {controller.BuscarNaCollection(numeroSaque).GetSaldo()}");
-                                        break;
                                     }
-                                    catch (SaldoInsuficienteException e)
-                                    {
-                                        Console.WriteLine(e.Message);
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Console.WriteLine($"Ocorreu um erro: {e.Message}");
-                                    }
-                                    finally
-                                    {
-                                        
-                                    }
+      
                                     break;
 
-                                case 2:
-                                    Console.WriteLine("Digite o número da conta:");
-                                    int numeroDeposito = Convert.ToInt32(Console.ReadLine());
-
-                                    Console.WriteLine("Digite o valor do depósito:");
-                                    float valorDeposito = Convert.ToSingle(Console.ReadLine());
-
-                                    controller.Depositar(numeroDeposito, valorDeposito);
-                                    Console.WriteLine($"Depósito realizado com sucesso, saldo atual: {controller.BuscarNaCollection(numeroDeposito).GetSaldo()}");
+                                case 2:         //Depositar ----------------------------------------------------------------------> OK
+                                    var contaDeposito = ValidacaoHelper.ExisteCadastro(controller, "Digite o número da conta que deseja depositar: ", out int numeroDeposito);
+                                    if (contaDeposito != null)
+                                    {
+                                        float valorDeposito = ValidacaoHelper.ValorPositivo("Digite o valor do depósito: ");
+                                        controller.Depositar(numeroDeposito, valorDeposito);
+                                    }
+       
                                     break;
 
-                                case 3:
-                                    Console.WriteLine("Digite o número da conta de origem:");
-                                    int numeroContaOrigem = Convert.ToInt32(Console.ReadLine());
-                                    Console.WriteLine("Digite o número da conta de destino:");
-                                    int numeroContaDestino = Convert.ToInt32(Console.ReadLine());
+                                case 3:         //Transferir ----------------------------------------------------------------------> OK
+                                    var contaOrigem = ValidacaoHelper.ExisteCadastro(controller, "Digite o número da conta origem: ", out int numeroOrigem);
+                                    if (contaOrigem != null)
+                                    {
+                                        var contaDestino = ValidacaoHelper.ExisteCadastro(controller, "Digite o número da conta destino: ", out int numeroDestino);
+                                        if(contaDestino != null)
+                                        {
+                                            float valorTransferencia = ValidacaoHelper.ValorPositivo("Digite o valor da trasnferência: ");
+                                            controller.Transferir(numeroOrigem, numeroDestino, valorTransferencia);
+                                        }
+                                    }
 
-                                    Console.WriteLine("Digite o valor da transferência:");
-                                    float valorTransferencia = Convert.ToSingle(Console.ReadLine());
-
-                                    controller.Transferir(numeroContaOrigem, numeroContaDestino, valorTransferencia);
-                                    Console.WriteLine($"Transferência realizada com sucesso, saldo atual da conta de origem: {controller.BuscarNaCollection(numeroContaOrigem).GetSaldo()}, saldo atual da conta de destino: {controller.BuscarNaCollection(numeroContaDestino).GetSaldo()}");
                                     break;
 
-                                case 4:
-                                    Console.WriteLine("Digite o número da conta:");
-                                    int numeroContaVisualizar = Convert.ToInt32(Console.ReadLine());
-                                    var contaVisualizar = controller.BuscarNaCollection(numeroContaVisualizar);
+                                case 4:          //Visualizar Dados ---------------------------------------------------------------> OK
+
+                                    var contaVisualizar = ValidacaoHelper.ExisteCadastro(controller, "Digite o número da conta que deseja visualizar: ", out int numeroVizualizar);
                                     if (contaVisualizar != null)
                                     {
                                         contaVisualizar.Visualizar();
                                     }
-                                    else
-                                    {
-                                        Console.WriteLine($"Conta {numeroContaVisualizar} não encontrada.");
-                                    }
                                     break;
+                              
+                                case 5:          //Sair do menu operações ---------------------------------------------> OK
 
-                                case 5:
                                     Console.WriteLine("Voltando para o menu principal");
                                     Console.Clear();
                                     saida = true;
                                     break;
 
-                                default:
+                                default:        //Opção invalida ------------------------------------------------------> OK
+
                                     Console.WriteLine("Opção inválida, digite outra.");
                                     break;
 

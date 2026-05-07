@@ -3,14 +3,12 @@ using Projeto1E2.Exceptions;
 using Projeto1E2.Repository;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace Projeto1E2.Controller;
 
-internal class ContaController: IContaRepository
+public class ContaController: IContaRepository
 {
     private List<Conta> contas = new List<Conta>();
     public void ProcurarPorNumero(int numero)
@@ -32,22 +30,17 @@ internal class ContaController: IContaRepository
     }
     public void ListarTodas()
     {
-       // if(contas.Count != 0)
-        //{
-            Console.WriteLine("\nContas cadastradas:");
+        if(contas.Count != 0)
+        {
             foreach(var conta in contas)
             {
-                Console.WriteLine($"\nTitular da conta: {conta.GetTitular()}");
-                Console.WriteLine($"\nNúmero da conta: {conta.GetNumero()}");
-                Console.WriteLine($"\nAgência: {conta.GetAgencia()}");
-                string tipoString = conta.GetTipo() == 1 ? "Corrente" : "Poupança";
-                Console.WriteLine($"\nTipo: {tipoString}");
+                conta.Visualizar();
             }
-      //  }
-      //  else
-      //  {
-       //     Console.WriteLine("Não existem contas cadastradas.");
-      //  }
+        }
+        else
+        {
+            Console.WriteLine("Não existem contas cadastradas.");
+        }
             
     }
     
@@ -61,6 +54,7 @@ internal class ContaController: IContaRepository
         else
         {
             contas.Add(conta);
+            Console.WriteLine($"Conta cadastrada com sucesso, numero da conta é: {conta.GetNumero}");
         }
 
     }
@@ -122,11 +116,11 @@ internal class ContaController: IContaRepository
         {
             throw new ContaNaoEncontradaException($"A conta de número {numero} não existe no sistema.");
         }
-        
-        if (contaBuscada.Sacar(valor))
+        else if (contaBuscada.Sacar(valor))
         {
-            Console.WriteLine($"Saque no valor: {valor} realizado com sucesso.");
+            Console.WriteLine($"Saque no valor: {valor}, realizado com sucesso.\nSaldo atual: {BuscarNaCollection(numero).GetSaldo()}");
         }
+
     }
     public void Depositar(int numero, float valor) 
     {
@@ -136,9 +130,9 @@ internal class ContaController: IContaRepository
             throw new ContaNaoEncontradaException($"A conta de número {numero} não existe no sistema.");
         }
         contaBuscada.Depositar(valor);
+        Console.WriteLine($"Depósito realizado com sucesso, saldo atual: {BuscarNaCollection(numero).GetSaldo()}");
     }
-        
-    
+       
     public void Transferir(int numeroOrigem, int numeroDestino, float valor) 
     {
         Conta contaOrigem = BuscarNaCollection(numeroOrigem);
@@ -156,6 +150,8 @@ internal class ContaController: IContaRepository
         if (contaOrigem.Sacar(valor))
         {
            contaDestino.Depositar(valor);
+            Console.WriteLine($"Transferência realizada com sucesso, saldo atual da conta de origem: {BuscarNaCollection(numeroOrigem).GetSaldo()}, saldo atual da conta de destino: {BuscarNaCollection(numeroDestino).GetSaldo()}");
+
         }
         else
         {

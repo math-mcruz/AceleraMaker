@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Projeto1E2.Contas;
+using Projeto1E2.Controller;
+using Projeto1E2.Exceptions;
+using System;
 using System.Collections.Generic;
-using System.Text;
+
 
 namespace Projeto1E2.Utils;
 
@@ -76,5 +79,32 @@ public static class ValidacaoHelper
             }
         }
     }
+
+    public static Conta ExisteCadastro(ContaController controller, string texto, out int numeroDeletar)
+    {
+        numeroDeletar = 0;
+        try
+        {
+            //texto para digitar o numero da conta
+            Console.WriteLine(texto);
+            numeroDeletar = Convert.ToInt32(Console.ReadLine());
+
+            var contaBuscada = controller.BuscarNaCollection(numeroDeletar);
+
+            if (contaBuscada != null)
+            {
+                return contaBuscada;
+            }
+            Console.WriteLine("Conta não encontrada");
+        }
+        catch(FormatException)
+        {
+            // Se não tiver essa conta
+            Console.WriteLine("Digite numeros inteiros");
+            
+        }
+        return null;
+    }
+
 }
             
