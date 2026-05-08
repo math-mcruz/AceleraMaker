@@ -4,7 +4,9 @@ using Projeto1E2.Repository;
 using Projeto1E2.Utils;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
+using System.Text.Json;
+
 
 
 namespace Projeto1E2.Controller;
@@ -12,20 +14,26 @@ namespace Projeto1E2.Controller;
 public class ContaController: IContaRepository
 {
     private List<Conta> contas = new List<Conta>();
+
+    public ContaController()
+    {
+        //sempre que programa começar ele ja vai ter os dados
+        LerContas();
+    }
     public void ProcurarPorNumero(int numero)
     {
         foreach (var conta in contas)
         {
-            if (conta.GetNumero() == numero)
+            if (conta.Numero == numero)
             {
-                Console.WriteLine($"\nTitular da conta: {conta.GetTitular()}");
-                Console.WriteLine($"Número da conta: {conta.GetNumero()}");
-                Console.WriteLine($"Agência: {conta.GetAgencia()}");
-                string tipoString = conta.GetTipo() == 1 ? "Corrente" : "Poupança";
+                Console.WriteLine($"\nTitular da conta: {conta.Titular}");
+                Console.WriteLine($"Número da conta: {conta.Numero}");
+                Console.WriteLine($"Agência: {conta.Agencia}");
+                string tipoString = conta.Tipo == 1 ? "Corrente" : "Poupança";
                 Console.WriteLine($"Tipo: {tipoString}");
                 return;
             }
-            //chamar o visualizar da conta para mostrar as informações da conta encontrada
+            
         }
 
     }
@@ -47,24 +55,25 @@ public class ContaController: IContaRepository
     
     public void Cadastrar(Conta conta)
     {
-        //analisar aqui se precisa tratar
-        if (BuscarNaCollection(conta.GetNumero()) != null)
+        
+        if (BuscarNaCollection(conta.Numero) != null)
         {
             Console.WriteLine("Conta já cadastrada.");
         }
         else
         {
             contas.Add(conta);
-            Console.WriteLine($"Conta cadastrada com sucesso, numero da conta é: {conta.GetNumero()}");
+            GravarContas();
+            Console.WriteLine($"Conta cadastrada com sucesso, numero da conta é: {conta.Numero}");
         }
 
     }
     public void Atualizar(Conta conta)
     {
-        var contaAntiga = BuscarNaCollection(conta.GetNumero());
+        var contaAntiga = BuscarNaCollection(conta.Numero);
         if (contaAntiga == null)
         {
-            throw new ContaNaoEncontradaException($"A conta de número {conta.GetNumero()} não existe no sistema.");
+            throw new ContaNaoEncontradaException($"A conta de número {conta.Numero} não existe no sistema.");
         }
 
         Conta contaAtualizada = null;
@@ -81,11 +90,11 @@ public class ContaController: IContaRepository
                     //buscar qual tipo de conta 
                     if (contaAntiga is ContaCorrente cc1)
                     {
-                        contaAtualizada = new ContaCorrente(numero: contaAntiga.GetNumero(), agencia: contaAntiga.GetAgencia(), tipo: 1, titular: atualizarTitular, limite: cc1.GetLimite());
+                        contaAtualizada = new ContaCorrente(numero: contaAntiga.Numero, agencia: contaAntiga.Agencia, tipo: 1, titular: atualizarTitular, limite: cc1.Limite);
                     }
                     else if (contaAntiga is ContaPoupanca cp1)
                     {
-                        contaAtualizada = new ContaPoupanca(numero: contaAntiga.GetNumero(), agencia: contaAntiga.GetAgencia(), tipo: 1, titular: atualizarTitular, aniversario: cp1.GetAniversario());
+                        contaAtualizada = new ContaPoupanca(numero: contaAntiga.Numero, agencia: contaAntiga.Agencia, tipo: 1, titular: atualizarTitular, aniversario: cp1.Aniversario);
 
                     }
 
@@ -99,12 +108,12 @@ public class ContaController: IContaRepository
                     //buscar qual tipo de conta
                     if (contaAntiga is ContaCorrente cc2)
                     {
-                        contaAtualizada = new ContaCorrente(numero: contaAntiga.GetNumero(), agencia: atualizarAgencia, tipo: 1, titular: contaAntiga.GetTitular(), limite: cc2.GetLimite());
+                        contaAtualizada = new ContaCorrente(numero: contaAntiga.Numero, agencia: atualizarAgencia, tipo: 1, titular: contaAntiga.Titular, limite: cc2.Limite);
 
                     }
                     else if (contaAntiga is ContaPoupanca cp2)
                     {
-                        contaAtualizada = new ContaPoupanca(numero: contaAntiga.GetNumero(), agencia: atualizarAgencia, tipo: 1, titular: contaAntiga.GetTitular(), aniversario: cp2.GetAniversario());
+                        contaAtualizada = new ContaPoupanca(numero: contaAntiga.Numero, agencia: atualizarAgencia, tipo: 1, titular: contaAntiga.Titular, aniversario: cp2.Aniversario);
 
                     }
 
@@ -116,15 +125,15 @@ public class ContaController: IContaRepository
                     byte atualizarTipo = ValidacaoHelper.OpcaoRestricao("\n[1] - Corrente\t[2] - Poupança\n\nDigite qual o novo da tipo da Conta:", 1, 2);
                     if (atualizarTipo == 1)
                     {
-                        Console.WriteLine("Digite o novo limite:\n");
-                        float atualizarLimite = ValidacaoHelper.ValorPositivoFloat("Digite o número da nova agência:\n");
+                        
+                        float atualizarLimite = ValidacaoHelper.ValorPositivoFloat("Digite o novo limite:\n");
 
-                        contaAtualizada = new ContaCorrente(numero: contaAntiga.GetNumero(), agencia: contaAntiga.GetAgencia(), tipo: 1, titular: contaAntiga.GetTitular(), limite: atualizarLimite);
+                        contaAtualizada = new ContaCorrente(numero: contaAntiga.Numero, agencia: contaAntiga.Agencia, tipo: 1, titular: contaAntiga.Titular, limite: atualizarLimite);
                     }
                     else
                     {
                         int atualizarAniversario = DateTime.Now.Day;
-                        contaAtualizada = new ContaPoupanca(numero: contaAntiga.GetNumero(), agencia: contaAntiga.GetAgencia(), tipo: 2, titular: contaAntiga.GetTitular(), aniversario: atualizarAniversario);
+                        contaAtualizada = new ContaPoupanca(numero: contaAntiga.Numero, agencia: contaAntiga.Agencia, tipo: 2, titular: contaAntiga.Titular, aniversario: atualizarAniversario);
 
                     }
 
@@ -147,7 +156,8 @@ public class ContaController: IContaRepository
 
         contas.Remove(contaAntiga);
         contas.Add(contaAtualizada);
-        Console.WriteLine($"Seu novo número de conta é: {contaAtualizada.GetNumero()}");
+        GravarContas();
+        Console.WriteLine($"Seu novo número de conta é: {contaAtualizada.Numero}");
         
     }
     public void Deletar(int numero) 
@@ -158,6 +168,7 @@ public class ContaController: IContaRepository
             throw new ContaNaoEncontradaException($"A conta de número {numero} não existe no sistema.");
         }
         contas.Remove(contaBuscada);
+        GravarContas();
     }
     public void Sacar(int numero, float valor) 
     {
@@ -168,7 +179,8 @@ public class ContaController: IContaRepository
         }
         else if (contaBuscada.Sacar(valor))
         {
-            Console.WriteLine($"Saque no valor: {valor}, realizado com sucesso.\nSaldo atual: {BuscarNaCollection(numero).GetSaldo()}");
+            Console.WriteLine($"Saque no valor: {valor}, realizado com sucesso.\nSaldo atual: {BuscarNaCollection(numero).Saldo}");
+            GravarContas();
         }
 
     }
@@ -180,7 +192,8 @@ public class ContaController: IContaRepository
             throw new ContaNaoEncontradaException($"A conta de número {numero} não existe no sistema.");
         }
         contaBuscada.Depositar(valor);
-        Console.WriteLine($"Depósito realizado com sucesso, saldo atual: {BuscarNaCollection(numero).GetSaldo()}");
+        GravarContas();
+        Console.WriteLine($"Depósito realizado com sucesso, saldo atual: {BuscarNaCollection(numero).Saldo}");
     }
        
     public void Transferir(int numeroOrigem, int numeroDestino, float valor) 
@@ -200,7 +213,8 @@ public class ContaController: IContaRepository
         if (contaOrigem.Sacar(valor))
         {
            contaDestino.Depositar(valor);
-            Console.WriteLine($"Transferência realizada com sucesso, saldo atual da conta de origem: {BuscarNaCollection(numeroOrigem).GetSaldo()}, saldo atual da conta de destino: {BuscarNaCollection(numeroDestino).GetSaldo()}");
+            GravarContas();
+           Console.WriteLine($"Transferência realizada com sucesso, saldo atual da conta de origem: {BuscarNaCollection(numeroOrigem).Saldo}, saldo atual da conta de destino: {BuscarNaCollection(numeroDestino).Saldo}");
 
         }
         else
@@ -218,17 +232,34 @@ public class ContaController: IContaRepository
 
     public Conta BuscarNaCollection(int numero)
     {
-        //pode ser feito de uma forma simples com foreach e uma forma mais eficiente com find
         //caso não ache o numero da conta ele retorna o valor padrão que vai ser null nesse caso
-
-        return contas.FirstOrDefault(c => c.GetNumero() == numero);//coloquei qualquer coisa por enquanto
-
-        //FAZER TRATAMENTO COM EXCEÇÃO PARA QUANDO A CONTA NÃO FOR ENCONTRADA
+        return contas.FirstOrDefault(c => c.Numero == numero);
     }
-    public Conta BuscarNaCollectionTipo(int tipo)
+
+    private void GravarContas()
     {
-        return contas.FirstOrDefault(c => c.GetTipo() == tipo);//coloquei qualquer coisa por enquanto
+        //não precisa usar o using para liberar dados, File.WriteAllText faz isso
 
-        //FAZER TRATAMENTO COM EXCEÇÃO PARA QUANDO A CONTA NÃO FOR ENCONTRADA
+        //formatação do JSON
+        var opcoes = new JsonSerializerOptions { WriteIndented = true };
+
+        //converte as contas para string para serem gravados no arquivo
+        string jsonString = JsonSerializer.Serialize(contas, opcoes);
+
+        //salva as contas no arquivo
+        File.WriteAllText("contas.json", jsonString);
     }
+
+    private void LerContas()
+    {
+        //verifica se tem o arquivo, ou seja, primeira vez usando o sistema
+        if (!File.Exists("contas.json")) return;
+
+        //le ps dados do arquivo
+        string jsonString = File.ReadAllText("contas.json");
+
+        //retorna as contas certas usando a formatação
+        contas = JsonSerializer.Deserialize<List<Conta>>(jsonString);
+    }
+
 }

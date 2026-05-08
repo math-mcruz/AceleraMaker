@@ -12,20 +12,20 @@ public class ContaCorrente: Conta
    public ContaCorrente(int numero, int agencia, int tipo, string titular, float limite) 
         : base(numero, agencia, tipo, titular)
     {
-        this._limite = limite;
+        Limite = limite;
     }
 
-    private float _limite;
+    public float Limite { get; protected set; }
 
-    public float GetLimite()
-    {
-        return _limite;
-    }
+    //public float GetLimite()
+    //{
+    //    return _limite;
+    //}
 
-    public void SetLimite(float limite)
-    {
-        _limite = limite;
-    }
+    //public void SetLimite(float limite)
+    //{
+    //    _limite = limite;
+    //}
 
     public override bool Sacar(float valor)
     {
@@ -35,28 +35,28 @@ public class ContaCorrente: Conta
         }
         //Sobrescreve o método da classe pai, na conta corrente o cliente pode sacar com o seu saldo + valor do limite, podendo ficar negativado
         //observação: o this é para aceessar os métodos da classe pai o GetSaldo()
-        if (valor <= this.GetSaldo() + _limite)
+        if (valor <= this.Saldo + Limite)
         {
             //Aqui ele faz o saldo com o valor mesmo que tenha passado do saldo que tinha
-            this.SetSaldo(this.GetSaldo() - valor);
+            this.Saldo -= valor;
             return true;
         }
         else
         {
-        throw new SaldoInsuficienteException($"Saldo: {this.GetSaldo()}, limite: {_limite}\nInsuficiente para sacar: {valor}.");
+        throw new SaldoInsuficienteException($"Saldo: {this.Saldo}, limite: {Limite}\nInsuficiente para sacar: {valor}.");
         }
     }
     public override void Visualizar()
     {
         if (this != null)
         {
-            Console.WriteLine($"\nTitular da conta: {this.GetTitular()}");
-            Console.WriteLine($"Número da conta: {this.GetNumero()}");
-            Console.WriteLine($"Agência: {this.GetAgencia()}");
-            string tipoString = this.GetTipo() == 1 ? "Corrente" : "Poupança";
+            Console.WriteLine($"\nTitular da conta: {this.Titular}");
+            Console.WriteLine($"Número da conta: {this.Numero}");
+            Console.WriteLine($"Agência: {this.Agencia}");
+            string tipoString = this.Tipo == 1 ? "Corrente" : "Poupança";
             Console.WriteLine($"Tipo: {tipoString}");
-            Console.WriteLine($"Limite: {this.GetLimite()}");
-            Console.WriteLine($"Saldo: {this.GetSaldo()}");
+            Console.WriteLine($"Limite: {Limite}");
+            Console.WriteLine($"Saldo: {this.Saldo}");
 
         }
         else

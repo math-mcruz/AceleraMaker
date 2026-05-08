@@ -33,15 +33,16 @@ class Menu
 
                         var numeroConta = controller.GerarNumero();
 
-                        float novolimite = 0;
-
-                        int novoAniversario = DateTime.Now.Day;
+                        float novoLimite = 0;
+                        
+                        int novoAniversario = DateTime.Today.Day;
 
                         Conta novaConta = null;
 
                         if (novoTipo == 1)
                         {
-                            novaConta = new ContaCorrente(numero: numeroConta, agencia: novaAgencia, tipo: novoTipo, titular: novoTitular, limite: novolimite);
+                            novoLimite = ValidacaoHelper.ValorPositivo("\nDigite o número do Limite:\n");
+                            novaConta = new ContaCorrente(numero: numeroConta, agencia: novaAgencia, tipo: novoTipo, titular: novoTitular, limite: novoLimite);
                         }
                         else
                         {
@@ -64,13 +65,13 @@ class Menu
                             controller.Atualizar(contaAntiga);
 
                             Console.WriteLine("Conta atualizada com sucesso");
-                            contaAntiga.Visualizar();
+                            
                         }
                         break;
 
                     case 4:             //deletar conta ----------------------------------------------------------->   OK
 
-                        var contaDeletar = ValidacaoHelper.ExisteCadastro(controller,"Digite o número da conta que deseja atualizar:", out int numeroDeletar);
+                        var contaDeletar = ValidacaoHelper.ExisteCadastro(controller,"Digite o número da conta que deseja deletar:", out int numeroDeletar);
                         if (contaDeletar != null)
                         {
                             controller.Deletar(numeroDeletar);
@@ -82,6 +83,7 @@ class Menu
                         bool saidaOperacoes = false;
                         while (!saidaOperacoes)
                         {
+                            Console.Clear();
                             //Exibe menu de operações
                             byte opcaoOperacao = ExibirMenu.Operacoes();
                             switch (opcaoOperacao)
@@ -91,7 +93,7 @@ class Menu
                                     var contaSaque = ValidacaoHelper.ExisteCadastro(controller, "Digite o número da conta que deseja sacar: ", out int numeroSaque);
                                     if (contaSaque != null)
                                     {
-                                        float valorSaque = ValidacaoHelper.ValorPositivo("Digite o valor do depósito: ");
+                                        float valorSaque = ValidacaoHelper.ValorPositivo("Digite o valor do saque: ");
                                         controller.Sacar(numeroSaque, valorSaque);
                                     }
       
@@ -143,9 +145,9 @@ class Menu
                                     break;
 
                             }
-                            Console.WriteLine("\nAperte qualquer tecla para continuar.");
-                            Console.ReadKey();
-                            Console.Clear();
+                            //Console.WriteLine("\nAperte qualquer tecla para continuar.");
+                            //Console.ReadKey();
+                            //Console.Clear();
 
                         }
                         break;
