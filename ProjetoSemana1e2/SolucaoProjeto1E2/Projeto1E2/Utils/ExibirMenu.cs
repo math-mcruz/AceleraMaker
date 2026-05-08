@@ -16,8 +16,9 @@ public static class ExibirMenu
         Console.WriteLine("[2] - Listar todas as contas");
         Console.WriteLine("[3] - Atualizar conta");
         Console.WriteLine("[4] - Deletar conta");
-        Console.WriteLine("[5] - Realizar operações");
-        Console.WriteLine("[6] - Sair\n");
+        Console.WriteLine("[5] - Procurar por número");
+        Console.WriteLine("[6] - Realizar operações");
+        Console.WriteLine("[7] - Sair\n");
 
         return Convert.ToByte(Console.ReadLine());
     }

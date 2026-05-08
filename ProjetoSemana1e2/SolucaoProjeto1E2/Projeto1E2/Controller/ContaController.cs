@@ -28,8 +28,9 @@ public class ContaController: IContaRepository
         {
             if (conta.Numero == numero)
             {
+                Console.Clear();
+                Console.WriteLine($"Conta {conta.Numero} encontrada, dados: ");
                 Console.WriteLine($"\nTitular da conta: {conta.Titular}");
-                Console.WriteLine($"Número da conta: {conta.Numero}");
                 Console.WriteLine($"Agência: {conta.Agencia}");
                 string tipoString = conta.Tipo == 1 ? "Corrente" : "Poupança";
                 Console.WriteLine($"Tipo: {tipoString}");

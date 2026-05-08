@@ -83,7 +83,14 @@ class Menu
                         }
                         break;
 
-                    case 5:         //realizar operações, sub menu em Utils para não poluir o menu principal
+                    case 5:            //Procurar por número, Validações(ValidacaoHelper) para garantir os dados certos
+
+                        //precisa ter a conta para poder mostrar
+                        int numeroProcurar = ValidacaoHelper.ValorPositivo("\nDigite o número que deseja procurar: \n");
+                        controller.ProcurarPorNumero(numeroProcurar);
+                        break;
+
+                    case 6:         //realizar operações, sub menu em Utils para não poluir o menu principal
 
                         bool saidaOperacoes = false;
                         while (!saidaOperacoes)
@@ -163,7 +170,7 @@ class Menu
                         }
                         break;
 
-                    case 6:                     //sair
+                    case 7:                     //sair
 
                         Cores.Continuar("\nFechando o sistema...");
                         return;
