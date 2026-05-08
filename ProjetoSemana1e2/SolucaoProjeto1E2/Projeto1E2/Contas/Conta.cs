@@ -76,7 +76,7 @@ public abstract class Conta
         {
             throw new ValorInvalidoException($"Valor inválido para depósito: {valor}.\nO valor deve ser maior do que zero. ");
         }
-        Saldo += valor;
+        this.Saldo += valor;
     }
     //Método virtual PODE ser sobrescrito, neste caso, a ContaCorrente vai sobrescrever o método Sacar
     public virtual bool Sacar(float valor)
