@@ -134,12 +134,12 @@ public static class ValidacaoHelper
             {
                 return contaBuscada;
             }
-            Console.WriteLine("Conta não encontrada");
+            Cores.ExibirErro("Conta não encontrada");
         }
         catch(FormatException)
         {
             // Se não tiver essa conta
-            Console.WriteLine("Digite numeros inteiros");
+            Cores.ExibirErro("Digite numeros inteiros");
             
         }
         return null;

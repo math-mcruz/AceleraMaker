@@ -13,15 +13,17 @@ namespace Projeto1E2.Controller;
 
 public class ContaController: IContaRepository
 {
+    //instancia das lista de contas, pilar do projeto
     private List<Conta> contas = new List<Conta>();
 
-    public ContaController()
+    public ContaController() //precisa para ler o JSON
     {
         //sempre que programa começar ele ja vai ter os dados
         LerContas();
     }
     public void ProcurarPorNumero(int numero)
     {
+        //Procura por cada conta se ela existe e mostra se achar
         foreach (var conta in contas)
         {
             if (conta.Numero == numero)
@@ -35,10 +37,11 @@ public class ContaController: IContaRepository
             }
             
         }
-
+        Cores.ExibirErro("Conta não encontrada");
     }
     public void ListarTodas()
     {
+        //se tiver mais de uma conta ele lista todas
         if(contas.Count != 0)
         {
             foreach(var conta in contas)
@@ -55,14 +58,16 @@ public class ContaController: IContaRepository
     
     public void Cadastrar(Conta conta)
     {
-        
+        //se tiver conta com número igual ele não pode criar
         if (BuscarNaCollection(conta.Numero) != null)
         {
             Cores.ExibirErro("Conta já cadastrada.");
         }
         else
         {
+            //cria a conta
             contas.Add(conta);
+            //grava no arquivo
             GravarContas();
             Cores.ExibirSucesso($"Conta cadastrada com sucesso, numero da conta é: {conta.Numero}");
         }
@@ -70,6 +75,7 @@ public class ContaController: IContaRepository
     }
     public void Atualizar(Conta conta)
     {
+        //verifica se existe a conta
         var contaAntiga = BuscarNaCollection(conta.Numero);
         if (contaAntiga == null)
         {
@@ -78,6 +84,7 @@ public class ContaController: IContaRepository
 
         Conta contaAtualizada = null;
         bool saidaAtualizar = false;
+        //loop infinito para escolher o que quer mudar e depois encerra
         while (!saidaAtualizar)
         {
             //Exibe menu de operações
@@ -86,7 +93,9 @@ public class ContaController: IContaRepository
             Cores.CorOriginal();
             switch (opcaoOperacao)
             {
-                case 1:// atualizar titular --------------------------------------------------------------------> OK
+                case 1:// atualizar titular, Validações(ValidacaoHelper) para garantir os dados certos
+
+                    //precisa ser um nome(string) e sem números ou outros char
                     string? atualizarTitular = ValidacaoHelper.TextoMenu("\nDigite o nome novo do titular:\n");
 
                     //buscar qual tipo de conta 
@@ -101,10 +110,13 @@ public class ContaController: IContaRepository
                     }
 
                     Console.Clear();
+                    //quebra o looping
                     saidaAtualizar = true;
                     break;
 
-                case 2: //atualizar agencia ----------------------------------------------------------------------------> OK
+                case 2: //atualizar agencia, Validações(ValidacaoHelper) para garantir os dados certos
+
+                    //precisa ser um valor positivo
                     int atualizarAgencia = ValidacaoHelper.ValorPositivo("\nDigite o número da nova agência:\n");
 
                     //buscar qual tipo de conta
@@ -121,19 +133,23 @@ public class ContaController: IContaRepository
 
                     Console.Clear();
                     saidaAtualizar = true;
+                    //quebra o looping
                     break;
 
-                case 3: // atualizar tipo  --------------------------------------------------------> OK
+                case 3: // atualizar tipo, Validações(ValidacaoHelper) para garantir os dados certos
+
+                    //precisa ser entre 1 e 2
                     byte atualizarTipo = ValidacaoHelper.OpcaoRestricao("\n[1] - Corrente\t[2] - Poupança\n\nDigite qual o novo da tipo da Conta:", 1, 2);
                     if (atualizarTipo == 1)
                     {
-                        
+                        //precisa ser positivo
                         float atualizarLimite = ValidacaoHelper.ValorPositivoFloat("Digite o novo limite:\n");
 
                         contaAtualizada = new ContaCorrente(numero: contaAntiga.Numero, agencia: contaAntiga.Agencia, tipo: 1, titular: contaAntiga.Titular, limite: atualizarLimite);
                     }
                     else
                     {
+                        //pega o dia para ser o aniversário de rendimento
                         int atualizarAniversario = DateTime.Now.Day;
                         contaAtualizada = new ContaPoupanca(numero: contaAntiga.Numero, agencia: contaAntiga.Agencia, tipo: 2, titular: contaAntiga.Titular, aniversario: atualizarAniversario);
 
@@ -143,37 +159,45 @@ public class ContaController: IContaRepository
                     saidaAtualizar = true;
                     break;
 
-                case 4: //nenhuma das opções (cancelar) ----------------------------------> OK
+                case 4:             //nenhuma das opções (cancelar) 
+
                     Console.WriteLine("Voltando para o menu principal.");
                     Console.Clear();
+                    //quebra o looping
                     saidaAtualizar = true;
                     break;
 
-                default: //numero errado --------------------------------------------------> OK
+                default:                    //numero errado
 
                     Cores.ExibirErro("Opção inválida, digite outra.");
                     break;
             }
         }
-
+        //remove a antiga
         contas.Remove(contaAntiga);
+        //cria uma nova com os mesmos dados, pórem com a mudança escolhida
         contas.Add(contaAtualizada);
+        //salva no JSON
         GravarContas();
         Cores.ExibirSucesso($"Seu novo número de conta é: {contaAtualizada.Numero}");
         
     }
     public void Deletar(int numero) 
     {
+        //a conta precisa existir
         var contaBuscada = BuscarNaCollection(numero);
         if (contaBuscada == null)
         {
             throw new ContaNaoEncontradaException($"A conta de número {numero} não existe no sistema.");
         }
+        //se existe então deleta
         contas.Remove(contaBuscada);
+        //salva a mudança
         GravarContas();
     }
     public void Sacar(int numero, float valor) 
     {
+        //verifica se existe a conta
         Conta contaBuscada = BuscarNaCollection(numero);
         if (contaBuscada == null)
         {
@@ -182,24 +206,28 @@ public class ContaController: IContaRepository
         else if (contaBuscada.Sacar(valor))
         {
             Cores.ExibirSucesso($"Saque no valor: {valor}, realizado com sucesso.\nSaldo atual: {BuscarNaCollection(numero).Saldo}");
+            //faz o saque e salva
             GravarContas();
         }
 
     }
     public void Depositar(int numero, float valor) 
     {
+        //verifica se existe a conta
         Conta contaBuscada = BuscarNaCollection(numero);
         if (contaBuscada == null)
         {
             throw new ContaNaoEncontradaException($"A conta de número {numero} não existe no sistema.");
         }
         contaBuscada.Depositar(valor);
+        //faz o depósito e salva
         GravarContas();
         Cores.ExibirSucesso($"Depósito realizado com sucesso, saldo atual: {BuscarNaCollection(numero).Saldo}");
     }
        
     public void Transferir(int numeroOrigem, int numeroDestino, float valor) 
     {
+        //verifica se existe as contas
         Conta contaOrigem = BuscarNaCollection(numeroOrigem);
         Conta contaDestino = BuscarNaCollection(numeroDestino);
         if (contaOrigem == null)
@@ -211,11 +239,12 @@ public class ContaController: IContaRepository
         {
             throw new ContaNaoEncontradaException($"A conta de número {numeroDestino} não existe no sistema.");
         }
-
+        //pirmeiro tenta sacar da conta origem, se der certo ai deposita na conta destino, caso não a transação é cancelada
         if (contaOrigem.Sacar(valor))
         {
            contaDestino.Depositar(valor);
-            GravarContas();
+           //salva a mudança
+           GravarContas();
            Cores.ExibirSucesso($"Transferência realizada com sucesso, saldo atual da conta de origem: {BuscarNaCollection(numeroOrigem).Saldo}, saldo atual da conta de destino: {BuscarNaCollection(numeroDestino).Saldo}");
 
         }
@@ -227,6 +256,7 @@ public class ContaController: IContaRepository
     }
     public int GerarNumero()
     {
+        //gera um número aleatorio até 1000 para ser o id da conta
         Random random = new Random();
         return random.Next(1, 1000);
     }

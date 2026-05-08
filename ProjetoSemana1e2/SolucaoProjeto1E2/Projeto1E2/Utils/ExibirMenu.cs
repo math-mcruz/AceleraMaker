@@ -9,14 +9,13 @@ public static class ExibirMenu
     public static byte Principal()
     //byte pois o numero é muito pequeno e economiza memória
     {
-        //criar uma classe para aplicar cores no menu para não poluir o código principal
+        //classe menu para não poluir o código principal
         Console.WriteLine("    Sistema Bancário");
         Console.WriteLine("\n\tMenu:\n");
         Console.WriteLine("[1] - Cadastrar");
         Console.WriteLine("[2] - Listar todas as contas");
         Console.WriteLine("[3] - Atualizar conta");
         Console.WriteLine("[4] - Deletar conta");
-        //posso fazer um segundo menu para gerenciar as operações
         Console.WriteLine("[5] - Realizar operações");
         Console.WriteLine("[6] - Sair\n");
 

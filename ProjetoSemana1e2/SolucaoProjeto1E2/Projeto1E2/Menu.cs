@@ -13,7 +13,6 @@ class Menu
     
     static void Main(string[] args)
     {
-        //fazer um imprimir menu principal e menu de operações
         ContaController controller = new ContaController();
         while (true)
         {
@@ -25,7 +24,7 @@ class Menu
                 Cores.CorOriginal();
                 switch (opcao)
                 {
-                    case 1:             //cadastrar ------------------------------------------------------>   OK
+                    case 1:             //cadastrar - Validações(ValidacaoHelper) para garantir os dados certos
 
                         string? novoTitular = ValidacaoHelper.TextoMenu("\nDigite o nome do titular:\n");
 
@@ -37,30 +36,31 @@ class Menu
 
                         float novoLimite = 0;
                         
-                        int novoAniversario = DateTime.Today.Day;
+                        int novoAniversario = DateTime.Today.Day;//gera só o dia, sem mês e ano
 
                         Conta novaConta = null;
 
-                        if (novoTipo == 1)
+                        if (novoTipo == 1) //verifica o tipo para instanciar corretamente, tipo 1 é conta corrente
                         {
                             novoLimite = ValidacaoHelper.ValorPositivo("\nDigite o número do Limite:\n");
                             novaConta = new ContaCorrente(numero: numeroConta, agencia: novaAgencia, tipo: novoTipo, titular: novoTitular, limite: novoLimite);
                         }
-                        else
+                        else //como tem a validação só pode 1 e 2, e 2 é conta poupança
                         {
                             novaConta = new ContaPoupanca(numero: numeroConta, agencia: novaAgencia, tipo: novoTipo, titular: novoTitular, aniversario: novoAniversario);
                         }
                         
                         controller.Cadastrar(novaConta);
-                       
                         break;
 
-                    case 2:             //listar todas as contas --------------------------------------------------------------------------------------->   OK
+                    case 2:             //listar todas as contas 
 
                         controller.ListarTodas();
                         break;
 
-                    case 3:             //Atualizar conta ---------------------------------------------------------------------------------------------->   OK
+                    case 3:             //Atualizar conta, Validações(ValidacaoHelper) para garantir os dados certos
+
+                        //precisa ter a conta para poder atualizar
                         var contaAntiga = ValidacaoHelper.ExisteCadastro(controller, "\nDigite o número da conta que deseja atualizar:\n", out numeroConta);
                         if (contaAntiga != null)
                         { 
@@ -71,7 +71,9 @@ class Menu
                         }
                         break;
 
-                    case 4:             //deletar conta ----------------------------------------------------------->   OK
+                    case 4:             //deletar conta, Validações(ValidacaoHelper) para garantir os dados certos
+
+                        //precisa ter a conta para poder deletar
 
                         var contaDeletar = ValidacaoHelper.ExisteCadastro(controller,"Digite o número da conta que deseja deletar:", out int numeroDeletar);
                         if (contaDeletar != null)
@@ -81,7 +83,8 @@ class Menu
                         }
                         break;
 
-                    case 5://realizar operações fazer esse sub menu em Utils para não poluir o menu principal
+                    case 5:         //realizar operações, sub menu em Utils para não poluir o menu principal
+
                         bool saidaOperacoes = false;
                         while (!saidaOperacoes)
                         {
@@ -92,7 +95,9 @@ class Menu
                             Cores.CorOriginal();
                             switch (opcaoOperacao)
                             {
-                                case 1:             //Sacar ---------------------------------------------------------------------> OK
+                                case 1:             //Sacar, Validações(ValidacaoHelper) para garantir os dados certos
+
+                                    //precisa ter a conta para poder sacar
 
                                     var contaSaque = ValidacaoHelper.ExisteCadastro(controller, "Digite o número da conta que deseja sacar: ", out int numeroSaque);
                                     if (contaSaque != null)
@@ -103,7 +108,9 @@ class Menu
       
                                     break;
 
-                                case 2:         //Depositar ----------------------------------------------------------------------> OK
+                                case 2:         //Depositar, Validações(ValidacaoHelper) para garantir os dados certos
+
+                                    //precisa ter a conta para poder depositar
                                     var contaDeposito = ValidacaoHelper.ExisteCadastro(controller, "Digite o número da conta que deseja depositar: ", out int numeroDeposito);
                                     if (contaDeposito != null)
                                     {
@@ -113,7 +120,9 @@ class Menu
        
                                     break;
 
-                                case 3:         //Transferir ----------------------------------------------------------------------> OK
+                                case 3:         //Transferir, Validações(ValidacaoHelper) para garantir os dados certos
+
+                                    //precisa ter as contas para poder transferir entre elas
                                     var contaOrigem = ValidacaoHelper.ExisteCadastro(controller, "Digite o número da conta origem: ", out int numeroOrigem);
                                     if (contaOrigem != null)
                                     {
@@ -127,8 +136,9 @@ class Menu
 
                                     break;
 
-                                case 4:          //Visualizar Dados ---------------------------------------------------------------> OK
+                                case 4:          //Visualizar dados, Validações(ValidacaoHelper) para garantir os dados certos
 
+                                    //precisa ter a conta para poder mostrar
                                     var contaVisualizar = ValidacaoHelper.ExisteCadastro(controller, "Digite o número da conta que deseja visualizar: ", out int numeroVizualizar);
                                     if (contaVisualizar != null)
                                     {
@@ -136,27 +146,24 @@ class Menu
                                     }
                                     break;
                               
-                                case 5:          //Sair do menu operações ---------------------------------------------> OK
+                                case 5:          //Sair do menu operações 
 
                                     Console.WriteLine("Voltando para o menu principal");
                                     Console.Clear();
                                     saidaOperacoes = true;
                                     break;
 
-                                default:        //Opção invalida ------------------------------------------------------> OK
+                                default:        //Opção invalida 
 
                                     Cores.ExibirErro("Opção inválida, digite outra.");
                                     break;
 
                             }
-                            //Console.WriteLine("\nAperte qualquer tecla para continuar.");
-                            //Console.ReadKey();
-                            //Console.Clear();
-
+                          
                         }
                         break;
 
-                    case 6://sair
+                    case 6:                     //sair
 
                         Cores.Continuar("\nFechando o sistema...");
                         return;

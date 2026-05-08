@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Projeto1E2.Contas;
-/*
- Classe responsável por definir o Objeto Conta Poupanca
- */
+
 public class ContaPoupanca: Conta
 {
     public ContaPoupanca(int numero, int agencia, int tipo, string titular, int aniversario) 
