@@ -13,15 +13,29 @@ public static class ValidacaoHelper
     {
         while (true)
         {
+            Cores.CorMenu();
             Console.WriteLine(texto);
-            string? resposta = Console.ReadLine();
+            Cores.CorOriginal();
 
-            if (!string.IsNullOrWhiteSpace(resposta))
+            string titular = Console.ReadLine();
+
+            //não pode ser nulo ou vazio 
+            if (string.IsNullOrWhiteSpace(titular))
             {
-                return resposta;
+                Cores.ExibirErro("O titular deve ter um nome, digite novamente.");
+                continue; 
             }
+            //verifica em cada char se tem letra ou espaços
+            bool apenasLetras = titular.All(c => char.IsLetter(c) || char.IsWhiteSpace(c));
 
-            Console.WriteLine("O campo não pode ser vazio, digite um texto válido.");
+            if (!apenasLetras)
+            {
+                //se tiver número ou outro tipo de char que não pode ter em um nome
+                Cores.ExibirErro("O nome deve conter apenas letras.");
+                continue;
+            }
+            //é um nome
+            return titular;
         }
     }
 

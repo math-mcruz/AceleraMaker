@@ -48,7 +48,7 @@ public class ContaController: IContaRepository
         }
         else
         {
-            Console.WriteLine("Não existem contas cadastradas.");
+            Cores.ExibirErro("Não existem contas cadastradas.");
         }
             
     }
@@ -58,13 +58,13 @@ public class ContaController: IContaRepository
         
         if (BuscarNaCollection(conta.Numero) != null)
         {
-            Console.WriteLine("Conta já cadastrada.");
+            Cores.ExibirErro("Conta já cadastrada.");
         }
         else
         {
             contas.Add(conta);
             GravarContas();
-            Console.WriteLine($"Conta cadastrada com sucesso, numero da conta é: {conta.Numero}");
+            Cores.ExibirSucesso($"Conta cadastrada com sucesso, numero da conta é: {conta.Numero}");
         }
 
     }
@@ -81,7 +81,9 @@ public class ContaController: IContaRepository
         while (!saidaAtualizar)
         {
             //Exibe menu de operações
+            Cores.CorMenu();
             byte opcaoOperacao = ExibirMenu.Atualizar();
+            Cores.CorOriginal();
             switch (opcaoOperacao)
             {
                 case 1:// atualizar titular --------------------------------------------------------------------> OK
@@ -149,7 +151,7 @@ public class ContaController: IContaRepository
 
                 default: //numero errado --------------------------------------------------> OK
 
-                    Console.WriteLine("Opção inválida, digite outra.");
+                    Cores.ExibirErro("Opção inválida, digite outra.");
                     break;
             }
         }
@@ -157,7 +159,7 @@ public class ContaController: IContaRepository
         contas.Remove(contaAntiga);
         contas.Add(contaAtualizada);
         GravarContas();
-        Console.WriteLine($"Seu novo número de conta é: {contaAtualizada.Numero}");
+        Cores.ExibirSucesso($"Seu novo número de conta é: {contaAtualizada.Numero}");
         
     }
     public void Deletar(int numero) 
@@ -179,7 +181,7 @@ public class ContaController: IContaRepository
         }
         else if (contaBuscada.Sacar(valor))
         {
-            Console.WriteLine($"Saque no valor: {valor}, realizado com sucesso.\nSaldo atual: {BuscarNaCollection(numero).Saldo}");
+            Cores.ExibirSucesso($"Saque no valor: {valor}, realizado com sucesso.\nSaldo atual: {BuscarNaCollection(numero).Saldo}");
             GravarContas();
         }
 
@@ -193,7 +195,7 @@ public class ContaController: IContaRepository
         }
         contaBuscada.Depositar(valor);
         GravarContas();
-        Console.WriteLine($"Depósito realizado com sucesso, saldo atual: {BuscarNaCollection(numero).Saldo}");
+        Cores.ExibirSucesso($"Depósito realizado com sucesso, saldo atual: {BuscarNaCollection(numero).Saldo}");
     }
        
     public void Transferir(int numeroOrigem, int numeroDestino, float valor) 
@@ -214,7 +216,7 @@ public class ContaController: IContaRepository
         {
            contaDestino.Depositar(valor);
             GravarContas();
-           Console.WriteLine($"Transferência realizada com sucesso, saldo atual da conta de origem: {BuscarNaCollection(numeroOrigem).Saldo}, saldo atual da conta de destino: {BuscarNaCollection(numeroDestino).Saldo}");
+           Cores.ExibirSucesso($"Transferência realizada com sucesso, saldo atual da conta de origem: {BuscarNaCollection(numeroOrigem).Saldo}, saldo atual da conta de destino: {BuscarNaCollection(numeroDestino).Saldo}");
 
         }
         else

@@ -20,7 +20,9 @@ class Menu
             try
             {
                 //Exibe menu principal
+                Cores.CorMenu();
                 byte opcao = ExibirMenu.Principal();
+                Cores.CorOriginal();
                 switch (opcao)
                 {
                     case 1:             //cadastrar ------------------------------------------------------>   OK
@@ -64,7 +66,7 @@ class Menu
                         { 
                             controller.Atualizar(contaAntiga);
 
-                            Console.WriteLine("Conta atualizada com sucesso");
+                            Cores.ExibirSucesso("Conta atualizada com sucesso");
                             
                         }
                         break;
@@ -75,7 +77,7 @@ class Menu
                         if (contaDeletar != null)
                         {
                             controller.Deletar(numeroDeletar);
-                            Console.WriteLine($"Conta deletada com sucesso.");
+                            Cores.ExibirSucesso("Conta deletada com sucesso.");
                         }
                         break;
 
@@ -85,7 +87,9 @@ class Menu
                         {
                             Console.Clear();
                             //Exibe menu de operações
+                            Cores.CorMenu();
                             byte opcaoOperacao = ExibirMenu.Operacoes();
+                            Cores.CorOriginal();
                             switch (opcaoOperacao)
                             {
                                 case 1:             //Sacar ---------------------------------------------------------------------> OK
@@ -141,7 +145,7 @@ class Menu
 
                                 default:        //Opção invalida ------------------------------------------------------> OK
 
-                                    Console.WriteLine("Opção inválida, digite outra.");
+                                    Cores.ExibirErro("Opção inválida, digite outra.");
                                     break;
 
                             }
@@ -153,13 +157,17 @@ class Menu
                         break;
 
                     case 6://sair
-                        Console.WriteLine("Encerrando o menu");
+
+                        Cores.Continuar("\nFechando o sistema...");
                         return;
+
                     default:
-                        Console.WriteLine("Opção inválida, digite outra.");
+
+                        Cores.ExibirErro("Opção inválida, digite outra.");
                         break;
+
                 }
-                Console.WriteLine("\nAperte qualquer tecla para continuar.");
+                Cores.Continuar("\nAperte qualquer tecla para continuar.");
                 Console.ReadKey();
                 Console.Clear();
             }
