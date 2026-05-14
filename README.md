@@ -14,4 +14,5 @@ Treinamento com projetos semanais voltados ao desenvolvimento de habilidades pro
 
 ## 👤 Autor
 *Matheus Cruz*
-`www.linkedin.com/in/mathmcruz`
+
+www.linkedin.com/in/mathmcruz

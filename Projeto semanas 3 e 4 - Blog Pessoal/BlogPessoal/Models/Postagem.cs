@@ -1,0 +1,26 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace BlogPessoal.Models;
+
+[Table("Postagens")]
+public class Postagem
+{
+    [Key]
+    public int PostagemId { get; set; }
+
+    [Required]
+    [StringLength(80)]
+    public string? Nome { get; set; }
+
+    //declarando as dependencias: Usuario 1:N Postagem e Tema 1:N Postagem.
+
+    public int UsuarioId { get; set; }
+    public int TemaId { get; set; }
+    [JsonIgnore]
+    public Usuario? Usuario { get; set; }
+    [JsonIgnore]
+    public Tema? Tema { get; set; }
+
+}
