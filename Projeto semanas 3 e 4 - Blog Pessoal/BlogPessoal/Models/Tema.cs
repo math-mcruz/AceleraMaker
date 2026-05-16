@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace BlogPessoal.Models;
 
@@ -20,5 +21,6 @@ public class Tema
     public string? Nome { get; set; }
 
     //Tema 1:N Postagem.
+    [JsonIgnore]
     public ICollection<Postagem>? Postagem { get; set; }
 }

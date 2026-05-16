@@ -11,7 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 //ajuste para colocar o filtro global nos controladores
 builder.Services.AddControllers(options => { options.Filters.Add(typeof(ApiExceptionFilter)); } ).AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
+
+
+
 builder.Services.AddOpenApi();
+
+
+
 
 //variavel de ambiente para proteger a senha do Banco de Dados
 //temporario achar uma solução melhor
@@ -24,11 +30,28 @@ string? connection = $"{mySqlConnection};Pwd={senhaBanco};";
 builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseMySql(connection, ServerVersion.AutoDetect(connection)));
 
+
+
+
+
+
 //Aplicando o filtro
 builder.Services.AddScoped<ApiLoggingFilter>();
 
+
+
+
 //fazer isso para cada repository
+builder.Services.AddScoped<IUsuarioRepository,UsuarioRepository>();
+builder.Services.AddScoped<IPostagemRepository,PostagemRepository>();
 builder.Services.AddScoped<ITemaRepository,TemaRepository>();
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+
+
 
 var app = builder.Build();
 

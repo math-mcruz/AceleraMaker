@@ -1,4 +1,5 @@
 ﻿using BlogPessoal.Data;
+using BlogPessoal.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +10,11 @@ namespace BlogPessoal.Controllers;
 public class UsuariosController : ControllerBase
 {
     //requisitos funcionais: Cadastro de usuarios, Atualização de dados dos usuarios e Exclusão de usuarios 
-    private readonly BlogDbContext _context;
+    private readonly IUnitOfWork _uof;
 
-    public UsuariosController(BlogDbContext context)
+    public UsuariosController(IUnitOfWork uof)
     {
-        _context = context;
+        _uof = uof;
     }
 
     //[HttpGet] ai segue os get, put, post e delete

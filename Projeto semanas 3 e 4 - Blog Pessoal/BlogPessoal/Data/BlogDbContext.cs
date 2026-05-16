@@ -12,5 +12,6 @@ public class BlogDbContext: DbContext
     public DbSet<Usuario>? Usuarios { get; set; }
     public DbSet<Postagem>? Postagens { get; set; }
     public DbSet<Tema>? Temas { get; set; }
-    public DbSet<UsuarioLogin> UsuariosLogins { get; set; }//não é opcional
+
+   // public DbSet<UsuarioLogin> UsuariosLogins { get; set; }//não é opcional
 }
