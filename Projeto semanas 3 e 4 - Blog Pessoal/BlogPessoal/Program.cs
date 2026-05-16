@@ -1,11 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using BlogPessoal.Data;
 using System.Text.Json.Serialization;
+using BlogPessoal.Middlewares.Filters;
+using BlogPessoal.Middlewares.Exceptions;
+using BlogPessoal.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //ajuste para ignorar ciclos
-builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+//ajuste para colocar o filtro global nos controladores
+builder.Services.AddControllers(options => { options.Filters.Add(typeof(ApiExceptionFilter)); } ).AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddOpenApi();
 
@@ -20,12 +24,21 @@ string? connection = $"{mySqlConnection};Pwd={senhaBanco};";
 builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseMySql(connection, ServerVersion.AutoDetect(connection)));
 
+//Aplicando o filtro
+builder.Services.AddScoped<ApiLoggingFilter>();
+
+//fazer isso para cada repository
+builder.Services.AddScoped<ITemaRepository,TemaRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.ConfigureExceptionHandler();
+
+    //lembrar que isso é só para o modo Development, pois não pode mostrar o stacktrace no modo deploy, por segurança
 }
 
 app.UseHttpsRedirection();
