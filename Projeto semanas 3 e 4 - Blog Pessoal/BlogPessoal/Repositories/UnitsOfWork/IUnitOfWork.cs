@@ -1,4 +1,8 @@
-﻿namespace BlogPessoal.Repositories;
+﻿using BlogPessoal.Repositories.Postagens;
+using BlogPessoal.Repositories.Temas;
+using BlogPessoal.Repositories.Usuarios;
+
+namespace BlogPessoal.Repositories.UnitsOfWork;
 
 public interface IUnitOfWork
 {

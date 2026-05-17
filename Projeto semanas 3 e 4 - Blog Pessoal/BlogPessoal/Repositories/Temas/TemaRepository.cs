@@ -2,7 +2,7 @@
 using BlogPessoal.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogPessoal.Repositories;
+namespace BlogPessoal.Repositories.Temas;
 
 //vou fazer primeiro no temas pois é o mais simples
 public class TemaRepository : Repository<Tema>, ITemaRepository

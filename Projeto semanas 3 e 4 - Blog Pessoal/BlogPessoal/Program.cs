@@ -4,6 +4,10 @@ using System.Text.Json.Serialization;
 using BlogPessoal.Middlewares.Filters;
 using BlogPessoal.Middlewares.Exceptions;
 using BlogPessoal.Repositories;
+using BlogPessoal.Repositories.Postagens;
+using BlogPessoal.Repositories.Usuarios;
+using BlogPessoal.Repositories.Temas;
+using BlogPessoal.Repositories.UnitsOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,5 +1,8 @@
-﻿using BlogPessoal.Models;
-using BlogPessoal.Repositories;
+﻿using BlogPessoal.DTOs;
+using BlogPessoal.DTOs.Mappings;
+using BlogPessoal.DTOs.Postagens;
+using BlogPessoal.Models;
+using BlogPessoal.Repositories.UnitsOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,50 +26,68 @@ public class PostagensController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Postagem>> Get()
+    public ActionResult<IEnumerable<PostagemResponseDTO>> Get()
     {
         var postagem = _uof.PostagemRepository.GetAll();
-        return Ok(postagem);
+        if (postagem is null)
+            return NotFound("Não existem temas criados");
+
+        var postResponseDTO = postagem.ToPostagemDTOList();
+
+        return Ok(postResponseDTO);
+    }
+
+    [HttpGet("")]
+    public ActionResult<IEnumerable<Postagem>> GetAutorTema()
+    {
+        //resolver
     }
 
     [HttpPost]
-    public ActionResult Post(Postagem postagem)
+    public ActionResult<PostagemRequestDTO> Post(PostagemRequestDTO postRequestDto)
     {
-        if (postagem is null)
-        {
+        if (postRequestDto is null)
             return BadRequest("Dados inválidos");
-        }
-        var novaPostagem = _uof.PostagemRepository.Create(postagem);
+
+        var post = postRequestDto.RequestToPost();
+
+        var postCriado = _uof.PostagemRepository.Create(post);
         _uof.Commit();
 
-        return StatusCode(StatusCodes.Status201Created, novaPostagem);
+        var postResponseDto = postCriado.ToPostResponseDTO();
+
+        return StatusCode(StatusCodes.Status201Created, postResponseDto);
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult Put(int id, Postagem postagem)
+    public ActionResult<PostagemRequestDTO> Put(int id, PostagemResponseDTO postResponseDto)
     {
-        if (id != postagem.PostagemId)
-        {
+        if (id != postResponseDto.PostagemId)
             return BadRequest("Dados inválidos");
-        }
 
-        _uof.PostagemRepository.Update(postagem);
+        var post = postResponseDto.ResponseToPost();
+
+        var postAtualizado = _uof.PostagemRepository.Update(post);
         _uof.Commit();
 
-        return Ok(postagem);
+        var novoPostResponseDto = postAtualizado.ToPostResponseDTO();
+
+        return Ok(novoPostResponseDto);
     }
 
     [HttpDelete("{id:int}")]
     public ActionResult Delete(int id)
     {
-        var postagem = _uof.PostagemRepository.Get(c => c.PostagemId == id);
-        if (postagem is null)
-        {
+        var post = _uof.PostagemRepository.Get(c => c.PostagemId == id);
+        if (post is null)
             return NotFound("Postagem não encontrado");
-        }
-        var postagemExcluir = _uof.PostagemRepository.Delete(postagem);
+
+
+        var postExcluido = _uof.PostagemRepository.Delete(post);
         _uof.Commit();
 
-        return Ok(postagemExcluir);
+        var postResponseDto = postExcluido.ToPostResponseDTO();
+
+        return Ok(postResponseDto);
     }
 }

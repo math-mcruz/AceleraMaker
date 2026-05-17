@@ -1,7 +1,8 @@
 ﻿using BlogPessoal.DTOs;
 using BlogPessoal.DTOs.Mappings;
+using BlogPessoal.DTOs.Temas;
 using BlogPessoal.Models;
-using BlogPessoal.Repositories;
+using BlogPessoal.Repositories.UnitsOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -22,52 +23,51 @@ public class TemasController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<TemaDTO>> Get()
+    public ActionResult<IEnumerable<TemaResponseDTO>> Get()
     {
         var temas = _uof.TemaRepository.GetAll();
         if (temas is null)
             return NotFound("Não existem temas criados");
 
-        var temasDto = temas.ToTemaDTOList();
+        var temasResponseDto = temas.ToTemaDTOList();
 
-        return Ok(temasDto);
+        return Ok(temasResponseDto);
     }
 
     [HttpPost]
-    public ActionResult<TemaDTO> Post(TemaDTO temaDto)
+    public ActionResult<TemaRequestDTO> Post(TemaRequestDTO temaRequestDto)
     {
-        if(temaDto is null)
+        if(temaRequestDto is null)
             return BadRequest("Dados inválidos");
         
-        var tema = temaDto.ToTema();
+        var tema = temaRequestDto.RequestToTema();
 
         var temaCriado = _uof.TemaRepository.Create(tema);
         _uof.Commit();//salva no banco
+        
+        var TemaResponseDTO = temaCriado.ToTemaResponseDTO();
 
-        var novoTemaDTO = temaCriado.ToTemaDTO();
-
-        return StatusCode(StatusCodes.Status201Created, novoTemaDTO);
+        return StatusCode(StatusCodes.Status201Created, TemaResponseDTO);
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult<TemaDTO> Put(int id, TemaDTO temaDto)
+    public ActionResult<TemaRequestDTO> Put(int id, TemaResponseDTO temaResponseDto)
     {
-        if (id != temaDto.TemaId)
+        if (id != temaResponseDto.TemaId)
             return BadRequest("Dados inválidos");
 
-        var tema = temaDto.ToTema();
+        var tema = temaResponseDto.ResponseToTema();
 
         var temaAtualizado = _uof.TemaRepository.Update(tema);
         _uof.Commit();
 
-        var novoTemaDto = temaAtualizado.ToTemaDTO();
+        var novoTemaResponseDto = temaAtualizado.ToTemaResponseDTO();
 
-        return Ok(novoTemaDto);
-
+        return Ok(novoTemaResponseDto);
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult<TemaDTO> Delete(int id)
+    public ActionResult<TemaResponseDTO> Delete(int id)
     {
         var tema = _uof.TemaRepository.Get(c=>c.TemaId == id);
 
@@ -77,8 +77,8 @@ public class TemasController : ControllerBase
         var temaExcluido = _uof.TemaRepository.Delete(tema);
         _uof.Commit();
 
-        var temaExcluidoDto = temaExcluido.ToTemaDTO();
+        var temaResponseDto = temaExcluido.ToTemaResponseDTO();
 
-        return Ok(temaExcluidoDto);
+        return Ok(temaResponseDto);
     }
 }

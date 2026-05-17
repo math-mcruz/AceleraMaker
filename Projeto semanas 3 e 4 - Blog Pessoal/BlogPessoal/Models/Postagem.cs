@@ -24,8 +24,8 @@ public class Postagem
     public int UsuarioId { get; set; }
     public int TemaId { get; set; }
     [JsonIgnore]
-    public Usuario? Usuario { get; set; }
+    public virtual Usuario? Usuario { get; set; }
     [JsonIgnore]
-    public Tema? Tema { get; set; }
+    public virtual Tema? Tema { get; set; }
 
 }

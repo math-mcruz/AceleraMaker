@@ -1,6 +1,9 @@
 ﻿using BlogPessoal.Data;
+using BlogPessoal.Repositories.Postagens;
+using BlogPessoal.Repositories.Temas;
+using BlogPessoal.Repositories.Usuarios;
 
-namespace BlogPessoal.Repositories;
+namespace BlogPessoal.Repositories.UnitsOfWork;
 
 public class UnitOfWork : IUnitOfWork
 {

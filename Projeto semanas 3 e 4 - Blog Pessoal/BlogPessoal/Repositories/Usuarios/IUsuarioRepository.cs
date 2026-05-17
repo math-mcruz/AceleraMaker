@@ -1,6 +1,6 @@
 ﻿using BlogPessoal.Models;
 
-namespace BlogPessoal.Repositories;
+namespace BlogPessoal.Repositories.Usuarios;
 
 public interface IUsuarioRepository
 {

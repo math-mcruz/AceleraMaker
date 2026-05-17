@@ -1,7 +1,7 @@
 ﻿using BlogPessoal.Data;
 using BlogPessoal.Models;
 
-namespace BlogPessoal.Repositories;
+namespace BlogPessoal.Repositories.Usuarios;
 
 public class UsuarioRepository : IUsuarioRepository
 {
