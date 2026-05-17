@@ -17,7 +17,7 @@ public class Tema
     public int TemaId { get; set; }
 
     [Required]
-    [StringLength(80)]
+    [StringLength(50)]
     public string? Nome { get; set; }
 
     //Tema 1:N Postagem.

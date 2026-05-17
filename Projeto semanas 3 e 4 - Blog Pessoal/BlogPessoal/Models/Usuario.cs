@@ -17,14 +17,17 @@ public class Usuario
     public int UsuarioId { get; set; }
 
     [Required]
-    [StringLength(80)]
-    public string? UsuarioNome { get; set; }
+    [StringLength(30)]
+    public string Nome { get; set; }
 
     [Required]
-    public DateTime? UsuarioIdade { get; set; }
+    [StringLength(20)]
+    public string Email { get; set; }
 
     //data de criação?
-    public DateTime DataCadastro { get; set; }
+    [Required]
+    [StringLength(20)]
+    public string Senha { get; set; }
     //preencher com mais dados
 
     //Usuario 1:N Postagem
