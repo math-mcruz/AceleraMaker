@@ -1,4 +1,5 @@
 ﻿using BlogPessoal.Data;
+using BlogPessoal.DTOs.Postagens;
 using BlogPessoal.Models;
 using BlogPessoal.Models.Pagination;
 using Microsoft.EntityFrameworkCore;
@@ -11,18 +12,21 @@ public class PostagemRepository : Repository<Postagem>, IPostagemRepository
     {}
 
     //consulta de autor ou/e tema
-    public IEnumerable<Postagem> GetAutorTema(PostagensParameters postagemParams)
+    public PagedList<Postagem> GetFiltroAutorTema(PostagensFiltroAutorTema postFiltroParams)
     {
-        //faz o include para ter acesso ao nome dos usuarios e temas
-        var consulta = _context.Set<Postagem>().Include(p => p.Usuario).Include(p => p.Tema).AsQueryable();
+        //faz o include para ter acesso ao nome dos usuarios e temas ------------------------------------**********************************
+        //var consulta = _context.Set<Postagem>().AsNoTracking().AsQueryable();
+        var consulta = GetAll().AsQueryable();
 
-        if (postagemParams.Autor != null)
-            consulta = consulta.Where(p => p.UsuarioId == postagemParams.Autor);
+        if (postFiltroParams.AutorId != null)
+            consulta = consulta.Where(p => p.UsuarioId == postFiltroParams.AutorId);
 
-        if (postagemParams.Tema != null)
-            consulta = consulta.Where(p => p.TemaId == postagemParams.Tema);
+        if (postFiltroParams.TemaId != null)
+            consulta = consulta.Where(p => p.TemaId == postFiltroParams.TemaId);
 
         //ordenada por data de postagem
-        return consulta.OrderBy(p => p.Data).Skip((postagemParams.PageNumber - 1) * postagemParams.PageSize).Take(postagemParams.PageSize).ToList();
+        var postOredenado = consulta.OrderBy(p => p.Data);
+
+        return PagedList<Postagem>.ToPagedList(postOredenado, postFiltroParams.PageNumber, postFiltroParams.PageSize);
     }
 }

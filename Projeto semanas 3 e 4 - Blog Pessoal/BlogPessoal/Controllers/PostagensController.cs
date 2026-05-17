@@ -2,9 +2,11 @@
 using BlogPessoal.DTOs.Mappings;
 using BlogPessoal.DTOs.Postagens;
 using BlogPessoal.Models;
+using BlogPessoal.Models.Pagination;
 using BlogPessoal.Repositories.UnitsOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace BlogPessoal.Controllers;
 
@@ -28,19 +30,39 @@ public class PostagensController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<PostagemResponseDTO>> Get()
     {
-        var postagem = _uof.PostagemRepository.GetAll();
-        if (postagem is null)
-            return NotFound("Não existem temas criados");
+        var postagens = _uof.PostagemRepository.GetAll();
 
-        var postResponseDTO = postagem.ToPostagemDTOList();
+        if (postagens is null)
+            return NotFound("Não existem postagens criados");
+        
+        var postResponseDTO = postagens.ToPostagemDTOList();
 
         return Ok(postResponseDTO);
     }
 
-    [HttpGet("")]
-    public ActionResult<IEnumerable<Postagem>> GetAutorTema()
+    [HttpGet("filtro")]
+    public ActionResult<IEnumerable<PostagemResponseDTO>> GetFiltro([FromQuery] PostagensFiltroAutorTema postFiltro)
     {
-        //resolver
+        var postagens = _uof.PostagemRepository.GetFiltroAutorTema(postFiltro);
+
+        if (postagens is null)
+            return NotFound("Não existem postagens criados");
+
+        var metadata = new
+        {
+            postagens.TotalCount,
+            postagens.PageSize,
+            postagens.CurrentPage,
+            postagens.TotalPages,
+            postagens.HasNext,
+            postagens.HasPrevious,
+        };
+        //teve que instalar Newtonsoft.json da aula. considerar se vai usar -----------------------------------------************************
+        Response.Headers.Append("Pagination", JsonConvert.SerializeObject(metadata));
+
+        var postResponseDto = postagens.ToPostagemDTOList();
+        
+        return Ok(postagens);
     }
 
     [HttpPost]

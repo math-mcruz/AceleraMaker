@@ -1,8 +1,8 @@
 ﻿namespace BlogPessoal.Models.Pagination;
 
-public class PostagensParameters : QueryStringParameters
+public class PostagensFiltroAutorTema : QueryStringParameters
 {
     // ? pois a consulta é ou/e então pode ser um ou os dois, assim eles podem ser nulos
-    public int? Autor {  get; set; }
-    public int? Tema {  get; set; }
+    public int? AutorId {  get; set; }
+    public int? TemaId {  get; set; }
 }

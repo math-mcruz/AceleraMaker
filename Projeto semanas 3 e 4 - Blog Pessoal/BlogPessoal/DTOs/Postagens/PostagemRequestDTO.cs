@@ -9,7 +9,7 @@ public class PostagemRequestDTO
     [StringLength(80)]
     public string? Titulo { get; set; }
 
-    [Required[Required(ErrorMessage = "Texto é obrigatório.")]]
+    [Required(ErrorMessage = "Texto é obrigatório.")]
     [StringLength(100, MinimumLength =1)]
     public string? Texto { get; set; }
 

@@ -20,6 +20,7 @@ public class UsuariosController : ControllerBase
     {
         _uof = uof;
     }
+    /*
     //ainda tem que fazer o Repository de usuario -------------------------------------------********************************
     [HttpPost]
     public ActionResult<UsuarioRequestDTO> Post(UsuarioRequestDTO usuRequestDto)
@@ -70,4 +71,5 @@ public class UsuariosController : ControllerBase
 
         return Ok(usuResponseDto);
     }
+    */
 }

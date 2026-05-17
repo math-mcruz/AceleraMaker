@@ -5,7 +5,7 @@ public class QueryStringParameters
 {
     const int maxMaxPageSize = 50;
     public int PageNumber { get; set; } = 1;
-    private int _pageSize;
+    private int _pageSize = maxMaxPageSize;
     public int PageSize
     {
         get
