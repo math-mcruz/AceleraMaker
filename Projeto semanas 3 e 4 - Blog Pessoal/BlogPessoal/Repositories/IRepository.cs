@@ -6,8 +6,8 @@ public interface IRepository<T>
 {
     //CRUD
     T Create(T entity);
-    IEnumerable<T> GetAll();//mais leve (Read)
-    T? Get(Expression<Func<T, bool>> predicate);//serve para receber uma função lambda que vai retornar true se encontrar o id oou falso se não encontrar
+    Task<IEnumerable<T>> GetAllAsync();//mais leve (Read)
+    Task<T?> GetAsync(Expression<Func<T, bool>> predicate);//serve para receber uma função lambda que vai retornar true se encontrar o id oou falso se não encontrar
 
     T Update(T entity);
 

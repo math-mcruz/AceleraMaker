@@ -19,16 +19,16 @@ public class Repository<T> : IRepository<T> where T : class
         _context.Set<T>().Add(entity);
         return entity;
     }
-    public IEnumerable<T> GetAll()
+    public async Task<IEnumerable<T>> GetAllAsync()
     {
         //o set vai acessar a tabela T
         //como esse get vai ser apenas para exibir, usar AsNoTracking vai otimizar a busca
-        return _context.Set<T>().AsNoTracking().ToList();
+        return await _context.Set<T>().AsNoTracking().ToListAsync();
     }
-    public T Get(Expression<Func<T, bool>> predicate)
+    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate)
     {
         //se não achar o id vai retornar null, serve para deletar o tema ou postagem
-        return _context.Set<T>().FirstOrDefault(predicate);
+        return await _context.Set<T>().FirstOrDefaultAsync(predicate);
     }
 
     public T Update(T entity)

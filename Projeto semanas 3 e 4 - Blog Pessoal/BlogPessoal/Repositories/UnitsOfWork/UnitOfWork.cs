@@ -58,14 +58,8 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
-    public void Commit() //salvar no banco de dados
+    public async Task Commit() //salvar no banco de dados
     {
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
-
-    public void Dispose()//liberação de recursos
-    {
-        _context.Dispose();
-    }
-
 }

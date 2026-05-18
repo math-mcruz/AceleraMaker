@@ -23,9 +23,9 @@ public class TemasController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<TemaResponseDTO>> Get()
+    public async Task<ActionResult<IEnumerable<TemaResponseDTO>>> Get()
     {
-        var temas = _uof.TemaRepository.GetAll();
+        var temas = await _uof.TemaRepository.GetAllAsync();
         if (temas is null)
             return NotFound("Não existem temas criados");
 
@@ -35,7 +35,7 @@ public class TemasController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<TemaRequestDTO> Post(TemaRequestDTO temaRequestDto)
+    public async Task<ActionResult<TemaRequestDTO>> Post(TemaRequestDTO temaRequestDto)
     {
         if(temaRequestDto is null)
             return BadRequest("Dados inválidos");
@@ -43,7 +43,7 @@ public class TemasController : ControllerBase
         var tema = temaRequestDto.RequestToTema();
 
         var temaCriado = _uof.TemaRepository.Create(tema);
-        _uof.Commit();//salva no banco
+        await _uof.CommitAsync();//salva no banco
         
         var TemaResponseDTO = temaCriado.ToTemaResponseDTO();
 
@@ -51,7 +51,7 @@ public class TemasController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult<TemaRequestDTO> Put(int id, TemaResponseDTO temaResponseDto)
+    public async Task<ActionResult<TemaRequestDTO>> Put(int id, TemaResponseDTO temaResponseDto)
     {
         if (id != temaResponseDto.TemaId)
             return BadRequest("Dados inválidos");
@@ -59,7 +59,7 @@ public class TemasController : ControllerBase
         var tema = temaResponseDto.ResponseToTema();
 
         var temaAtualizado = _uof.TemaRepository.Update(tema);
-        _uof.Commit();
+        await _uof.CommitAsync();
 
         var novoTemaResponseDto = temaAtualizado.ToTemaResponseDTO();
 
@@ -67,15 +67,15 @@ public class TemasController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult<TemaResponseDTO> Delete(int id)
+    public async Task<ActionResult<TemaResponseDTO>> Delete(int id)
     {
-        var tema = _uof.TemaRepository.Get(c=>c.TemaId == id);
+        var tema = await _uof.TemaRepository.GetAsync(c=>c.TemaId == id);
 
         if(tema is null)
             return NotFound("Tema não encontrado");
 
         var temaExcluido = _uof.TemaRepository.Delete(tema);
-        _uof.Commit();
+        await _uof.CommitAsync();
 
         var temaResponseDto = temaExcluido.ToTemaResponseDTO();
 

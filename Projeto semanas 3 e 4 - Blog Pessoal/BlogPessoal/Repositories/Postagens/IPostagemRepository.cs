@@ -6,5 +6,5 @@ namespace BlogPessoal.Repositories.Postagens;
 
 public interface IPostagemRepository : IRepository<Postagem>
 {
-   PagedList<Postagem> GetFiltroAutorTema(PostagensFiltroAutorTema postagemFiltroParams);
+   Task<PagedList<Postagem>> GetFiltroAutorTemaAsync(PostagensFiltroAutorTema postagemFiltroParams);
 }

@@ -22,6 +22,10 @@ public class UsuariosController : ControllerBase
     }
     /*
     //ainda tem que fazer o Repository de usuario -------------------------------------------********************************
+
+
+                        Lembrar de convergir para ASSÍNCroNO o SaveChangesAsync()
+
     [HttpPost]
     public ActionResult<UsuarioRequestDTO> Post(UsuarioRequestDTO usuRequestDto)
     {

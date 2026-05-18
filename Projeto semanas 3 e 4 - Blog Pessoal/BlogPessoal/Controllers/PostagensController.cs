@@ -28,9 +28,9 @@ public class PostagensController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<PostagemResponseDTO>> Get()
+    public async Task<ActionResult<IEnumerable<PostagemResponseDTO>>> Get()
     {
-        var postagens = _uof.PostagemRepository.GetAll();
+        var postagens = await _uof.PostagemRepository.GetAllAsync();
 
         if (postagens is null)
             return NotFound("Não existem postagens criados");
@@ -41,9 +41,9 @@ public class PostagensController : ControllerBase
     }
 
     [HttpGet("filtro")]
-    public ActionResult<IEnumerable<PostagemResponseDTO>> GetFiltro([FromQuery] PostagensFiltroAutorTema postFiltro)
+    public async Task<ActionResult<IEnumerable<PostagemResponseDTO>>> GetFiltro([FromQuery] PostagensFiltroAutorTema postFiltro)
     {
-        var postagens = _uof.PostagemRepository.GetFiltroAutorTema(postFiltro);
+        var postagens = await _uof.PostagemRepository.GetFiltroAutorTemaAsync(postFiltro);
 
         if (postagens is null)
             return NotFound("Não existem postagens criados");
@@ -66,7 +66,7 @@ public class PostagensController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<PostagemRequestDTO> Post(PostagemRequestDTO postRequestDto)
+    public async Task<ActionResult<PostagemRequestDTO>> Post(PostagemRequestDTO postRequestDto)
     {
         if (postRequestDto is null)
             return BadRequest("Dados inválidos");
@@ -74,7 +74,7 @@ public class PostagensController : ControllerBase
         var post = postRequestDto.RequestToPost();
 
         var postCriado = _uof.PostagemRepository.Create(post);
-        _uof.Commit();
+        await _uof.CommitAsync();
 
         var postResponseDto = postCriado.ToPostResponseDTO();
 
@@ -82,7 +82,7 @@ public class PostagensController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult<PostagemRequestDTO> Put(int id, PostagemResponseDTO postResponseDto)
+    public async Task<ActionResult<PostagemRequestDTO>> Put(int id, PostagemResponseDTO postResponseDto)
     {
         if (id != postResponseDto.PostagemId)
             return BadRequest("Dados inválidos");
@@ -90,7 +90,7 @@ public class PostagensController : ControllerBase
         var post = postResponseDto.ResponseToPost();
 
         var postAtualizado = _uof.PostagemRepository.Update(post);
-        _uof.Commit();
+        await _uof.CommitAsync();
 
         var novoPostResponseDto = postAtualizado.ToPostResponseDTO();
 
@@ -98,15 +98,15 @@ public class PostagensController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult<PostagemResponseDTO>> Delete(int id)
     {
-        var post = _uof.PostagemRepository.Get(c => c.PostagemId == id);
+        var post = await _uof.PostagemRepository.GetAsync(c => c.PostagemId == id);
         if (post is null)
             return NotFound("Postagem não encontrado");
 
 
         var postExcluido = _uof.PostagemRepository.Delete(post);
-        _uof.Commit();
+        await _uof.CommitAsync();
 
         var postResponseDto = postExcluido.ToPostResponseDTO();
 

@@ -12,11 +12,10 @@ public class PostagemRepository : Repository<Postagem>, IPostagemRepository
     {}
 
     //consulta de autor ou/e tema
-    public PagedList<Postagem> GetFiltroAutorTema(PostagensFiltroAutorTema postFiltroParams)
+    public async Task<PagedList<Postagem>> GetFiltroAutorTemaAsync(PostagensFiltroAutorTema postFiltroParams)
     {
         //faz o include para ter acesso ao nome dos usuarios e temas ------------------------------------**********************************
-        //var consulta = _context.Set<Postagem>().AsNoTracking().AsQueryable();
-        var consulta = GetAll().AsQueryable();
+        var consulta = await GetAllAsync();
 
         if (postFiltroParams.AutorId != null)
             consulta = consulta.Where(p => p.UsuarioId == postFiltroParams.AutorId);
@@ -25,7 +24,7 @@ public class PostagemRepository : Repository<Postagem>, IPostagemRepository
             consulta = consulta.Where(p => p.TemaId == postFiltroParams.TemaId);
 
         //ordenada por data de postagem
-        var postOredenado = consulta.OrderBy(p => p.Data);
+        var postOredenado = consulta.OrderBy(p => p.Data).AsQueryable();
 
         return PagedList<Postagem>.ToPagedList(postOredenado, postFiltroParams.PageNumber, postFiltroParams.PageSize);
     }
