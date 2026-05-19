@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace BlogPessoal.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/postagens")]
 [ApiController]
 public class PostagensController : ControllerBase
 {

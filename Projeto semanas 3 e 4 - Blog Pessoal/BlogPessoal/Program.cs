@@ -5,9 +5,14 @@ using BlogPessoal.Middlewares.Filters;
 using BlogPessoal.Middlewares.Exceptions;
 using BlogPessoal.Repositories;
 using BlogPessoal.Repositories.Postagens;
-using BlogPessoal.Repositories.Usuarios;
 using BlogPessoal.Repositories.Temas;
 using BlogPessoal.Repositories.UnitsOfWork;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using BlogPessoal.Models;
+using BlogPessoal.Services.Token;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +25,12 @@ builder.Services.AddControllers(options => { options.Filters.Add(typeof(ApiExcep
 
 builder.Services.AddOpenApi();
 
+//autenticação
+builder.Services.AddControllers();
+builder.Services.AddAuthentication("Bearer").AddJwtBearer();
 
-
+//configurando o Identity
+builder.Services.AddIdentity<Usuario, IdentityRole<int>>().AddEntityFrameworkStores<BlogDbContext>().AddDefaultTokenProviders();
 
 //variavel de ambiente para proteger a senha do Banco de Dados
 //temporario achar uma solução melhor
@@ -31,10 +40,33 @@ string? mySqlConnection = builder.Configuration.GetConnectionString("DefaultConn
 
 string? connection = $"{mySqlConnection};Pwd={senhaBanco};";
 
+
+//configurando validação por token JWT
 builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseMySql(connection, ServerVersion.AutoDetect(connection)));
 
+var secretKey = builder.Configuration["JWT:SecretKey"] ?? throw new ArgumentException("Chave secreta inválida");
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false; //quando for para produção é bom ativar
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+    };
+});
 
 
 
@@ -43,16 +75,14 @@ builder.Services.AddDbContext<BlogDbContext>(options =>
 builder.Services.AddScoped<ApiLoggingFilter>();
 
 
-
-
-//fazer isso para cada repository
-builder.Services.AddScoped<IUsuarioRepository,UsuarioRepository>();
+//fazer isso para cada repository ---------------------------------------------*********** falta o de usuario
 builder.Services.AddScoped<IPostagemRepository,PostagemRepository>();
 builder.Services.AddScoped<ITemaRepository,TemaRepository>();
-
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 
 
 
@@ -64,6 +94,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.ConfigureExceptionHandler();
+    app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json","Blog Pessoal API"));
 
     //lembrar que isso é só para o modo Development, pois não pode mostrar o stacktrace no modo deploy, por segurança
 }

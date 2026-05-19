@@ -7,7 +7,7 @@ public class UsuarioRequestDTO
 
     [Required(ErrorMessage = "Nome é obrigatório.")]
     [StringLength(30)]
-    public string Nome { get; set; }
+    public string Username { get; set; }
 
     [Required(ErrorMessage = "E-mail é obrigatório.")]
     [StringLength(20)]

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogPessoal.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/temas")]
 [ApiController]
 public class TemasController : ControllerBase
 {

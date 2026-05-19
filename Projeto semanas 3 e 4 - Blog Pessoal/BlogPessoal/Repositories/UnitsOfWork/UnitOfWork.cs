@@ -1,14 +1,11 @@
 ﻿using BlogPessoal.Data;
 using BlogPessoal.Repositories.Postagens;
 using BlogPessoal.Repositories.Temas;
-using BlogPessoal.Repositories.Usuarios;
 
 namespace BlogPessoal.Repositories.UnitsOfWork;
 
 public class UnitOfWork : IUnitOfWork
 {
-    public IUsuarioRepository? _usuarioRepository;
-
     public IPostagemRepository? _postagemRepository;
 
     public ITemaRepository? _temaRepository;
@@ -18,20 +15,6 @@ public class UnitOfWork : IUnitOfWork
     public UnitOfWork(BlogDbContext context)
     {
         _context = context;
-    }
-
-    public IUsuarioRepository UsuarioRepository
-    {
-        get 
-        {
-            //verifica se tem uma instancia de usuario se não tiver ele cria
-            //pode usar o operador ??, mas dessa maneira é mais facil de entender
-            if(_usuarioRepository is null)
-            {
-                _usuarioRepository = new UsuarioRepository(_context); 
-            }
-            return _usuarioRepository;
-        }
     }
     public IPostagemRepository PostagemRepository
     {
@@ -58,7 +41,7 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
-    public async Task Commit() //salvar no banco de dados
+    public async Task CommitAsync() //salvar no banco de dados
     {
         await _context.SaveChangesAsync();
     }

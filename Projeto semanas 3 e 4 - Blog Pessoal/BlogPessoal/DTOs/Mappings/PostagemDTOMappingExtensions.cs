@@ -49,7 +49,7 @@ public static class PostagemDTOMappingExtensions
             Titulo = post.Titulo,
             Texto = post.Texto,
             Data = post.Data,
-            NomeAutor = post.Usuario.Nome,
+            NomeAutor = post.Usuario.UserName,
             NomeTema = post.Tema.Nome
         };
     }
@@ -66,7 +66,7 @@ public static class PostagemDTOMappingExtensions
             Titulo = postagem.Titulo,
             Texto = postagem.Texto,
             Data = postagem.Data,
-            NomeAutor = postagem.Usuario.Nome,
+            NomeAutor = postagem.Usuario.UserName,
             NomeTema = postagem.Tema.Nome
         });
     }

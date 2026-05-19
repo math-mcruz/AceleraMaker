@@ -13,9 +13,9 @@ public static class UsuarioDTOMappingExtensions
 
         return new Usuario
         {
-            Nome = usuRequestDto.Nome,
+            UserName = usuRequestDto.Username,
             Email = usuRequestDto.Email,
-            Senha = usuRequestDto.Senha
+            PasswordHash = usuRequestDto.Senha
         };
     }
 
@@ -26,8 +26,8 @@ public static class UsuarioDTOMappingExtensions
 
         return new Usuario
         {
-            UsuarioId = usuResponseDto.UsuarioId,
-            Nome = usuResponseDto.Nome,
+            Id = usuResponseDto.UsuarioId,
+            UserName = usuResponseDto.Username,
             Email = usuResponseDto.Email
         };
     }
@@ -40,8 +40,8 @@ public static class UsuarioDTOMappingExtensions
 
         return new UsuarioResponseDTO
         {
-            UsuarioId = usuario.UsuarioId,
-            Nome = usuario.Nome,
+            UsuarioId = usuario.Id,
+            Username = usuario.UserName,
             Email = usuario.Email,
         };
     }

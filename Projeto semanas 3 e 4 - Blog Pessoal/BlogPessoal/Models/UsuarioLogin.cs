@@ -6,5 +6,10 @@ namespace BlogPessoal.Models;
 [NotMapped]
 public class UsuarioLogin
 {
-    //não vai gerar tabela no banco de dados, será auxiliar na segurança do projeto *******     
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
+
+    [Required]
+    public string Senha { get; set; }
 }
