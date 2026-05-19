@@ -4,6 +4,7 @@ using BlogPessoal.DTOs.Postagens;
 using BlogPessoal.Models;
 using BlogPessoal.Models.Pagination;
 using BlogPessoal.Repositories.UnitsOfWork;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -32,9 +33,9 @@ public class PostagensController : ControllerBase
     {
         var postagens = await _uof.PostagemRepository.GetAllAsync();
 
-        if (postagens is null)
+        if (postagens is null || !postagens.Any())
             return NotFound("Não existem postagens criados");
-        
+
         var postResponseDTO = postagens.ToPostagemDTOList();
 
         return Ok(postResponseDTO);
@@ -64,9 +65,9 @@ public class PostagensController : ControllerBase
         
         return Ok(postagens);
     }
-
+    [Authorize]
     [HttpPost]
-    public async Task<ActionResult<PostagemRequestDTO>> Post(PostagemRequestDTO postRequestDto)
+    public async Task<ActionResult<PostagemResponseDTO>> Post(PostagemRequestDTO postRequestDto)
     {
         if (postRequestDto is null)
             return BadRequest("Dados inválidos");
@@ -76,31 +77,37 @@ public class PostagensController : ControllerBase
         var postCriado = _uof.PostagemRepository.Create(post);
         await _uof.CommitAsync();
 
-        var postResponseDto = postCriado.ToPostResponseDTO();
+        var postCompleto = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == postCriado.PostagemId);
+
+        var postResponseDto = postCompleto.ToPostResponseDTO();
 
         return StatusCode(StatusCodes.Status201Created, postResponseDto);
     }
 
+    [Authorize]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<PostagemRequestDTO>> Put(int id, PostagemResponseDTO postResponseDto)
+    public async Task<ActionResult<PostagemResponseDTO>> Put(int id, PostagemUpdateDTO postUpdateDto)
     {
-        if (id != postResponseDto.PostagemId)
+        if (id != postUpdateDto.PostagemId)
             return BadRequest("Dados inválidos");
 
-        var post = postResponseDto.ResponseToPost();
+        var post = postUpdateDto.UpdateToPost();
 
         var postAtualizado = _uof.PostagemRepository.Update(post);
         await _uof.CommitAsync();
 
-        var novoPostResponseDto = postAtualizado.ToPostResponseDTO();
+        var postCompleto = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == postAtualizado.PostagemId);
+
+        var novoPostResponseDto = postCompleto.ToPostResponseDTO();
 
         return Ok(novoPostResponseDto);
     }
 
+    [Authorize]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<PostagemResponseDTO>> Delete(int id)
     {
-        var post = await _uof.PostagemRepository.GetAsync(c => c.PostagemId == id);
+        var post = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == id);
         if (post is null)
             return NotFound("Postagem não encontrado");
 
@@ -108,7 +115,9 @@ public class PostagensController : ControllerBase
         var postExcluido = _uof.PostagemRepository.Delete(post);
         await _uof.CommitAsync();
 
-        var postResponseDto = postExcluido.ToPostResponseDTO();
+        var postCompleto = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == postExcluido.PostagemId);
+
+        var postResponseDto = postCompleto.ToPostResponseDTO();
 
         return Ok(postResponseDto);
     }

@@ -18,15 +18,15 @@ public static class TemaDTOMappingExtensions
         };
     }
     //criei esse método para fazer o put
-    public static Tema? ResponseToTema(this TemaResponseDTO temaDto)
+    public static Tema? UpdateToTema(this TemaUpdateDTO temaUpdateDto)
     {
-        if (temaDto is null)
+        if (temaUpdateDto is null)
             return null;
 
         return new Tema
         {
-            TemaId = temaDto.TemaId,
-            Nome = temaDto.Nome
+            TemaId = temaUpdateDto.TemaId,
+            Nome = temaUpdateDto.Nome
         };
     }
 

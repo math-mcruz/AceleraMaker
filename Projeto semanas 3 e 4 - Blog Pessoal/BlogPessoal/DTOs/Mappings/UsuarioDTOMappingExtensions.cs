@@ -19,16 +19,17 @@ public static class UsuarioDTOMappingExtensions
         };
     }
 
-    public static Usuario? ResponseToUsuario(this UsuarioResponseDTO usuResponseDto)
+    public static Usuario? UpdateToUsuario(this UsuarioUpdateDTO usuUpdateDto)
     {
-        if (usuResponseDto is null)
+        if (usuUpdateDto is null)
             return null;
 
         return new Usuario
         {
-            Id = usuResponseDto.UsuarioId,
-            UserName = usuResponseDto.Username,
-            Email = usuResponseDto.Email
+            Id = usuUpdateDto.Id,
+            UserName = usuUpdateDto.Username,
+            Email = usuUpdateDto.Email,
+            PasswordHash = usuUpdateDto.Senha
         };
     }
 
@@ -40,10 +41,9 @@ public static class UsuarioDTOMappingExtensions
 
         return new UsuarioResponseDTO
         {
-            UsuarioId = usuario.Id,
+            Id = usuario.Id,
             Username = usuario.UserName,
             Email = usuario.Email,
         };
     }
-
 }

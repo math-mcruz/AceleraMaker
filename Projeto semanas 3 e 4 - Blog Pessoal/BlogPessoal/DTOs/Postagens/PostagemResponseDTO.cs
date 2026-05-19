@@ -8,6 +8,4 @@ public class PostagemResponseDTO
     public DateTime? Data { get; set; }
     public string? NomeAutor { get; set; }
     public string? NomeTema { get; set; }
-    public int UsuarioId { get; set; }
-    public int TemaId { get; set; }
 }

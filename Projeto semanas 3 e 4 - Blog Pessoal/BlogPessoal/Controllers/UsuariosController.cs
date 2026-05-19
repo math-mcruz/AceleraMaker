@@ -1,12 +1,12 @@
 ﻿using BlogPessoal.Data;
 using BlogPessoal.DTOs;
-using BlogPessoal.DTOs.Auth;
 using BlogPessoal.DTOs.Mappings;
 using BlogPessoal.DTOs.Status;
 using BlogPessoal.DTOs.Usuarios;
 using BlogPessoal.Models;
 using BlogPessoal.Repositories.UnitsOfWork;
 using BlogPessoal.Services.Token;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,20 +22,10 @@ public class UsuariosController : ControllerBase
 {
     private readonly ITokenService _tokenService;
     private readonly UserManager<Usuario> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly RoleManager<IdentityRole<int>> _roleManager;
     private readonly IConfiguration _configuration;
 
-
-
-
-    private readonly IUnitOfWork _uof;
-
-    public UsuariosController(IUnitOfWork uof)
-    {
-        _uof = uof;
-    }
-
-    public UsuariosController(ITokenService tokenService, UserManager<Usuario> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+    public UsuariosController(ITokenService tokenService, UserManager<Usuario> userManager, RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration)
     {
         _tokenService = tokenService;
         _userManager = userManager;
@@ -104,46 +94,28 @@ public class UsuariosController : ControllerBase
 
             var token = _tokenService.GenerateAccessToken(authClains, _configuration);
 
-            var refreshToken = _tokenService.GenerateRefreshToken();
-
-            _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInMinutes"], out int refreshTokenValidityInMinutes);
-
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(refreshTokenValidityInMinutes);
-
-            user.RefreshToken = refreshToken;
-
             await _userManager.UpdateAsync(user);
 
             return Ok(new
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
-                RefreshToken = refreshToken,
                 Expiration = token.ValidTo
             });
         }
         return Unauthorized();
     }
-
-
+    /*
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<ActionResult> Atualizar(int id, [FromBody] UsuarioRequestDTO usuarioAtualizado)
     {
         
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult> Excluir(int id)
     {
         
-    }
-
-    /*
-    //métodos extras para fazer o refresh token
-    [HttpPost]
-    [Route("refresh-token")]
-    public async Task<ActionResult> RefreshToken(TokenModel tokenModel)
-    {
-
-    }
-    */
+    }*/
 }

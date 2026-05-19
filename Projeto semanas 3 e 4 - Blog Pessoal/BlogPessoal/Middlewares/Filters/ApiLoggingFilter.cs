@@ -30,7 +30,6 @@ public class ApiLoggingFilter: IActionFilter
 
     public void OnActionExecuting(ActionExecutingContext context)
     {
-        //esse método executa depois do método action
         throw new NotImplementedException();
     }
 }

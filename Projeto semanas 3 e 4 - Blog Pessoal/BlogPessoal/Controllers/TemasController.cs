@@ -3,6 +3,7 @@ using BlogPessoal.DTOs.Mappings;
 using BlogPessoal.DTOs.Temas;
 using BlogPessoal.Models;
 using BlogPessoal.Repositories.UnitsOfWork;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,7 @@ public class TemasController : ControllerBase
         return Ok(temasResponseDto);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<TemaRequestDTO>> Post(TemaRequestDTO temaRequestDto)
     {
@@ -50,13 +52,14 @@ public class TemasController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, TemaResponseDTO);
     }
 
+    [Authorize]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<TemaRequestDTO>> Put(int id, TemaResponseDTO temaResponseDto)
+    public async Task<ActionResult<TemaResponseDTO>> Put(int id, TemaUpdateDTO temaUpdateDto)
     {
-        if (id != temaResponseDto.TemaId)
+        if (id != temaUpdateDto.TemaId)
             return BadRequest("Dados inválidos");
 
-        var tema = temaResponseDto.ResponseToTema();
+        var tema = temaUpdateDto.UpdateToTema();
 
         var temaAtualizado = _uof.TemaRepository.Update(tema);
         await _uof.CommitAsync();
@@ -66,6 +69,7 @@ public class TemasController : ControllerBase
         return Ok(novoTemaResponseDto);
     }
 
+    [Authorize]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<TemaResponseDTO>> Delete(int id)
     {

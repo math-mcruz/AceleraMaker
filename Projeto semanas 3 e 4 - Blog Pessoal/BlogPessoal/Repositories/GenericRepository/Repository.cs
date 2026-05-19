@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace BlogPessoal.Repositories;
+namespace BlogPessoal.Repositories.GenericRepository;
 
 public class Repository<T> : IRepository<T> where T : class
 {
@@ -19,13 +19,13 @@ public class Repository<T> : IRepository<T> where T : class
         _context.Set<T>().Add(entity);
         return entity;
     }
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public virtual async Task<IEnumerable<T>> GetAllAsync()
     {
         //o set vai acessar a tabela T
         //como esse get vai ser apenas para exibir, usar AsNoTracking vai otimizar a busca
         return await _context.Set<T>().AsNoTracking().ToListAsync();
     }
-    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate)
+    public virtual async Task<T> GetAsync(Expression<Func<T, bool>> predicate)
     {
         //se não achar o id vai retornar null, serve para deletar o tema ou postagem
         return await _context.Set<T>().FirstOrDefaultAsync(predicate);

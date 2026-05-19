@@ -13,12 +13,8 @@ public class Usuario : IdentityUser<int> //int para deixar o id herdado de tipo 
     {
         Postagem = new Collection<Postagem>();
     }
-    //Id, UserName, Email e SenhaHash ja estão em identityUser ---------------------------***************************
+    //Id, UserName, Email e SenhaHash ja estão em identityUser
 
     // Relação 1:N com Postagem
     public ICollection<Postagem>? Postagem { get; set; }
-
-    // Propriedades para controle de segurança (Tokens)
-    public string? RefreshToken { get; set; }
-    public DateTime RefreshTokenExpiryTime { get; set; }
 }

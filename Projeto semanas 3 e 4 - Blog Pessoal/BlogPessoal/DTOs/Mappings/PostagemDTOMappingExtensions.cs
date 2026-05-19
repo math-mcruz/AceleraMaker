@@ -22,19 +22,19 @@ public static class PostagemDTOMappingExtensions
         };
     }
 
-    public static Postagem? ResponseToPost(this PostagemResponseDTO postResponseDto)
+    public static Postagem? UpdateToPost(this PostagemUpdateDTO postUpdateDto)
     {
-        if (postResponseDto is null)
+        if (postUpdateDto is null)
             return null;
 
         return new Postagem
         {
-            PostagemId = postResponseDto.PostagemId,
-            Titulo = postResponseDto.Titulo,
-            Texto = postResponseDto.Texto,
-            Data = postResponseDto.Data,
-            UsuarioId = postResponseDto.UsuarioId,
-            TemaId = postResponseDto.TemaId
+            PostagemId = postUpdateDto.PostagemId,
+            Titulo = postUpdateDto.Titulo,
+            Texto = postUpdateDto.Texto,
+            Data = postUpdateDto.Data,
+            UsuarioId = postUpdateDto.UsuarioId,
+            TemaId = postUpdateDto.TemaId
         };
     }
     //saida dos dados para enviar para o usuário novamente

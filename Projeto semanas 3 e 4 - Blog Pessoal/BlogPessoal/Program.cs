@@ -1,18 +1,21 @@
-using Microsoft.EntityFrameworkCore;
 using BlogPessoal.Data;
-using System.Text.Json.Serialization;
-using BlogPessoal.Middlewares.Filters;
 using BlogPessoal.Middlewares.Exceptions;
-using BlogPessoal.Repositories;
+using BlogPessoal.Middlewares.Filters;
+using BlogPessoal.Models;
+using BlogPessoal.Repositories.GenericRepository;
 using BlogPessoal.Repositories.Postagens;
 using BlogPessoal.Repositories.Temas;
 using BlogPessoal.Repositories.UnitsOfWork;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using BlogPessoal.Models;
 using BlogPessoal.Services.Token;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using System.Text;
+using System.Text.Json.Serialization;
+using Swashbuckle.AspNetCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,17 +23,27 @@ var builder = WebApplication.CreateBuilder(args);
 //ajuste para colocar o filtro global nos controladores
 builder.Services.AddControllers(options => { options.Filters.Add(typeof(ApiExceptionFilter)); } ).AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlogPessoal", Version = "v1" });
+    c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Description = "Insira o token JWT:\n(Bearer token)",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
 
-
-
-builder.Services.AddOpenApi();
+    //filtro automatico
+    c.OperationFilter<Swashbuckle.AspNetCore.Filters.SecurityRequirementsOperationFilter>();
+});
 
 //autenticação
 builder.Services.AddControllers();
-builder.Services.AddAuthentication("Bearer").AddJwtBearer();
+//builder.Services.AddAuthentication("Bearer").AddJwtBearer();
 
 //configurando o Identity
-builder.Services.AddIdentity<Usuario, IdentityRole<int>>().AddEntityFrameworkStores<BlogDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<Usuario, IdentityRole<int>>().AddRoles<IdentityRole<int>>().AddEntityFrameworkStores<BlogDbContext>().AddDefaultTokenProviders();
 
 //variavel de ambiente para proteger a senha do Banco de Dados
 //temporario achar uma solução melhor
@@ -92,9 +105,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    //app.MapOpenApi();
+    app.UseSwagger();
     app.ConfigureExceptionHandler();
-    app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json","Blog Pessoal API"));
+    app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "Blog Pessoal API"));
 
     //lembrar que isso é só para o modo Development, pois não pode mostrar o stacktrace no modo deploy, por segurança
 }

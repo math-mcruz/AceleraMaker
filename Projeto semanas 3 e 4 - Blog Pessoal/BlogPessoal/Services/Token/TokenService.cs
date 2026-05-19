@@ -33,19 +33,6 @@ public class TokenService : ITokenService
         return token;
     }
 
-    public string GenerateRefreshToken()
-    {
-        var secureRandomBytes = new byte[128];
-
-        using var randomNumberGenerator = RandomNumberGenerator.Create();
-
-        randomNumberGenerator.GetBytes(secureRandomBytes);
-
-        var refreshToken = Convert.ToBase64String(secureRandomBytes);
-
-        return refreshToken;
-    }
-
     public ClaimsPrincipal GetPrincipalFromExpiredToken(string token, IConfiguration _config)
     {
         var secretKey = _config["JWT:SecretKey"] ?? throw new InvalidOperationException("Chave inválida");
