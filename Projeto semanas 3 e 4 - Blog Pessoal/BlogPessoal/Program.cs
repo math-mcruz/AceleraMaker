@@ -15,6 +15,7 @@ using Microsoft.OpenApi;
 using System.Text;
 using System.Text.Json.Serialization;
 using Swashbuckle.AspNetCore;
+using BlogPessoal.Config;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -118,5 +119,20 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        await DbInitializer.InitializeAsync(services);
+    }
+    catch (Exception ex)
+    {
+        // Se der algum erro de conexão com banco, ele avisa no terminal
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Um erro ocorreu ao popular o banco de dados.");
+    }
+}
 
 app.Run();

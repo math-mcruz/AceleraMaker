@@ -24,10 +24,11 @@ public class TemasController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<TemaResponseDTO>>> Get()
     {
         var temas = await _uof.TemaRepository.GetAllAsync();
-        if (temas is null)
+        if (temas is null || !temas.Any())
             return NotFound("Não existem temas criados");
 
         var temasResponseDto = temas.ToTemaDTOList();
@@ -35,9 +36,9 @@ public class TemasController : ControllerBase
         return Ok(temasResponseDto);
     }
 
-    [Authorize]
     [HttpPost]
-    public async Task<ActionResult<TemaRequestDTO>> Post(TemaRequestDTO temaRequestDto)
+    [Authorize(Policy = "RequerAdmin")]
+    public async Task<ActionResult<TemaResponseDTO>> Post(TemaRequestDTO temaRequestDto)
     {
         if(temaRequestDto is null)
             return BadRequest("Dados inválidos");
@@ -52,12 +53,17 @@ public class TemasController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, TemaResponseDTO);
     }
 
-    [Authorize]
     [HttpPut("{id:int}")]
+    [Authorize(Policy = "RequerAdmin")]
     public async Task<ActionResult<TemaResponseDTO>> Put(int id, TemaUpdateDTO temaUpdateDto)
     {
         if (id != temaUpdateDto.TemaId)
             return BadRequest("Dados inválidos");
+
+        var temaExiste = await _uof.TemaRepository.GetAsync(t => t.TemaId == id);
+
+        if (temaExiste is null) 
+            return NotFound("Tema não encontrado.");
 
         var tema = temaUpdateDto.UpdateToTema();
 
@@ -69,8 +75,8 @@ public class TemasController : ControllerBase
         return Ok(novoTemaResponseDto);
     }
 
-    [Authorize]
     [HttpDelete("{id:int}")]
+    [Authorize(Policy = "RequerAdmin")]
     public async Task<ActionResult<TemaResponseDTO>> Delete(int id)
     {
         var tema = await _uof.TemaRepository.GetAsync(c=>c.TemaId == id);
@@ -81,8 +87,6 @@ public class TemasController : ControllerBase
         var temaExcluido = _uof.TemaRepository.Delete(tema);
         await _uof.CommitAsync();
 
-        var temaResponseDto = temaExcluido.ToTemaResponseDTO();
-
-        return Ok(temaResponseDto);
+        return NoContent();
     }
 }

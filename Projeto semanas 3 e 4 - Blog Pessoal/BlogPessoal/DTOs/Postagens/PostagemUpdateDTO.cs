@@ -2,9 +2,12 @@
 
 namespace BlogPessoal.DTOs.Postagens
 {
-    public class PostagemUpdateDTO : PostagemRequestDTO
+    public class PostagemUpdateDTO
     {
-        [Required]
         public int PostagemId { get; set; }
+        public string Titulo { get; set; }
+        public string Texto { get; set; }
+        public DateTime Data { get; set; }
+        public int TemaId { get; set; }
     }
 }

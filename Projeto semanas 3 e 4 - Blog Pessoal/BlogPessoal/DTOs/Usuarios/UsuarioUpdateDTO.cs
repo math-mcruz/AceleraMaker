@@ -1,6 +1,6 @@
 ﻿namespace BlogPessoal.DTOs.Usuarios;
 
-public class UsuarioUpdateDTO : UsuarioRequestDTO
+public class UsuarioUpdateDTO
 {
-    public int Id { get; set; }
+    public String Nome { get; set; }
 }

@@ -1,0 +1,1762 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Microsoft (R) Visual C# Compiler",
+        "version": "5.6.0.0",
+        "fileVersion": "5.6.0-2.26230.102 (caa81fa4971f74880cdab61990cb1b11420939ec)",
+        "semanticVersion": "5.6.0",
+        "language": "en-US"
+      },
+      "results": [
+        {
+          "ruleId": "CS8613",
+          "level": "warning",
+          "message": "Nullability of reference types in return type of 'Task<T> Repository<T>.GetAsync(Expression<Func<T, bool>> predicate)' doesn't match implicitly implemented member 'Task<T?> IRepository<T>.GetAsync(Expression<Func<T, bool>> predicate)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/GenericRepository/Repository.cs",
+                "region": {
+                  "startLine": 28,
+                  "startColumn": 34,
+                  "endLine": 28,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8613",
+          "level": "warning",
+          "message": "Nullability of reference types in return type of 'Task<Postagem> PostagemRepository.GetAsync(Expression<Func<Postagem, bool>> predicate)' doesn't match implicitly implemented member 'Task<Postagem?> IRepository<Postagem>.GetAsync(Expression<Func<Postagem, bool>> predicate)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/Postagens/PostagemRepository.cs",
+                "region": {
+                  "startLine": 19,
+                  "startColumn": 42,
+                  "endLine": 19,
+                  "endColumn": 50
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS0108",
+          "level": "warning",
+          "message": "'TemaRepository._context' hides inherited member 'Repository<Tema>._context'. Use the new keyword if hiding was intended.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/Temas/TemaRepository.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 36,
+                  "endLine": 11,
+                  "endColumn": 44
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS8613",
+          "level": "warning",
+          "message": "Nullability of reference types in return type of 'Task<Tema> Repository<Tema>.GetAsync(Expression<Func<Tema, bool>> predicate)' doesn't match implicitly implemented member 'Task<Tema?> IRepository<Tema>.GetAsync(Expression<Func<Tema, bool>> predicate)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/Temas/TemaRepository.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 49,
+                  "endLine": 9,
+                  "endColumn": 64
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Username' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioResponseDTO.cs",
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 19,
+                  "endLine": 6,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioResponseDTO.cs",
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 19,
+                  "endLine": 6,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Email' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioResponseDTO.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 19,
+                  "endLine": 7,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioResponseDTO.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 19,
+                  "endLine": 7,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Username' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioRequestDTO.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 19,
+                  "endLine": 10,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioRequestDTO.cs",
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 19,
+                  "endLine": 10,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Email' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioRequestDTO.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 19,
+                  "endLine": 15,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioRequestDTO.cs",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 19,
+                  "endLine": 15,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Senha' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioRequestDTO.cs",
+                "region": {
+                  "startLine": 20,
+                  "startColumn": 19,
+                  "endLine": 20,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioRequestDTO.cs",
+                "region": {
+                  "startLine": 20,
+                  "startColumn": 19,
+                  "endLine": 20,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Titulo' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Postagens/PostagemResponseDTO.cs",
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 19,
+                  "endLine": 6,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Postagens/PostagemResponseDTO.cs",
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 19,
+                  "endLine": 6,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Texto' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Postagens/PostagemResponseDTO.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 19,
+                  "endLine": 7,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Postagens/PostagemResponseDTO.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 19,
+                  "endLine": 7,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8601",
+          "level": "warning",
+          "message": "Possible null reference assignment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/UsuarioDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 45,
+                  "startColumn": 24,
+                  "endLine": 45,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8601",
+          "level": "warning",
+          "message": "Possible null reference assignment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/UsuarioDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 46,
+                  "startColumn": 21,
+                  "endLine": 46,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8601",
+          "level": "warning",
+          "message": "Possible null reference assignment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/PostagemDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 49,
+                  "startColumn": 22,
+                  "endLine": 49,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8601",
+          "level": "warning",
+          "message": "Possible null reference assignment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/PostagemDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 50,
+                  "startColumn": 21,
+                  "endLine": 50,
+                  "endColumn": 31
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8602",
+          "level": "warning",
+          "message": "Dereference of a possibly null reference.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/PostagemDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 52,
+                  "startColumn": 25,
+                  "endLine": 52,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8602",
+          "level": "warning",
+          "message": "Dereference of a possibly null reference.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/PostagemDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 53,
+                  "startColumn": 24,
+                  "endLine": 53,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8601",
+          "level": "warning",
+          "message": "Possible null reference assignment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/PostagemDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 66,
+                  "startColumn": 22,
+                  "endLine": 66,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8601",
+          "level": "warning",
+          "message": "Possible null reference assignment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/PostagemDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 67,
+                  "startColumn": 21,
+                  "endLine": 67,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8602",
+          "level": "warning",
+          "message": "Dereference of a possibly null reference.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/PostagemDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 69,
+                  "startColumn": 25,
+                  "endLine": 69,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8602",
+          "level": "warning",
+          "message": "Dereference of a possibly null reference.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/PostagemDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 70,
+                  "startColumn": 24,
+                  "endLine": 70,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Email' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Models/UsuarioLogin.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 19,
+                  "endLine": 11,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Models/UsuarioLogin.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 19,
+                  "endLine": 11,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable property 'Senha' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Models/UsuarioLogin.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 19,
+                  "endLine": 14,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Models/UsuarioLogin.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 19,
+                  "endLine": 14,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8618",
+          "level": "warning",
+          "message": "Non-nullable field '_context' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/Temas/TemaRepository.cs",
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 12,
+                  "endLine": 13,
+                  "endColumn": 26
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/Temas/TemaRepository.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 36,
+                  "endLine": 11,
+                  "endColumn": 44
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Possible null reference argument for parameter 'entity' in 'Tema IRepository<Tema>.Create(Tema entity)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Controllers/TemasController.cs",
+                "region": {
+                  "startLine": 47,
+                  "startColumn": 53,
+                  "endLine": 47,
+                  "endColumn": 57
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Possible null reference argument for parameter 'entity' in 'Tema IRepository<Tema>.Update(Tema entity)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Controllers/TemasController.cs",
+                "region": {
+                  "startLine": 64,
+                  "startColumn": 57,
+                  "endLine": 64,
+                  "endColumn": 61
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Possible null reference argument for parameter 'source' in 'IIncludableQueryable<Postagem, Tema?> EntityFrameworkQueryableExtensions.Include<Postagem, Tema?>(IQueryable<Postagem> source, Expression<Func<Postagem, Tema?>> navigationPropertyPath)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/Postagens/PostagemRepository.cs",
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 22,
+                  "endLine": 17,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Possible null reference argument for parameter 'source' in 'IIncludableQueryable<Postagem, Tema?> EntityFrameworkQueryableExtensions.Include<Postagem, Tema?>(IQueryable<Postagem> source, Expression<Func<Postagem, Tema?>> navigationPropertyPath)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/Postagens/PostagemRepository.cs",
+                "region": {
+                  "startLine": 21,
+                  "startColumn": 22,
+                  "endLine": 21,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8603",
+          "level": "warning",
+          "message": "Possible null reference return.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/Postagens/PostagemRepository.cs",
+                "region": {
+                  "startLine": 21,
+                  "startColumn": 16,
+                  "endLine": 21,
+                  "endColumn": 116
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Possible null reference argument for parameter 'entity' in 'Postagem IRepository<Postagem>.Create(Postagem entity)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Controllers/PostagensController.cs",
+                "region": {
+                  "startLine": 77,
+                  "startColumn": 57,
+                  "endLine": 77,
+                  "endColumn": 61
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Possible null reference argument for parameter 'post' in 'PostagemResponseDTO? PostagemDTOMappingExtensions.ToPostResponseDTO(Postagem post)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Controllers/PostagensController.cs",
+                "region": {
+                  "startLine": 82,
+                  "startColumn": 31,
+                  "endLine": 82,
+                  "endColumn": 43
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Possible null reference argument for parameter 'entity' in 'Postagem IRepository<Postagem>.Update(Postagem entity)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Controllers/PostagensController.cs",
+                "region": {
+                  "startLine": 96,
+                  "startColumn": 61,
+                  "endLine": 96,
+                  "endColumn": 65
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Possible null reference argument for parameter 'post' in 'PostagemResponseDTO? PostagemDTOMappingExtensions.ToPostResponseDTO(Postagem post)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Controllers/PostagensController.cs",
+                "region": {
+                  "startLine": 101,
+                  "startColumn": 35,
+                  "endLine": 101,
+                  "endColumn": 47
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8603",
+          "level": "warning",
+          "message": "Possible null reference return.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/GenericRepository/Repository.cs",
+                "region": {
+                  "startLine": 31,
+                  "startColumn": 16,
+                  "endLine": 31,
+                  "endColumn": 70
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8604",
+          "level": "warning",
+          "message": "Possible null reference argument for parameter 'post' in 'PostagemResponseDTO? PostagemDTOMappingExtensions.ToPostResponseDTO(Postagem post)'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Controllers/PostagensController.cs",
+                "region": {
+                  "startLine": 120,
+                  "startColumn": 31,
+                  "endLine": 120,
+                  "endColumn": 43
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS0169",
+          "level": "warning",
+          "message": "The field 'TemaRepository._context' is never used",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/Temas/TemaRepository.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 36,
+                  "endLine": 11,
+                  "endColumn": 44
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 3
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 111,
+                  "startColumn": 1,
+                  "endLine": 111,
+                  "endColumn": 6
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Data/BlogDbContext.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 5,
+                  "endLine": 14,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S101",
+          "level": "warning",
+          "message": "Rename class 'UsuarioDTOMappingExtensions' to match pascal case naming rules, consider using 'UsuarioDtoMappingExtensions'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/UsuarioDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 21,
+                  "endLine": 6,
+                  "endColumn": 48
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S101",
+          "level": "warning",
+          "message": "Rename class 'TemaDTOMappingExtensions' to match pascal case naming rules, consider using 'TemaDtoMappingExtensions'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/TemaDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 21,
+                  "endLine": 7,
+                  "endColumn": 45
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Program.cs",
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 1,
+                  "endLine": 43,
+                  "endColumn": 63
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Program.cs",
+                "region": {
+                  "startLine": 108,
+                  "startColumn": 5,
+                  "endLine": 108,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/Postagens/PostagemRepository.cs",
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 5,
+                  "endLine": 43,
+                  "endColumn": 8
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S101",
+          "level": "warning",
+          "message": "Rename class 'PostagemDTOMappingExtensions' to match pascal case naming rules, consider using 'PostagemDtoMappingExtensions'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/PostagemDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 21,
+                  "endLine": 7,
+                  "endColumn": 49
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S101",
+          "level": "warning",
+          "message": "Rename class 'PostagemRequestDTO' to match pascal case naming rules, consider using 'PostagemRequestDto'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Postagens/PostagemRequestDTO.cs",
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 14,
+                  "endLine": 5,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S4487",
+          "level": "warning",
+          "message": "Remove this unread private field '_roleManager' or refactor the code to use its value.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Controllers/UsuariosController.cs",
+                "region": {
+                  "startLine": 25,
+                  "startColumn": 53,
+                  "endLine": 25,
+                  "endColumn": 65
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S101",
+          "level": "warning",
+          "message": "Rename class 'PostagemResponseDTO' to match pascal case naming rules, consider using 'PostagemResponseDto'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Postagens/PostagemResponseDTO.cs",
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 14,
+                  "endLine": 3,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S101",
+          "level": "warning",
+          "message": "Rename class 'PostagemUpdateDTO' to match pascal case naming rules, consider using 'PostagemUpdateDto'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Postagens/PostagemUpdateDTO.cs",
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 18,
+                  "endLine": 5,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S101",
+          "level": "warning",
+          "message": "Rename class 'TemaRequestDTO' to match pascal case naming rules, consider using 'TemaRequestDto'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Temas/TemaRequestDTO.cs",
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 14,
+                  "endLine": 5,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S101",
+          "level": "warning",
+          "message": "Rename class 'TemaResponseDTO' to match pascal case naming rules, consider using 'TemaResponseDto'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Temas/TemaResponseDTO.cs",
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 14,
+                  "endLine": 3,
+                  "endColumn": 29
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S101",
+          "level": "warning",
+          "message": "Rename class 'TemaUpdateDTO' to match pascal case naming rules, consider using 'TemaUpdateDto'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Temas/TemaUpdateDTO.cs",
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 14,
+                  "endLine": 5,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S101",
+          "level": "warning",
+          "message": "Rename class 'UsuarioRequestDTO' to match pascal case naming rules, consider using 'UsuarioRequestDto'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioRequestDTO.cs",
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 14,
+                  "endLine": 5,
+                  "endColumn": 31
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S4487",
+          "level": "warning",
+          "message": "Remove this unread private field '_logger' or refactor the code to use its value.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Middlewares/Filters/ApiLoggingFilter.cs",
+                "region": {
+                  "startLine": 18,
+                  "startColumn": 48,
+                  "endLine": 18,
+                  "endColumn": 55
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S101",
+          "level": "warning",
+          "message": "Rename class 'UsuarioUpdateDTO' to match pascal case naming rules, consider using 'UsuarioUpdateDto'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioUpdateDTO.cs",
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 14,
+                  "endLine": 3,
+                  "endColumn": 30
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S101",
+          "level": "warning",
+          "message": "Rename class 'UsuarioResponseDTO' to match pascal case naming rules, consider using 'UsuarioResponseDto'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Usuarios/UsuarioResponseDTO.cs",
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 14,
+                  "endLine": 3,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1144",
+          "level": "warning",
+          "message": "Remove the unused private field '_context'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/Temas/TemaRepository.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 5,
+                  "endLine": 11,
+                  "endColumn": 45
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/UnitsOfWork/UnitOfWork.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 29,
+                  "endLine": 11,
+                  "endColumn": 44
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/UnitsOfWork/UnitOfWork.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 33,
+                  "endLine": 9,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/UnitsOfWork/UnitOfWork.cs",
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 26,
+                  "endLine": 13,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA1829",
+          "level": "note",
+          "message": "Use the \"Count\" property instead of Enumerable.Count()",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/TemaDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 42,
+                  "endLine": 43,
+                  "endColumn": 50
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "PropertyNameKey": "Count"
+            }
+          }
+        },
+        {
+          "ruleId": "CA1829",
+          "level": "note",
+          "message": "Use the \"Count\" property instead of Enumerable.Count()",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/DTOs/Mappings/TemaDTOMappingExtensions.cs",
+                "region": {
+                  "startLine": 57,
+                  "startColumn": 42,
+                  "endLine": 57,
+                  "endColumn": 50
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "PropertyNameKey": "Count"
+            }
+          }
+        },
+        {
+          "ruleId": "S1481",
+          "level": "warning",
+          "message": "Remove the unused local variable 'postResponseDto'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Controllers/PostagensController.cs",
+                "region": {
+                  "startLine": 64,
+                  "startColumn": 13,
+                  "endLine": 64,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S927",
+          "level": "warning",
+          "message": "Rename parameter 'postFiltroParams' to 'postagemFiltroParams' to match the interface declaration.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Repositories/Postagens/PostagemRepository.cs",
+                "region": {
+                  "startLine": 25,
+                  "startColumn": 93,
+                  "endLine": 25,
+                  "endColumn": 109
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CA2263",
+          "level": "note",
+          "message": "Prefer the generic overload 'Microsoft.AspNetCore.Mvc.Filters.FilterCollection.Add<TFilterType>()' instead of 'Microsoft.AspNetCore.Mvc.Filters.FilterCollection.Add(System.Type)'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/AceleraMaker/projetosAceleraMaker/Projeto%20semanas%203%20e%204%20-%20Blog%20Pessoal/BlogPessoal/Program.cs",
+                "region": {
+                  "startLine": 24,
+                  "startColumn": 46,
+                  "endLine": 24,
+                  "endColumn": 93
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CA1829": {
+          "id": "CA1829",
+          "shortDescription": "Use Length/Count property instead of Count() when available",
+          "fullDescription": "Enumerable.Count() potentially enumerates the sequence while a Length/Count property is a direct access.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1829",
+          "properties": {
+            "category": "Performance",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CA2263": {
+          "id": "CA2263",
+          "shortDescription": "Prefer generic overload when type is known",
+          "fullDescription": "Using a generic overload is preferable to the 'System.Type' overload when the type is known, promoting cleaner and more type-safe code with improved compile-time checks.",
+          "defaultLevel": "note",
+          "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2263",
+          "properties": {
+            "category": "Usage",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Telemetry",
+              "EnabledRuleInAggressiveMode"
+            ]
+          }
+        },
+        "CS0108": {
+          "id": "CS0108",
+          "shortDescription": "Member hides inherited member; missing new keyword",
+          "fullDescription": "A variable was declared with the same name as a variable in a base type. However, the new keyword was not used. This warning informs you that you should use new; the variable is declared as if new had been used in the declaration.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0108)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS0169": {
+          "id": "CS0169",
+          "shortDescription": "Field is never used",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0169)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8601": {
+          "id": "CS8601",
+          "shortDescription": "Possible null reference assignment.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8601)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8602": {
+          "id": "CS8602",
+          "shortDescription": "Dereference of a possibly null reference.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8602)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8603": {
+          "id": "CS8603",
+          "shortDescription": "Possible null reference return.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8603)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8604": {
+          "id": "CS8604",
+          "shortDescription": "Possible null reference argument.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8604)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8613": {
+          "id": "CS8613",
+          "shortDescription": "Nullability of reference types in return type doesn't match implicitly implemented member.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8613)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8618": {
+          "id": "CS8618",
+          "shortDescription": "Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8618)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "S101": {
+          "id": "S101",
+          "shortDescription": "Types should be named in PascalCase",
+          "fullDescription": "Shared naming conventions allow teams to collaborate efficiently. This rule checks whether or not type names are using PascalCase. To reduce noise, two consecutive upper case characters are allowed unless they form the whole type name. So, MyXClass is compliant, but XC on its own is not.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-101",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S1104": {
+          "id": "S1104",
+          "shortDescription": "Fields should not have public accessibility",
+          "fullDescription": "Public fields in public classes do not respect the encapsulation principle and has three main disadvantages:",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1104",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S1144": {
+          "id": "S1144",
+          "shortDescription": "Unused private types or members should be removed",
+          "fullDescription": "private or internal types or private members that are never executed or referenced are dead code: unnecessary, inoperative code that should be removed. Cleaning out dead code decreases the size of the maintained codebase, making it easier to understand the program and preventing bugs from being introduced.",
+          "defaultLevel": "note",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1144",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay",
+              "Unnecessary"
+            ]
+          }
+        },
+        "S125": {
+          "id": "S125",
+          "shortDescription": "Sections of code should not be commented out",
+          "fullDescription": "Programmers should not comment out code as it bloats programs and reduces readability.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-125",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S1481": {
+          "id": "S1481",
+          "shortDescription": "Unused local variables should be removed",
+          "fullDescription": "If a local variable is declared but not used, it is dead code and should be removed. Doing so will improve maintainability because developers will not wonder what the variable is used for.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1481",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        },
+        "S4487": {
+          "id": "S4487",
+          "shortDescription": "Unread \"private\" fields should be removed",
+          "fullDescription": "Private fields only used to store values without reading them later is a case of dead store. So changing the value of such field is useless and most probably indicates a serious error in the code.",
+          "defaultLevel": "note",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-4487",
+          "properties": {
+            "category": "Critical Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay",
+              "Unnecessary"
+            ]
+          }
+        },
+        "S927": {
+          "id": "S927",
+          "shortDescription": "Parameter names should match base declaration and other partial definitions",
+          "fullDescription": "The name of a parameter in an externally visible. This rule raises an issue when method override does not match the name of the parameter in the base declaration of the method, or the name of the parameter in the interface declaration of the method or the name of any other partial definition.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-927",
+          "properties": {
+            "category": "Critical Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "MainSourceScope",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

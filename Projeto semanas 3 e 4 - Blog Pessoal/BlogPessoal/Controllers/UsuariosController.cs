@@ -34,6 +34,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpPost("cadastrar")]
+    [AllowAnonymous]
     public async Task<ActionResult> Cadastrar([FromBody] UsuarioRequestDTO userCadastro)
     {
         var userExists = await _userManager.FindByEmailAsync(userCadastro.Email!);
@@ -63,11 +64,13 @@ public class UsuariosController : ControllerBase
                 Message = "Falha ao cadastrar."
             });
         }
+        await _userManager.AddToRoleAsync(user, "Usuario");
 
         return Ok(new Response{ Status = "Sucesso", Message = "Usuário cadastrado com sucesso!"});
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<ActionResult> Login([FromBody] UsuarioLogin userLogin)
     {
         //encontrar o usuário
@@ -102,20 +105,64 @@ public class UsuariosController : ControllerBase
                 Expiration = token.ValidTo
             });
         }
-        return Unauthorized();
+        return Unauthorized("Email ou senha inválidos.");
     }
-    /*
-    [Authorize]
+    
     [HttpPut("{id}")]
-    public async Task<ActionResult> Atualizar(int id, [FromBody] UsuarioRequestDTO usuarioAtualizado)
+    [Authorize]
+    public async Task<ActionResult> Atualizar(int id, UsuarioUpdateDTO userUpdateDto)
     {
-        
+        var claimValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(claimValue) || !int.TryParse(claimValue, out int userLogadoId))
+            return Unauthorized("Token inválido.");
+
+        bool ehAdmin = User.IsInRole("Admin");
+
+        if (id != userLogadoId && !ehAdmin)
+            return Forbid("Sem permissão para atualizar o perfil de outro usuário.");
+
+        var user = await _userManager.FindByIdAsync(id.ToString());
+
+        if (user is null)
+            return NotFound("Usuário não encontrado.");
+
+        user.UserName = userUpdateDto.Nome;
+
+        var resultado = await _userManager.UpdateAsync(user);
+
+        if (!resultado.Succeeded)
+            return BadRequest(resultado.Errors);
+
+
+        return Ok("Perfil atualizado com sucesso!");
     }
 
-    [Authorize]
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<ActionResult> Excluir(int id)
     {
-        
-    }*/
+        var claimValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(claimValue) || !int.TryParse(claimValue, out int userLogadoId))
+            return Unauthorized("Token inválido.");
+
+        bool ehAdmin = User.IsInRole("Admin");
+
+        if (id != userLogadoId && !ehAdmin)
+            return Forbid("Sem permissão para excluir o perfil de outro usuário.");
+
+        var user = await _userManager.FindByIdAsync(id.ToString());
+
+        if (user is null)
+            return NotFound("Usuário não encontrado.");
+
+        var resultado = await _userManager.DeleteAsync(user);
+
+        if (!resultado.Succeeded)
+            return NoContent();
+
+
+        return Ok("Perfil excluído com sucesso!");
+    }
 }

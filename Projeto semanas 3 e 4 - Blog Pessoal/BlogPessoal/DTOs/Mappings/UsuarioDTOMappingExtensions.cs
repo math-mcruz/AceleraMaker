@@ -14,22 +14,7 @@ public static class UsuarioDTOMappingExtensions
         return new Usuario
         {
             UserName = usuRequestDto.Username,
-            Email = usuRequestDto.Email,
-            PasswordHash = usuRequestDto.Senha
-        };
-    }
-
-    public static Usuario? UpdateToUsuario(this UsuarioUpdateDTO usuUpdateDto)
-    {
-        if (usuUpdateDto is null)
-            return null;
-
-        return new Usuario
-        {
-            Id = usuUpdateDto.Id,
-            UserName = usuUpdateDto.Username,
-            Email = usuUpdateDto.Email,
-            PasswordHash = usuUpdateDto.Senha
+            Email = usuRequestDto.Email
         };
     }
 
@@ -43,7 +28,7 @@ public static class UsuarioDTOMappingExtensions
         {
             Id = usuario.Id,
             Username = usuario.UserName,
-            Email = usuario.Email,
+            Email = usuario.Email
         };
     }
 }

@@ -7,7 +7,7 @@ namespace BlogPessoal.DTOs.Mappings;
 public static class PostagemDTOMappingExtensions
 {
     //entrada dos dados para mandar pro banco
-    public static Postagem? RequestToPost(this PostagemRequestDTO postRequestDto)
+    public static Postagem? RequestToPost(this PostagemRequestDTO postRequestDto, int userLogado)
     {
         if (postRequestDto is null)
             return null;
@@ -17,26 +17,23 @@ public static class PostagemDTOMappingExtensions
             Titulo = postRequestDto.Titulo,
             Texto = postRequestDto.Texto,
             Data = postRequestDto.Data,
-            UsuarioId = postRequestDto.UsuarioId,
+            UsuarioId = userLogado,
             TemaId = postRequestDto.TemaId
         };
     }
 
-    public static Postagem? UpdateToPost(this PostagemUpdateDTO postUpdateDto)
+    public static void UpdateToPost(this Postagem postExistente, PostagemUpdateDTO postUpdateDto)
     {
-        if (postUpdateDto is null)
-            return null;
+        if (postUpdateDto is null) 
+            return;
 
-        return new Postagem
-        {
-            PostagemId = postUpdateDto.PostagemId,
-            Titulo = postUpdateDto.Titulo,
-            Texto = postUpdateDto.Texto,
-            Data = postUpdateDto.Data,
-            UsuarioId = postUpdateDto.UsuarioId,
-            TemaId = postUpdateDto.TemaId
-        };
+        postExistente.PostagemId = postUpdateDto.PostagemId;
+        postExistente.Titulo = postUpdateDto.Titulo;
+        postExistente.Texto = postUpdateDto.Texto;
+        postExistente.Data = postUpdateDto.Data; 
+        postExistente.TemaId = postUpdateDto.TemaId;
     }
+
     //saida dos dados para enviar para o usuário novamente
     public static PostagemResponseDTO? ToPostResponseDTO(this Postagem post)
     {
@@ -49,8 +46,8 @@ public static class PostagemDTOMappingExtensions
             Titulo = post.Titulo,
             Texto = post.Texto,
             Data = post.Data,
-            NomeAutor = post.Usuario.UserName,
-            NomeTema = post.Tema.Nome
+            NomeAutor = post.Usuario?.UserName ?? "Autor anônimo",
+            NomeTema = post.Tema?.Nome ?? "Tema Desconhecido"
         };
     }
 
@@ -60,14 +57,6 @@ public static class PostagemDTOMappingExtensions
         if (post is null || !post.Any())
             return new List<PostagemResponseDTO>();
 
-        return post.Select(postagem => new PostagemResponseDTO
-        {
-            PostagemId = postagem.PostagemId,
-            Titulo = postagem.Titulo,
-            Texto = postagem.Texto,
-            Data = postagem.Data,
-            NomeAutor = postagem.Usuario.UserName,
-            NomeTema = postagem.Tema.Nome
-        });
+        return post.Select(postagem => postagem.ToPostResponseDTO()!);
     }
 }

@@ -17,9 +17,6 @@ public class PostagemRequestDTO
     //achar uma maneira de colocar data automatico ------------------------------------***********************************
     public DateTime? Data { get; set; }
 
-    [Required(ErrorMessage = "Id do usuário é obrigatório.")]
-    public int UsuarioId { get; set; }
-
     [Required(ErrorMessage = "Id do Tema é obrigatório.")]
     public int TemaId { get; set; }
 }

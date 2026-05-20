@@ -7,7 +7,8 @@ using BlogPessoal.Repositories.UnitsOfWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace BlogPessoal.Controllers;
 
@@ -28,7 +29,9 @@ public class PostagensController : ControllerBase
         _uof = uof;
     }
 
+    //todos podem acessar
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<PostagemResponseDTO>>> Get()
     {
         var postagens = await _uof.PostagemRepository.GetAllAsync();
@@ -42,37 +45,45 @@ public class PostagensController : ControllerBase
     }
 
     [HttpGet("filtro")]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<PostagemResponseDTO>>> GetFiltro([FromQuery] PostagensFiltroAutorTema postFiltro)
     {
         var postagens = await _uof.PostagemRepository.GetFiltroAutorTemaAsync(postFiltro);
 
-        if (postagens is null)
-            return NotFound("Não existem postagens criados");
-
-        var metadata = new
-        {
-            postagens.TotalCount,
-            postagens.PageSize,
-            postagens.CurrentPage,
-            postagens.TotalPages,
-            postagens.HasNext,
-            postagens.HasPrevious,
-        };
-        //teve que instalar Newtonsoft.json da aula. considerar se vai usar -----------------------------------------************************
-        Response.Headers.Append("Pagination", JsonConvert.SerializeObject(metadata));
+        if (postagens is null || !postagens.Any())
+            return NotFound("Não existem postagens criadas com o filtro aplicado.");
 
         var postResponseDto = postagens.ToPostagemDTOList();
-        
-        return Ok(postagens);
+
+        var resposta = new
+        {
+            Dados = postResponseDto,
+            Paginacao = new
+            {
+                postagens.TotalCount,
+                postagens.PageSize,
+                postagens.CurrentPage,
+                postagens.TotalPages,
+                postagens.HasNext,
+                postagens.HasPrevious
+            }
+        };
+        return Ok(resposta);
     }
-    [Authorize]
+
     [HttpPost]
+    [Authorize(Policy = "RequerUsuario")]
     public async Task<ActionResult<PostagemResponseDTO>> Post(PostagemRequestDTO postRequestDto)
     {
         if (postRequestDto is null)
             return BadRequest("Dados inválidos");
 
-        var post = postRequestDto.RequestToPost();
+        var claimValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(claimValue) || !int.TryParse(claimValue, out int userLogadoId))
+            return Unauthorized("ID do usuário inválido ou não encontrado no token.");
+
+        var post = postRequestDto.RequestToPost(userLogadoId);
 
         var postCriado = _uof.PostagemRepository.Create(post);
         await _uof.CommitAsync();
@@ -84,14 +95,31 @@ public class PostagensController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, postResponseDto);
     }
 
-    [Authorize]
     [HttpPut("{id:int}")]
+    [Authorize(Policy = "RequerUsuario")]
     public async Task<ActionResult<PostagemResponseDTO>> Put(int id, PostagemUpdateDTO postUpdateDto)
     {
         if (id != postUpdateDto.PostagemId)
             return BadRequest("Dados inválidos");
 
-        var post = postUpdateDto.UpdateToPost();
+        var claimValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(claimValue) || !int.TryParse(claimValue, out int userLogadoId))
+            return Unauthorized("ID do usuário inválido ou não encontrado no token.");
+
+        //busca a postagem no banco
+        var post = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == id);
+
+        if (post is null)
+            return NotFound("Postagem não encontrada.");
+
+        bool ehAdmin = User.IsInRole("Admin");
+
+        //se for adimin ja da falso, e se for o post do autor da falso
+        if (post.UsuarioId != userLogadoId && !ehAdmin)
+            return Forbid("Sem permissão para editar a postagem.");
+
+        post.UpdateToPost(postUpdateDto);
 
         var postAtualizado = _uof.PostagemRepository.Update(post);
         await _uof.CommitAsync();
@@ -107,18 +135,24 @@ public class PostagensController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<PostagemResponseDTO>> Delete(int id)
     {
+        var claimValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(claimValue) || !int.TryParse(claimValue, out int userLogadoId))
+            return Unauthorized("ID do usuário inválido ou não encontrado no token.");
+
         var post = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == id);
+
         if (post is null)
             return NotFound("Postagem não encontrado");
 
+        bool ehAdmin = User.IsInRole("Admin");
+
+        if (post.UsuarioId != userLogadoId && !ehAdmin)
+            return Forbid("Sem permissão para excluir a postagem.");
 
         var postExcluido = _uof.PostagemRepository.Delete(post);
         await _uof.CommitAsync();
 
-        var postCompleto = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == postExcluido.PostagemId);
-
-        var postResponseDto = postCompleto.ToPostResponseDTO();
-
-        return Ok(postResponseDto);
+        return NoContent();
     }
 }
