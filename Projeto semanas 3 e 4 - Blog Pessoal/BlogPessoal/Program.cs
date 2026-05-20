@@ -15,7 +15,7 @@ using Microsoft.OpenApi;
 using System.Text;
 using System.Text.Json.Serialization;
 using Swashbuckle.AspNetCore;
-using BlogPessoal.Config;
+using BlogPessoal.Config.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,10 +29,12 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlogPessoal", Version = "v1" });
     c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
-        Description = "Insira o token JWT:\n(Bearer token)",
-        In = ParameterLocation.Header,
+        Description = "Insira o token JWT:",
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
     });
 
     //filtro automatico
@@ -82,6 +84,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+//Autorização
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequerAdmin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("RequerUsuario", policy => policy.RequireRole("Usuario", "Admin"));
+});
 
 
 

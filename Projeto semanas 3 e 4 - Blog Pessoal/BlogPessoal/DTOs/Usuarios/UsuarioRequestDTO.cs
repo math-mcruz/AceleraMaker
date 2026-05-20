@@ -14,7 +14,6 @@ public class UsuarioRequestDTO
     [EmailAddress]
     public string Email { get; set; }
 
-    //data de criação?
     [Required(ErrorMessage = "Senha é obrigatório.")]
     [StringLength(20, MinimumLength = 8)]
     public string Senha { get; set; }

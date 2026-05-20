@@ -58,13 +58,31 @@ public class UsuariosController : ControllerBase
 
         if (!result.Succeeded)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response
+            var mensagensDeErro = result.Errors.Select(e => e.Description);
+            var erroCompleto = string.Join(" | ", mensagensDeErro);
+
+            // 2. Retornamos 400 BadRequest com o detalhe do erro
+            return BadRequest(new Response
             {
                 Status = "Erro",
-                Message = "Falha ao cadastrar."
+                Message = $"Falha ao cadastrar: {erroCompleto}"
+            });
+            //return StatusCode(StatusCodes.Status500InternalServerError, new Response
+            //{
+            //    Status = "Erro",
+            //    Message = "Falha ao cadastrar."
+
+            //});
+        }
+        var roleResult = await _userManager.AddToRoleAsync(user, "Usuario");
+        if (!roleResult.Succeeded)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new Response
+            {
+                Status = "Aviso",
+                Message = "Usuário criado, mas falhou ao vincular o perfil de 'Usuario'."
             });
         }
-        await _userManager.AddToRoleAsync(user, "Usuario");
 
         return Ok(new Response{ Status = "Sucesso", Message = "Usuário cadastrado com sucesso!"});
     }
@@ -84,8 +102,9 @@ public class UsuariosController : ControllerBase
 
             var authClains = new List<Claim>
             {
-                //new Claim(ClaimTypes.Name, user.UserName!), decidir se vai por o nome também ------------------------------*************
+                new Claim(ClaimTypes.Name, user.UserName!),
                 new Claim(ClaimTypes.Email, user.Email!),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
