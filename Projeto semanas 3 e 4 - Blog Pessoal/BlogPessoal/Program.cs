@@ -1,3 +1,5 @@
+using BlogPessoal.Config.Data;
+using BlogPessoal.Config.RateLimitConfig;
 using BlogPessoal.Data;
 using BlogPessoal.Middlewares.Exceptions;
 using BlogPessoal.Middlewares.Filters;
@@ -6,16 +8,22 @@ using BlogPessoal.Repositories.GenericRepository;
 using BlogPessoal.Repositories.Postagens;
 using BlogPessoal.Repositories.Temas;
 using BlogPessoal.Repositories.UnitsOfWork;
+using BlogPessoal.Services;
+using BlogPessoal.Services.Postagens;
+using BlogPessoal.Services.Tema;
+using BlogPessoal.Services.Temas;
 using BlogPessoal.Services.Token;
+using BlogPessoal.Services.Usuario;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
-using Swashbuckle.AspNetCore;
-using BlogPessoal.Config.Data;
+using System.Threading.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,13 +34,30 @@ builder.Services.AddControllers(options => { options.Filters.Add(typeof(ApiExcep
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlogPessoal", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo 
+    { Title = "Blog Pessoal", 
+      Version = "v1", 
+      Description = "API RESTful desenvolvida em ASP.NET Core para gerenciamento de um Blog Pessoal.\n\n" +
+                      "**Principais Recursos:**\n" +
+                      "* Autenticação e Autorização com JWT.\n" +
+                      "* Gestão de Usuários e Perfis (Admin/Usuário comum).\n" +
+                      "* Operações completas de CRUD para Temas e Postagens.\n",
+      Contact = new OpenApiContact
+      {
+          Name = "Matheus Cruz",
+          Email = "matheusmcruz2004@gmail.com",
+          Url = new Uri("https://github.com/math-mcruz")
+      }
+    });
+    var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
+
     c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
         Description = "Insira o token JWT:",
         Name = "Authorization",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
+        Type = SecuritySchemeType.Http, //para não precisar escrever Bearer e depois o token
         Scheme = "bearer",
         BearerFormat = "JWT"
     });
@@ -91,20 +116,51 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("RequerUsuario", policy => policy.RequireRole("Usuario", "Admin"));
 });
 
+//aplicando Rate Limiting para não sobrecarregar o blog com requisições
 
+var myOptions = new RateLimitOptions();
+var myOptionsGlobal = new RateLimitGlobalOptions();
+
+builder.Configuration.GetSection(RateLimitOptions.MyRateLimit).Bind(myOptions);
+builder.Configuration.GetSection(RateLimitGlobalOptions.MyRateLimit).Bind(myOptionsGlobal);
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.AddSlidingWindowLimiter("sliding", regras =>
+    {
+        regras.PermitLimit = myOptions.PermitLimit;
+        regras.Window = TimeSpan.FromSeconds(myOptions.Window);
+        regras.SegmentsPerWindow = myOptions.SegmentsPerWindow;
+        regras.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        regras.QueueLimit = myOptions.QueueLimit;
+    });
+
+    options.AddSlidingWindowLimiter("global", regras =>
+    {
+        regras.PermitLimit = myOptionsGlobal.PermitLimit;
+        regras.Window = TimeSpan.FromMinutes(myOptionsGlobal.Window);
+        regras.SegmentsPerWindow = myOptionsGlobal.SegmentsPerWindow;
+        regras.QueueLimit = myOptionsGlobal.QueueLimit;
+    });
+});
 
 //Aplicando o filtro
 builder.Services.AddScoped<ApiLoggingFilter>();
 
 
-//fazer isso para cada repository ---------------------------------------------*********** falta o de usuario
+//Repository
 builder.Services.AddScoped<IPostagemRepository,PostagemRepository>();
 builder.Services.AddScoped<ITemaRepository,TemaRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+//Services
 builder.Services.AddScoped<ITokenService, TokenService>();
-
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<ITemaService, TemaService>();
+builder.Services.AddScoped<IPostagemService, PostagemService>();
 
 
 
@@ -121,12 +177,13 @@ if (app.Environment.IsDevelopment())
 
     //lembrar que isso é só para o modo Development, pois não pode mostrar o stacktrace no modo deploy, por segurança
 }
-
 app.UseHttpsRedirection();
+
+app.UseRateLimiter();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers().RequireRateLimiting("global");
 
 using (var scope = app.Services.CreateScope())
 {

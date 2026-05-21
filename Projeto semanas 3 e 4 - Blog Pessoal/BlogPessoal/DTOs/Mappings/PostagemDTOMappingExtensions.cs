@@ -1,5 +1,4 @@
 ﻿using BlogPessoal.DTOs.Postagens;
-using BlogPessoal.DTOs.Temas;
 using BlogPessoal.Models;
 
 namespace BlogPessoal.DTOs.Mappings;

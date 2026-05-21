@@ -2,7 +2,6 @@
 using System.Net;
 
 namespace BlogPessoal.Middlewares.Exceptions;
-//aula do macoratti
 public static class ApiExceptionMiddlewareExtensions
 {
     public static void ConfigureExceptionHandler(this IApplicationBuilder app)
@@ -11,18 +10,28 @@ public static class ApiExceptionMiddlewareExtensions
         {
             appError.Run(async context =>
             {
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.ContentType = "application/json";
 
                 var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
 
-                if(contextFeature != null)
+                if (contextFeature != null)
                 {
+                    var exception = contextFeature.Error;
+
+                    context.Response.StatusCode = exception switch
+                    {
+                        KeyNotFoundException => (int)HttpStatusCode.NotFound,           
+                        ArgumentException => (int)HttpStatusCode.BadRequest,             
+                        InvalidOperationException => (int)HttpStatusCode.Conflict,       
+                        UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized, 
+                        _ => (int)HttpStatusCode.InternalServerError                     
+                    };
+
                     await context.Response.WriteAsync(new ErrorDetails()
                     {
                         StatusCode = context.Response.StatusCode,
-                        Message = contextFeature.Error.Message,
-                        Trace = contextFeature.Error.StackTrace
+                        Message = exception.Message, 
+                        Trace = contextFeature.Error.StackTrace 
                     }.ToString());
                 }
             });

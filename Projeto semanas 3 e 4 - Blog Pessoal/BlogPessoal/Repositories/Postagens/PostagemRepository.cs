@@ -1,5 +1,4 @@
 ﻿using BlogPessoal.Data;
-using BlogPessoal.DTOs.Postagens;
 using BlogPessoal.Models;
 using BlogPessoal.Models.Pagination;
 using BlogPessoal.Repositories.GenericRepository;
@@ -22,9 +21,8 @@ public class PostagemRepository : Repository<Postagem>, IPostagemRepository
     }
 
     //consulta de autor ou/e tema
-    public async Task<PagedList<Postagem>> GetFiltroAutorTemaAsync(PostagensFiltroAutorTema postFiltroParams)
+    public async Task<PagedResponse<Postagem>> GetFiltroAutorTemaAsync(PostagensFiltroAutorTema postFiltroParams)
     {
-        //faz o include para ter acesso ao nome dos usuarios e temas ------------------------------------**********************************
         var consulta = await GetAllAsync();
 
         if (postFiltroParams.AutorId != null)
@@ -33,14 +31,20 @@ public class PostagemRepository : Repository<Postagem>, IPostagemRepository
         if (postFiltroParams.TemaId != null)
             consulta = consulta.Where(p => p.TemaId == postFiltroParams.TemaId);
 
-        //ordenada por data de postagem
-        var postOredenado = consulta.OrderBy(p => p.Data).AsQueryable();
+        var postOrdenado = consulta.OrderBy(p => p.Data);
 
-        return PagedList<Postagem>.ToPagedList(postOredenado, postFiltroParams.PageNumber, postFiltroParams.PageSize);
+        var count = postOrdenado.Count();
+
+        var itensPaginados = postOrdenado
+            .Skip((postFiltroParams.PageNumber - 1) * postFiltroParams.PageSize)
+            .Take(postFiltroParams.PageSize)
+            .ToList();
+
+        return new PagedResponse<Postagem>(
+            dados: itensPaginados,
+            count: count,
+            pageNumber: postFiltroParams.PageNumber,
+            pageSize: postFiltroParams.PageSize
+        );
     }
-
-    //public async Task<Postagem> GetPostagemCompletaAsync(int id)
-    //{
-    //    return await _context.Postagens.Include(p => p.Tema).Include(p => p.Usuario).FirstOrDefaultAsync(p => p.PostagemId == id);
-    //}
 }

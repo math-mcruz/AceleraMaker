@@ -1,187 +1,164 @@
-﻿using BlogPessoal.Data;
-using BlogPessoal.DTOs;
-using BlogPessoal.DTOs.Mappings;
-using BlogPessoal.DTOs.Status;
+﻿using BlogPessoal.DTOs.Status;
 using BlogPessoal.DTOs.Usuarios;
+using BlogPessoal.Middlewares.Extensions;
 using BlogPessoal.Models;
-using BlogPessoal.Repositories.UnitsOfWork;
-using BlogPessoal.Services.Token;
+using BlogPessoal.Services.Usuario;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.NetworkInformation;
-using System.Security.Claims;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace BlogPessoal.Controllers;
 
 [Route("api/usuarios")]
 [ApiController]
+[ApiConventionType(typeof(DefaultApiConventions))]
 public class UsuariosController : ControllerBase
 {
-    private readonly ITokenService _tokenService;
-    private readonly UserManager<Usuario> _userManager;
-    private readonly RoleManager<IdentityRole<int>> _roleManager;
-    private readonly IConfiguration _configuration;
+    private readonly IUsuarioService _usuarioService;
 
-    public UsuariosController(ITokenService tokenService, UserManager<Usuario> userManager, RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration)
+    public UsuariosController(IUsuarioService usuarioService)
     {
-        _tokenService = tokenService;
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _configuration = configuration;
+        _usuarioService = usuarioService;
     }
 
+    /// <summary>
+    /// Criar nova conta de usuário no Blog.
+    /// </summary>
+    /// <remarks>
+    /// Novos usuários recebem o perfil de acesso: **Usuario**.
+    /// 
+    /// **Senha deve conter:**
+    ///  * **Mínimo de 6 caracteres**
+    ///  * **Pelo menos uma letra maiúscula e uma minúscula**
+    ///  * **Pelo menos um número e um caractere especial (!, @, #, $, ...)**
+    /// 
+    /// Exemplo de requisição:
+    ///
+    ///     POST /api/usuarios/cadastrar
+    ///     {
+    ///        "nome": "Luis Guerreiro",
+    ///        "email": "luisg@email.com",
+    ///        "senha": "SenhaSuperSegura@123"
+    ///     }
+    ///
+    /// </remarks>
+    /// <param name="userCadastro">Dados essenciais para o cadastro.</param>
+    /// <returns>Mensagem de sucesso confirmando a criação da conta.</returns>
+    /// <response code="200">Usuário adastrado com sucesso!</response>
+    /// <response code="400">Falha, possíveis erros: dados inválidos, formatação, falta de propriedades obrigatórias, senha inválida.</response>
+    /// <response code="500">Falhou ao vincular o perfil.</response>
     [HttpPost("cadastrar")]
     [AllowAnonymous]
+    [EnableRateLimiting("sliding")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Response), StatusCodes.Status500InternalServerError)]
+    [ProducesDefaultResponseType]
     public async Task<ActionResult> Cadastrar([FromBody] UsuarioRequestDTO userCadastro)
     {
-        var userExists = await _userManager.FindByEmailAsync(userCadastro.Email!);
-
-        if (userExists != null) 
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response
-            {
-                Status = "Erro",
-                Message = "Usuário já existe."
-            });
-        }
-        Usuario user = new()
-        {
-            Email = userCadastro.Email,
-            SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = userCadastro.Username
-        };
-
-        var result = await _userManager.CreateAsync(user, userCadastro.Senha);
-
-        if (!result.Succeeded)
-        {
-            var mensagensDeErro = result.Errors.Select(e => e.Description);
-            var erroCompleto = string.Join(" | ", mensagensDeErro);
-
-            // 2. Retornamos 400 BadRequest com o detalhe do erro
-            return BadRequest(new Response
-            {
-                Status = "Erro",
-                Message = $"Falha ao cadastrar: {erroCompleto}"
-            });
-            //return StatusCode(StatusCodes.Status500InternalServerError, new Response
-            //{
-            //    Status = "Erro",
-            //    Message = "Falha ao cadastrar."
-
-            //});
-        }
-        var roleResult = await _userManager.AddToRoleAsync(user, "Usuario");
-        if (!roleResult.Succeeded)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response
-            {
-                Status = "Aviso",
-                Message = "Usuário criado, mas falhou ao vincular o perfil de 'Usuario'."
-            });
-        }
-
-        return Ok(new Response{ Status = "Sucesso", Message = "Usuário cadastrado com sucesso!"});
+        var response = await _usuarioService.CadastrarAsync(userCadastro);
+        return Ok(response);
     }
 
+    /// <summary>
+    /// Login com validação de email e senha.
+    /// </summary>
+    /// <remarks>
+    /// Geração do tokens JWT para autenticação, copie o Token retornado e cole no botão **Authorize** no topo da página para acessar as rotas protegidas.
+    /// 
+    /// Exemplo de requisição:
+    ///     
+    ///     POST /api/usuarios/login
+    ///     {
+    ///        "email": "luisg@email.com",
+    ///        "senha": "SenhaSuperSegura@123"
+    ///     }
+    ///     
+    /// </remarks>
+    /// <param name="usuarioLogin">Credenciais de acesso.</param>
+    /// <returns>Retorna o Token JWT que autoriza o acesso de rotas protegidas.</returns>
+    /// <response code="200">Login realizado com sucesso! Token JWT gerado.</response>
+    /// <response code="400">Falha, possíveis erros: formatação, e-mail ou senha inválidos.</response>
+    /// <response code="401">E-mail não encontrado ou senha incorreta.</response>
     [HttpPost("login")]
     [AllowAnonymous]
+    [EnableRateLimiting("sliding")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+    [ProducesDefaultResponseType]
     public async Task<ActionResult> Login([FromBody] UsuarioLogin userLogin)
     {
-        //encontrar o usuário
-        var user = await _userManager.FindByEmailAsync(userLogin.Email!);
-        
-        //verifica se existe o usuario e se a senha é a mesma
-        if (user is not null && await _userManager.CheckPasswordAsync(user, userLogin.Senha))
+        var (tokenString, expiracao) = await _usuarioService.LoginAsync(userLogin);
+
+        return Ok(new
         {
-            //busca os perfis do usuário
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            var authClains = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.UserName!),
-                new Claim(ClaimTypes.Email, user.Email!),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-
-            foreach(var userRole in userRoles)
-            {
-                //entender melhor como funciona ------------------------------------------------------------************
-                authClains.Add(new Claim(ClaimTypes.Role, userRole));
-            }
-
-            var token = _tokenService.GenerateAccessToken(authClains, _configuration);
-
-            await _userManager.UpdateAsync(user);
-
-            return Ok(new
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expiration = token.ValidTo
-            });
-        }
-        return Unauthorized("Email ou senha inválidos.");
+            Token = tokenString,
+            Expiration = expiracao
+        });
     }
-    
+
+    /// <summary>
+    /// Atualizar informações de perfil.
+    /// </summary>
+    /// <remarks>
+    /// **Observação:** apenas o usuário do perfil ou administrador pode atualizar a conta.
+    /// 
+    /// Exemplo de requisição:
+    ///
+    ///     PUT /api/usuarios/7
+    ///     {
+    ///        "nome": "Aline",
+    ///     }
+    ///
+    /// </remarks>
+    /// <param name="id">Id  do usuário que será atualizado.</param>
+    /// <param name="usuarioAtualizacao">Novas informações do perfil.</param>
+    /// <returns>Dados do usuário atualizado.</returns>
+    /// <response code="200">Perfil foi atualizado com sucesso!</response>
+    /// <response code="400">Falha, possíveis erros: Id inválido e/ou dados inválidos, formatação, falta de propriedades obrigatórias.</response>
+    /// <response code="401">Token JWT expirou ou inválido.</response>
+    /// <response code="403">Sem permissão para alterar a conta.</response>
+    /// <response code="404">Usuário não existe.</response>
     [HttpPut("{id}")]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+    [ProducesDefaultResponseType]
     public async Task<ActionResult> Atualizar(int id, UsuarioUpdateDTO userUpdateDto)
     {
-        var claimValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrEmpty(claimValue) || !int.TryParse(claimValue, out int userLogadoId))
-            return Unauthorized("Token inválido.");
-
+        int usuarioLogadoId = User.ObterIdUsuarioLogado();
         bool ehAdmin = User.IsInRole("Admin");
 
-        if (id != userLogadoId && !ehAdmin)
-            return Forbid("Sem permissão para atualizar o perfil de outro usuário.");
-
-        var user = await _userManager.FindByIdAsync(id.ToString());
-
-        if (user is null)
-            return NotFound("Usuário não encontrado.");
-
-        user.UserName = userUpdateDto.Nome;
-
-        var resultado = await _userManager.UpdateAsync(user);
-
-        if (!resultado.Succeeded)
-            return BadRequest(resultado.Errors);
-
+        await _usuarioService.AtualizarPerfilAsync(id, userUpdateDto, usuarioLogadoId, ehAdmin);
 
         return Ok("Perfil atualizado com sucesso!");
     }
 
+    /// <summary>
+    /// Excluir conta de usuário.
+    /// </summary>
+    /// <remarks>
+    /// **Observação:** apenas o usuário do perfil ou administrador pode excluir a conta.
+    /// </remarks>
+    /// <param name="id">ID da conta a ser excluída.</param>
+    /// <returns>Status de confirmação sem conteúdo.</returns>
+    /// <response code="204">Conta excluída com sucesso!</response>
+    /// <response code="401">Token JWT expirou ou inválido.</response>
+    /// <response code="403">Sem permissão para para excluir a conta.</response>
+    /// <response code="404">Conta não existe.</response>
     [HttpDelete("{id}")]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+    [ProducesDefaultResponseType]
     public async Task<ActionResult> Excluir(int id)
     {
-        var claimValue = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrEmpty(claimValue) || !int.TryParse(claimValue, out int userLogadoId))
-            return Unauthorized("Token inválido.");
-
+        int usuarioLogadoId = User.ObterIdUsuarioLogado();
         bool ehAdmin = User.IsInRole("Admin");
 
-        if (id != userLogadoId && !ehAdmin)
-            return Forbid("Sem permissão para excluir o perfil de outro usuário.");
+        await _usuarioService.ExcluirContaAsync(id, usuarioLogadoId, ehAdmin);
 
-        var user = await _userManager.FindByIdAsync(id.ToString());
-
-        if (user is null)
-            return NotFound("Usuário não encontrado.");
-
-        var resultado = await _userManager.DeleteAsync(user);
-
-        if (!resultado.Succeeded)
-            return NoContent();
-
-
-        return Ok("Perfil excluído com sucesso!");
+        return NoContent();
     }
 }
