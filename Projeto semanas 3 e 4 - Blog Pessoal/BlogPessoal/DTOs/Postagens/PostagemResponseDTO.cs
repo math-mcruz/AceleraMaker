@@ -6,6 +6,8 @@ public class PostagemResponseDTO
     public string Titulo { get; set; }
     public string Texto { get; set; }
     public DateTime? Data { get; set; }
+    public int UsuarioId { get; set; }
     public string? NomeAutor { get; set; }
+    public int TemaId { get; set; }
     public string? NomeTema { get; set; }
 }

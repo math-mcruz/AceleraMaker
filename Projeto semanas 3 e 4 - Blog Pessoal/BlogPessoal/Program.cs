@@ -2,7 +2,6 @@ using BlogPessoal.Config.Data;
 using BlogPessoal.Config.RateLimitConfig;
 using BlogPessoal.Data;
 using BlogPessoal.Middlewares.Exceptions;
-using BlogPessoal.Middlewares.Filters;
 using BlogPessoal.Models;
 using BlogPessoal.Repositories.GenericRepository;
 using BlogPessoal.Repositories.Postagens;
@@ -23,14 +22,13 @@ using Microsoft.OpenApi;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 //ajuste para ignorar ciclos
 //ajuste para colocar o filtro global nos controladores
-builder.Services.AddControllers(options => { options.Filters.Add(typeof(ApiExceptionFilter)); } ).AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -40,7 +38,7 @@ builder.Services.AddSwaggerGen(c =>
       Description = "API RESTful desenvolvida em ASP.NET Core para gerenciamento de um Blog Pessoal.\n\n" +
                       "**Principais Recursos:**\n" +
                       "* Autenticação e Autorização com JWT.\n" +
-                      "* Gestão de Usuários e Perfis (Admin/Usuário comum).\n" +
+                      "* Gestão de Usuários e Perfis (Admin e Usuário).\n" +
                       "* Operações completas de CRUD para Temas e Postagens.\n",
       Contact = new OpenApiContact
       {
@@ -133,7 +131,7 @@ builder.Services.AddRateLimiter(options =>
         regras.PermitLimit = myOptions.PermitLimit;
         regras.Window = TimeSpan.FromSeconds(myOptions.Window);
         regras.SegmentsPerWindow = myOptions.SegmentsPerWindow;
-        regras.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        //regras.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         regras.QueueLimit = myOptions.QueueLimit;
     });
 
@@ -145,10 +143,6 @@ builder.Services.AddRateLimiter(options =>
         regras.QueueLimit = myOptionsGlobal.QueueLimit;
     });
 });
-
-//Aplicando o filtro
-builder.Services.AddScoped<ApiLoggingFilter>();
-
 
 //Repository
 builder.Services.AddScoped<IPostagemRepository,PostagemRepository>();
@@ -162,17 +156,18 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ITemaService, TemaService>();
 builder.Services.AddScoped<IPostagemService, PostagemService>();
 
-
-
+//---------------------------------------------------------------------------------------------------------------------------
+//                                                          Build
+//---------------------------------------------------------------------------------------------------------------------------
 
 var app = builder.Build();
 
+app.ConfigureExceptionHandler();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     //app.MapOpenApi();
     app.UseSwagger();
-    app.ConfigureExceptionHandler();
     app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "Blog Pessoal API"));
 
     //lembrar que isso é só para o modo Development, pois não pode mostrar o stacktrace no modo deploy, por segurança

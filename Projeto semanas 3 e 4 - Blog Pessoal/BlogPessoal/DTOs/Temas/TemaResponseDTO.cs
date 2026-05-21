@@ -4,5 +4,4 @@ public class TemaResponseDTO
 {
     public int TemaId { get; set; }
     public string? Nome { get; set; }
-    public int QtdPostagens { get; set; }
 }

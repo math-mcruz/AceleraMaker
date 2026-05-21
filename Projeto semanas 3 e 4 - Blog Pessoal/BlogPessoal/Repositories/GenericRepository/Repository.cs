@@ -21,7 +21,6 @@ public class Repository<T> : IRepository<T> where T : class
     }
     public virtual async Task<IEnumerable<T>> GetAllAsync()
     {
-        //o set vai acessar a tabela T
         //como esse get vai ser apenas para exibir, usar AsNoTracking vai otimizar a busca
         return await _context.Set<T>().AsNoTracking().ToListAsync();
     }

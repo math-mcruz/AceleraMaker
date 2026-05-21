@@ -1,6 +1,8 @@
 ﻿using BlogPessoal.Data;
 using BlogPessoal.Models;
 using BlogPessoal.Repositories.GenericRepository;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BlogPessoal.Repositories.Temas;
 

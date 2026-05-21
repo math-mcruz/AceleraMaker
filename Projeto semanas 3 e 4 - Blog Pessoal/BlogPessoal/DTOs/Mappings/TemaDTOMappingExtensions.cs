@@ -40,7 +40,6 @@ public static class TemaDTOMappingExtensions
         {
             TemaId = tema.TemaId,
             Nome = tema.Nome,
-            QtdPostagens = tema.Postagem?.Count() ?? 0 //se não tiver postagens retorna 0
         };
     }
 
@@ -54,8 +53,6 @@ public static class TemaDTOMappingExtensions
         {
             TemaId = tema.TemaId,
             Nome = tema.Nome,
-            QtdPostagens = tema.Postagem?.Count() ?? 0
         });
-
     }
 }

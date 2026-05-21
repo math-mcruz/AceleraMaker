@@ -15,7 +15,7 @@ public static class PostagemDTOMappingExtensions
         {
             Titulo = postRequestDto.Titulo,
             Texto = postRequestDto.Texto,
-            Data = postRequestDto.Data,
+            Data = DateTime.Now,
             UsuarioId = userLogado,
             TemaId = postRequestDto.TemaId
         };
@@ -45,12 +45,12 @@ public static class PostagemDTOMappingExtensions
             Titulo = post.Titulo,
             Texto = post.Texto,
             Data = post.Data,
+            UsuarioId = post.UsuarioId,
             NomeAutor = post.Usuario?.UserName ?? "Autor anônimo",
+            TemaId = post.TemaId,
             NomeTema = post.Tema?.Nome ?? "Tema Desconhecido"
         };
     }
-
-    //saida de uma lista de postagens
     public static IEnumerable<PostagemResponseDTO> ToPostagemDTOList(this IEnumerable<Postagem> post)
     {
         if (post is null || !post.Any())

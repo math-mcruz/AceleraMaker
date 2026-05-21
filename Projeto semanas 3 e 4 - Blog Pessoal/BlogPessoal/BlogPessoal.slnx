@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../BlogPessoal.Tests/BlogPessoal.Tests.csproj" Id="0feaf4ae-494e-4bdd-b1a0-eb88b1e1dccb" />
   <Project Path="BlogPessoal.csproj" />
 </Solution>
