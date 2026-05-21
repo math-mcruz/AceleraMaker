@@ -46,6 +46,11 @@ public class PostagemService : IPostagemService
         if (postRequestDto is null)
             throw new ArgumentException("Dados inválidos."); // Vira 400
 
+        // Validar se o Tema existe
+        var temaExiste = await _uof.TemaRepository.GetAsync(t => t.TemaId == postRequestDto.TemaId);
+        if (temaExiste is null)
+            throw new KeyNotFoundException("Tema não encontrado."); // Vira 404
+
         var post = postRequestDto.RequestToPost(usuarioLogadoId);
 
         var postCriado = _uof.PostagemRepository.Create(post);

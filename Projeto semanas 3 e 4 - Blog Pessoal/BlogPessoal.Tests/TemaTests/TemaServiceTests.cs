@@ -4,7 +4,7 @@ using BlogPessoal.Services.Temas;
 using FluentAssertions;
 using Moq;
 
-namespace BlogPessoal.Tests;
+namespace BlogPessoal.Tests.TemaTests;
 
 public class TemaServiceTests
 {

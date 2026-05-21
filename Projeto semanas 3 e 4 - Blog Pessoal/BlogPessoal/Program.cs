@@ -66,7 +66,6 @@ builder.Services.AddSwaggerGen(c =>
 
 //autenticação
 builder.Services.AddControllers();
-//builder.Services.AddAuthentication("Bearer").AddJwtBearer();
 
 //configurando o Identity
 builder.Services.AddIdentity<Usuario, IdentityRole<int>>().AddRoles<IdentityRole<int>>().AddEntityFrameworkStores<BlogDbContext>().AddDefaultTokenProviders();
