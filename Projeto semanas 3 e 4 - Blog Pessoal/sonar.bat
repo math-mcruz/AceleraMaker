@@ -3,7 +3,7 @@ set PROJECT_KEY=blog-pessoal-dotnet
 set URL=http://localhost:9000
 
 echo [1/4] begin
-dotnet sonarscanner begin /k:"%PROJECT_KEY%" /d:sonar.host.url="%URL%" /d:sonar.login="%SONAR_TOKEN%" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.exclusions="**/Migrations/**,**/Config/**,**/Models/**,**/DTOs/**,Program.cs"
+dotnet sonarscanner begin /k:"%PROJECT_KEY%" /d:sonar.host.url="%URL%" /d:sonar.login="%SONAR_TOKEN%" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.exclusions="**/Migrations/**,**/Config/**,**/Models/**,**/DTOs/**,**/Repositories/**,**/Middlewares/**,**/Extensions/**,Program.cs"
 
 echo [2/4] clean, build
 dotnet clean BlogPessoal/BlogPessoal.slnx
