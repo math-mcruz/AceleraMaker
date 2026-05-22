@@ -1,6 +1,6 @@
 ﻿namespace BlogPessoal.Models.Pagination;
 
-//uma classe de paginação gênerica para poder usar em mais futuramente
+//paginação gênerica
 public class QueryStringParameters
 {
     const int maxMaxPageSize = 50;

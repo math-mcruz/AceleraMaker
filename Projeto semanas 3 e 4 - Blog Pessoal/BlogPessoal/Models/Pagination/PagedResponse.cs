@@ -2,10 +2,8 @@
 
 public class PagedResponse<T>
 {
-    // A lista de dados fica isolada aqui dentro
+    //resposta de paginação simples
     public IEnumerable<T> Dados { get; set; }
-
-    // Os metadados da paginação
     public int CurrentPage { get; set; }
     public int TotalPages { get; set; }
     public int PageSize { get; set; }

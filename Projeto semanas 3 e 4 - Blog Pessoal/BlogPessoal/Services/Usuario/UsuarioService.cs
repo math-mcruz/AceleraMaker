@@ -49,6 +49,7 @@ public class UsuarioService : IUsuarioService
             throw new ArgumentException($"Falha ao cadastrar: {erroCompleto}");
         }
 
+        //se acontecer de ele não receber a função de usuário
         var roleResult = await _userManager.AddToRoleAsync(user, "Usuario");
         if (!roleResult.Succeeded)
             throw new Exception("Usuário criado, mas falhou ao vincular o perfil de 'Usuario'.");
@@ -77,7 +78,7 @@ public class UsuarioService : IUsuarioService
         {
             authClaims.Add(new Claim(ClaimTypes.Role, userRole));
         }
-
+        //gera o token para liberar o acesso
         var token = _tokenService.GenerateAccessToken(authClaims, _configuration);
 
         await _userManager.UpdateAsync(user);

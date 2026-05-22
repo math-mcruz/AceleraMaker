@@ -4,6 +4,7 @@ using System.Net;
 namespace BlogPessoal.Middlewares.Exceptions;
 public static class ApiExceptionMiddlewareExtensions
 {
+    //captura as exceções do projeto e retorna um status code e uma mensagem
     public static void ConfigureExceptionHandler(this IApplicationBuilder app)
     {
         app.UseExceptionHandler(appError =>
@@ -31,7 +32,6 @@ public static class ApiExceptionMiddlewareExtensions
                     {
                         StatusCode = context.Response.StatusCode,
                         Message = exception.Message, 
-                        Trace = contextFeature.Error.StackTrace 
                     }.ToString());
                 }
             });

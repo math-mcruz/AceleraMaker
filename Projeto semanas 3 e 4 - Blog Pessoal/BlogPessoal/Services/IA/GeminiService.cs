@@ -13,14 +13,15 @@ public class GeminiService
     public GeminiService(HttpClient httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient;
-        _apiKey = configuration["Gemini:ApiKey"];
         _endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent";
+        _apiKey = configuration["Gemini:ApiKey"];
         //_endpoint = configuration["Gemini:Endpoint"];
     }
 
     public async Task<string> EnviarRequisicaoAsync(string prompt)
     {
         var requestUrl = $"{_endpoint}?key={_apiKey}";
+        //request que o Gemini pede
         var requestBody = new
         {
             contents = new[]

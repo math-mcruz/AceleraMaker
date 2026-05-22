@@ -1,4 +1,6 @@
-﻿namespace BlogPessoal.DTOs.Postagens;
+﻿using System.Text.Json.Serialization;
+
+namespace BlogPessoal.DTOs.Postagens;
 
 public class PostagemResponseDTO
 {
@@ -11,7 +13,12 @@ public class PostagemResponseDTO
     public int TemaId { get; set; }
     public string? NomeTema { get; set; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Resumo { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Tags { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Categoria { get; set; }
 }

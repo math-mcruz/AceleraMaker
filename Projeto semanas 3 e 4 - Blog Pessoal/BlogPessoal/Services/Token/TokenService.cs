@@ -7,6 +7,7 @@ namespace BlogPessoal.Services.Token;
 
 public class TokenService : ITokenService
 {
+    //gera o token de acesso com base nas claims do usuário e nas configurações do JWT
     public JwtSecurityToken GenerateAccessToken(IEnumerable<Claim> claims, IConfiguration _config)
     {
         var key = _config.GetSection("JWT").GetValue<string>("SecretKey") ??
@@ -31,7 +32,7 @@ public class TokenService : ITokenService
         var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
         return token;
     }
-
+    //gera de um novo token de acesso
     public ClaimsPrincipal GetPrincipalFromExpiredToken(string token, IConfiguration _config)
     {
         var secretKey = _config["JWT:SecretKey"] ?? throw new InvalidOperationException("Chave inválida");

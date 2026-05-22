@@ -41,7 +41,8 @@ builder.Services.AddSwaggerGen(c =>
                       "**Principais Recursos:**\n" +
                       "* Autenticação e Autorização com JWT.\n" +
                       "* Gestão de Usuários e Perfis (Admin e Usuário).\n" +
-                      "* Operações completas de CRUD para Temas e Postagens.\n",
+                      "* Operações completas de CRUD para Temas e Postagens.\n" +
+                      "* Resumos, tags e categoria sugerida de postagens com IA(Gemini).\n",
       Contact = new OpenApiContact
       {
           Name = "Matheus Cruz",
@@ -73,7 +74,6 @@ builder.Services.AddControllers();
 builder.Services.AddIdentity<Usuario, IdentityRole<int>>().AddRoles<IdentityRole<int>>().AddEntityFrameworkStores<BlogDbContext>().AddDefaultTokenProviders();
 
 //variavel de ambiente para proteger a senha do Banco de Dados
-//temporario achar uma solução melhor
 string? senhaBanco = Environment.GetEnvironmentVariable("SENHA_BANCO_LOCAL");
 
 string? mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -115,8 +115,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("RequerUsuario", policy => policy.RequireRole("Usuario", "Admin"));
 });
 
-//aplicando Rate Limiting para não sobrecarregar o blog com requisições
-
+//Rate Limiting para não sobrecarregar o blog com requisições
 var myOptions = new RateLimitOptions();
 var myOptionsGlobal = new RateLimitGlobalOptions();
 
@@ -161,14 +160,14 @@ builder.Services.AddHttpClient<GeminiService>();
 builder.Services.AddScoped<IIAService, IAService>();
 
 //---------------------------------------------------------------------------------------------------------------------------
-//                                                          Build
+//                                                          Build                                                             
 //---------------------------------------------------------------------------------------------------------------------------
 
 var app = builder.Build();
 
 app.ConfigureExceptionHandler();
 
-// Configure the HTTP request pipeline.
+//Development
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -182,6 +181,7 @@ app.UseAuthorization();
 
 app.MapControllers().RequireRateLimiting("global");
 
+//iniciar com as roles adimin e usuario
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -191,7 +191,6 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        // Se der algum erro de conexão com banco, ele avisa no terminal
         var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "Um erro ocorreu ao popular o banco de dados.");
     }

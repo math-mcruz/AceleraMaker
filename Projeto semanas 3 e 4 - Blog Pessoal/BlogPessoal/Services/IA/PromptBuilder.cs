@@ -2,6 +2,7 @@
 
 public class PromptBuilder
 {
+    //prompt com padrão
     public static string PromptResumo(string texto)
     {
         return $@"Você é um assistente de sistema analisando um blog. Leia o texto: '{texto}'.

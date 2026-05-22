@@ -12,9 +12,10 @@ public class IAService : IIAService
         _geminiService = geminiService;
     }
 
-    public async Task<ResultadoIADTO> GerarResumoAsync(string conteudo)
+    public async Task<ResultadoIADTO> GerarResumoAsync(string texto)
     {
-        if (string.IsNullOrWhiteSpace(conteudo))
+
+        if (string.IsNullOrWhiteSpace(texto))
         {
             return new ResultadoIADTO
             {
@@ -25,7 +26,7 @@ public class IAService : IIAService
         }
         try
         {
-            var prompt = PromptBuilder.PromptResumo(conteudo);
+            var prompt = PromptBuilder.PromptResumo(texto);
             var jsonResposta = await _geminiService.EnviarRequisicaoAsync(prompt);
 
             var opcoes = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
@@ -34,12 +35,12 @@ public class IAService : IIAService
 
             return resultado ?? new ResultadoIADTO();
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return new ResultadoIADTO
             {
                 Resumo = "Resumo indisponível no momento.",
-                Tags = e.Message, //Falha na IA
+                Tags = "Falha na IA",
                 Categoria = "Geral"
             };
         }

@@ -34,7 +34,7 @@ public class PostagemService : IPostagemService
             throw new KeyNotFoundException("Não existem postagens criadas com o filtro aplicado.");
 
         var postagensDto = postagensPaginadas.Dados.ToPostagemDTOList();
-
+        //paginação
         return new PagedResponse<PostagemResponseDTO>(
             dados: postagensDto,
             count: postagensPaginadas.TotalCount,
@@ -54,15 +54,30 @@ public class PostagemService : IPostagemService
 
         var post = postRequestDto.RequestToPost(usuarioLogadoId);
 
-        var postIA = await _iaService.GerarResumoAsync(post.Texto);
-        post.ResumoIA = postIA.Resumo;
-        post.TagsIA = postIA.Tags;
-        post.CategoriaIA = postIA.Categoria;
-
         var postCriado = _uof.PostagemRepository.Create(post);
         await _uof.CommitAsync();
 
         var postCompleto = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == postCriado.PostagemId);
+
+        return postCompleto.ToPostResponseDTO();
+    }
+
+    public async Task<PostagemResponseDTO> GerarResumoIAAsync(int postagemId)
+    {
+        var post = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == postagemId);
+        if (post is null)
+            throw new KeyNotFoundException("Postagem não encontrada.");
+
+        var postIA = await _iaService.GerarResumoAsync(post.Texto);
+
+        post.ResumoIA = postIA.Resumo;
+        post.TagsIA = postIA.Tags;
+        post.CategoriaIA = postIA.Categoria;
+
+        _uof.PostagemRepository.Update(post);
+        await _uof.CommitAsync();
+
+        var postCompleto = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == post.PostagemId);
 
         return postCompleto.ToPostResponseDTO();
     }

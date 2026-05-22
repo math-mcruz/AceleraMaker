@@ -3,7 +3,7 @@ using BlogPessoal.Models;
 
 namespace BlogPessoal.DTOs.Mappings;
 
-//não vou usar o AutoMapper por questões de melhor desempenho
+//não vou usar o AutoMapper
 public static class TemaDTOMappingExtensions
 {
     //entrada dos dados para mandar pro banco

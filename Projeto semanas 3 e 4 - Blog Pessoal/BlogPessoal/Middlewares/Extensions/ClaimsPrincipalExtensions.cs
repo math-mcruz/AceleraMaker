@@ -3,6 +3,7 @@
 namespace BlogPessoal.Middlewares.Extensions;
 public static class ClaimsPrincipalExtensions
 {
+    //verifca se é o usário logado para suas permissões
     public static int ObterIdUsuarioLogado(this ClaimsPrincipal user)
     {
         var claimValue = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;

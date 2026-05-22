@@ -13,9 +13,6 @@ public class PostagemRequestDTO
     [StringLength(100, MinimumLength =1)]
     public string? Texto { get; set; }
 
-    //[Required(ErrorMessage = "Data é obrigatório.")]
-    //public DateTime? Data { get; set; }
-
     [Required(ErrorMessage = "Id do Tema é obrigatório.")]
     public int TemaId { get; set; }
 }

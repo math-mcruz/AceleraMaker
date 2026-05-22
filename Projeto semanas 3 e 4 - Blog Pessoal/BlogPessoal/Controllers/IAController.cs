@@ -1,5 +1,7 @@
 ﻿using BlogPessoal.DTOs.IA;
+using BlogPessoal.Middlewares.Extensions;
 using BlogPessoal.Services.IA;
+using BlogPessoal.Services.Postagens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -11,37 +13,29 @@ namespace BlogPessoal.Controllers;
 [ApiConventionType(typeof(DefaultApiConventions))]
 public class IAController : ControllerBase
 {
-    private readonly IIAService _iaService;
+    private readonly IPostagemService _postService;
 
-    public IAController(IIAService iaService)
+    public IAController(IPostagemService postService)
     {
-        _iaService = iaService;
+        _postService = postService;
     }
     /// <summary>
     /// Resumir postagem.
     /// </summary>
     /// <remarks>
     /// Requer autenticação para usar a funcionalidade.
-    /// 
-    /// Exemplo de requisição:
-    ///
-    ///     POST /api/ia/resumir
-    ///     {
-    ///        "PostagemId": 1
-    ///     }
     /// </remarks>
-    /// <returns>Lista contendo todas as postagens e seus respectivos temas e autores.</returns>
+    /// <returns>Postagem resumida pelo Gemini Flash 3.5.</returns>
     /// <response code="200">Resumo da postagem foi retornado com sucesso!</response>
     /// <response code="400">Postagem não existe.</response>
-    [HttpPost("resumir")]
+    /// <response code="401">Não autorizado.</response>
+    [HttpPost("resumir/{id}")]
     [Authorize(Policy = "RequerUsuario")]
     [EnableRateLimiting("sliding")]
-    public async Task<ActionResult<ResultadoIADTO>> Resumir([FromBody] ResumoIARequestDTO request)
+    public async Task<ActionResult<ResultadoIADTO>> Resumir(int id)
     {
-        if (string.IsNullOrWhiteSpace(request.Conteudo))
-            return BadRequest(new { Mensagem = "Texto para resumo não pode estar vazio." });
+        var resultado = await _postService.GerarResumoIAAsync(id);
 
-        var resultado = await _iaService.GerarResumoAsync(request.Conteudo);
         return Ok(resultado);
     }
 }
