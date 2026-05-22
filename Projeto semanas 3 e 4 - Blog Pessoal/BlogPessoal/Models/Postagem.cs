@@ -20,6 +20,13 @@ public class Postagem
     [Required]
     public DateTime? Data { get; set; }
 
+    public string? ResumoIA { get; set; }
+
+    public string? TagsIA { get; set; }
+
+    public string? CategoriaIA { get; set; }
+
+
     //declarando as dependencias: Usuario 1:N Postagem e Tema 1:N Postagem.
     public int UsuarioId { get; set; }
     public int TemaId { get; set; }

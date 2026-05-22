@@ -1,6 +1,7 @@
 ﻿using BlogPessoal.DTOs.Postagens;
 using BlogPessoal.Models;
 using BlogPessoal.Repositories.UnitsOfWork;
+using BlogPessoal.Services.IA;
 using BlogPessoal.Services.Postagens;
 using FluentAssertions;
 using Moq;
@@ -10,12 +11,14 @@ namespace BlogPessoal.Tests.PostagemTests;
 public class PostagemServiceTests
 {
     private readonly Mock<IUnitOfWork> _uofMock;
+    private readonly Mock<IIAService> _iaServiceMock;
     private readonly PostagemService _postagemService;
 
     public PostagemServiceTests()
     {
         _uofMock = new Mock<IUnitOfWork>();
-        _postagemService = new PostagemService(_uofMock.Object);
+        _iaServiceMock = new Mock<IIAService>();
+        _postagemService = new PostagemService(_uofMock.Object, _iaServiceMock.Object);
     }
 
     [Fact]

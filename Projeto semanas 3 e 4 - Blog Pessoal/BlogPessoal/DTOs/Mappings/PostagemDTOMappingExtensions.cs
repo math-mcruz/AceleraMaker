@@ -1,4 +1,5 @@
-﻿using BlogPessoal.DTOs.Postagens;
+﻿using BlogPessoal.DTOs.IA;
+using BlogPessoal.DTOs.Postagens;
 using BlogPessoal.Models;
 
 namespace BlogPessoal.DTOs.Mappings;
@@ -48,7 +49,10 @@ public static class PostagemDTOMappingExtensions
             UsuarioId = post.UsuarioId,
             NomeAutor = post.Usuario?.UserName ?? "Autor anônimo",
             TemaId = post.TemaId,
-            NomeTema = post.Tema?.Nome ?? "Tema Desconhecido"
+            NomeTema = post.Tema?.Nome ?? "Tema Desconhecido",
+            Resumo = post.ResumoIA,
+            Tags = post.TagsIA,
+            Categoria = post.CategoriaIA
         };
     }
     public static IEnumerable<PostagemResponseDTO> ToPostagemDTOList(this IEnumerable<Postagem> post)

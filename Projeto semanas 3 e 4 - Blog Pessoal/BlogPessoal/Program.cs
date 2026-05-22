@@ -8,6 +8,7 @@ using BlogPessoal.Repositories.Postagens;
 using BlogPessoal.Repositories.Temas;
 using BlogPessoal.Repositories.UnitsOfWork;
 using BlogPessoal.Services;
+using BlogPessoal.Services.IA;
 using BlogPessoal.Services.Postagens;
 using BlogPessoal.Services.Tema;
 using BlogPessoal.Services.Temas;
@@ -22,6 +23,7 @@ using Microsoft.OpenApi;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -119,7 +121,7 @@ var myOptions = new RateLimitOptions();
 var myOptionsGlobal = new RateLimitGlobalOptions();
 
 builder.Configuration.GetSection(RateLimitOptions.MyRateLimit).Bind(myOptions);
-builder.Configuration.GetSection(RateLimitGlobalOptions.MyRateLimit).Bind(myOptionsGlobal);
+builder.Configuration.GetSection(RateLimitGlobalOptions.RateLimitGlobal).Bind(myOptionsGlobal);
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -130,7 +132,7 @@ builder.Services.AddRateLimiter(options =>
         regras.PermitLimit = myOptions.PermitLimit;
         regras.Window = TimeSpan.FromSeconds(myOptions.Window);
         regras.SegmentsPerWindow = myOptions.SegmentsPerWindow;
-        //regras.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        regras.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         regras.QueueLimit = myOptions.QueueLimit;
     });
 
@@ -139,6 +141,7 @@ builder.Services.AddRateLimiter(options =>
         regras.PermitLimit = myOptionsGlobal.PermitLimit;
         regras.Window = TimeSpan.FromMinutes(myOptionsGlobal.Window);
         regras.SegmentsPerWindow = myOptionsGlobal.SegmentsPerWindow;
+        regras.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         regras.QueueLimit = myOptionsGlobal.QueueLimit;
     });
 });
@@ -154,6 +157,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ITemaService, TemaService>();
 builder.Services.AddScoped<IPostagemService, PostagemService>();
+builder.Services.AddHttpClient<GeminiService>();
+builder.Services.AddScoped<IIAService, IAService>();
 
 //---------------------------------------------------------------------------------------------------------------------------
 //                                                          Build
@@ -162,14 +167,12 @@ builder.Services.AddScoped<IPostagemService, PostagemService>();
 var app = builder.Build();
 
 app.ConfigureExceptionHandler();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "Blog Pessoal API"));
-
-    //lembrar que isso é só para o modo Development, pois não pode mostrar o stacktrace no modo deploy, por segurança
 }
 app.UseHttpsRedirection();
 

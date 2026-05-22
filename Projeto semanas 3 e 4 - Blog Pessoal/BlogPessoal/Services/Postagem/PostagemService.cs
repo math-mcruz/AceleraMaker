@@ -2,16 +2,18 @@
 using BlogPessoal.DTOs.Postagens;
 using BlogPessoal.Models.Pagination;
 using BlogPessoal.Repositories.UnitsOfWork;
+using BlogPessoal.Services.IA;
 
 namespace BlogPessoal.Services.Postagens;
 
 public class PostagemService : IPostagemService
 {
     private readonly IUnitOfWork _uof;
-
-    public PostagemService(IUnitOfWork uof)
+    private readonly IIAService _iaService;
+    public PostagemService(IUnitOfWork uof, IIAService iaService)
     {
         _uof = uof;
+        _iaService = iaService;
     }
 
     public async Task<IEnumerable<PostagemResponseDTO>> GetAllAsync()
@@ -44,19 +46,22 @@ public class PostagemService : IPostagemService
     public async Task<PostagemResponseDTO> CreateAsync(PostagemRequestDTO postRequestDto, int usuarioLogadoId)
     {
         if (postRequestDto is null)
-            throw new ArgumentException("Dados inválidos."); // Vira 400
+            throw new ArgumentException("Dados inválidos.");
 
-        // Validar se o Tema existe
         var temaExiste = await _uof.TemaRepository.GetAsync(t => t.TemaId == postRequestDto.TemaId);
         if (temaExiste is null)
-            throw new KeyNotFoundException("Tema não encontrado."); // Vira 404
+            throw new KeyNotFoundException("Tema não encontrado."); 
 
         var post = postRequestDto.RequestToPost(usuarioLogadoId);
+
+        var postIA = await _iaService.GerarResumoAsync(post.Texto);
+        post.ResumoIA = postIA.Resumo;
+        post.TagsIA = postIA.Tags;
+        post.CategoriaIA = postIA.Categoria;
 
         var postCriado = _uof.PostagemRepository.Create(post);
         await _uof.CommitAsync();
 
-        // O seu código original buscava o post completo de novo. Mantive essa lógica!
         var postCompleto = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == postCriado.PostagemId);
 
         return postCompleto.ToPostResponseDTO();
@@ -65,16 +70,15 @@ public class PostagemService : IPostagemService
     public async Task<PostagemResponseDTO> UpdateAsync(int id, PostagemUpdateDTO postUpdateDto, int usuarioLogadoId, bool ehAdmin)
     {
         if (id != postUpdateDto.PostagemId)
-            throw new ArgumentException("Dados inválidos."); // Vira 400
+            throw new ArgumentException("Dados inválidos."); 
 
         var post = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == id);
 
         if (post is null)
-            throw new KeyNotFoundException("Postagem não encontrada."); // Vira 404
+            throw new KeyNotFoundException("Postagem não encontrada.");
 
-        // REGRA DE NEGÓCIO: Segurança de Autoria
         if (post.UsuarioId != usuarioLogadoId && !ehAdmin)
-            throw new UnauthorizedAccessException("Sem permissão para editar a postagem."); // Vira 401/403
+            throw new UnauthorizedAccessException("Sem permissão para editar a postagem.");
 
         post.UpdateToPost(postUpdateDto);
 
@@ -91,11 +95,10 @@ public class PostagemService : IPostagemService
         var post = await _uof.PostagemRepository.GetAsync(p => p.PostagemId == id);
 
         if (post is null)
-            throw new KeyNotFoundException("Postagem não encontrada."); // Vira 404
+            throw new KeyNotFoundException("Postagem não encontrada.");
 
-        // REGRA DE NEGÓCIO: Segurança de Autoria
         if (post.UsuarioId != usuarioLogadoId && !ehAdmin)
-            throw new UnauthorizedAccessException("Sem permissão para excluir a postagem."); // Vira 401/403
+            throw new UnauthorizedAccessException("Sem permissão para excluir a postagem.");
 
         _uof.PostagemRepository.Delete(post);
         await _uof.CommitAsync();
