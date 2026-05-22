@@ -1,0 +1,3 @@
+Progresso 14.9% ao 35.9% as havia métricas fora da camada de lógica de negócios.
+Progresso 90.3% foram implementados mais tetes e havia métricas focadas apenas na camada negócios(Service e Controller).
+Observação: os testes sobre as camadas de negócios(Service e Controller) em IA através de mocks ainda vão ser implementados.

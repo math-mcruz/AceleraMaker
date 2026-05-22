@@ -1,7 +1,7 @@
 
-# Ajustes (appsettings.json e sonar.bat(na pasta junto com README.md))
+# forma sugerida de ajustes (appsettings.json e sonar.bat(na pasta junto com README.md))
 
-## Ajuste na senha do Banco de Dados(forma sugerida)
+## Ajuste na senha do Banco de Dados
 * Pesquise no Windows por "Editar as variáveis de ambiente do sistema".
 * Em "Variáveis de usuário", clique em "Novo" e preencha:
   * **Nome:** `SENHA_BANCO_LOCAL`
@@ -16,3 +16,5 @@
   * **Nome:** `SONAR_TOKEN`
   * **Valor:** `Seu Token de acesso do SonarQube.`
 * Reinicie o Visual Studio (ou terminal) para aplicar a mudança.
+
+`Observação:` o arquivo .sonaqube/ está aplicado no .gitignore para não poluir com dados temporários.
