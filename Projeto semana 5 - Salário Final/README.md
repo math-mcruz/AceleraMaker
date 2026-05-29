@@ -14,11 +14,13 @@
 Crie o dataset:
 - `HERC01.SALARIO.COBOL`
 - `HERC01.SALARIO.JCL`
-- `HERC01.SALARIO.LOAD` 
+- `HERC01.SALARIO.LOAD`
+
 Submeta os JCLs de compilação na ordem:
 - `CDADOS`, `CBONUS`, `CCALC`, `CRES`.
 - `CMENU` por último, garantindo LINKAGE vai ter referências externas corretas.
-Aperte f3 até aparecer console nativo do TSO (`READY`), e escreva os comandos um por um (dando enter em cada um separado):
+
+Aperte f3 até aparecer console nativo do TSO (`READY`), e digite os comandos um por um (enter em cada um separado):
 - `ALLOC FI(SYSOUT) DA(*)`
 - `ALLOC FI(SYSIN) DA(*)`
 - `CALL 'SUA.BIBLIOTECA.LOAD(SALMENU)'`
