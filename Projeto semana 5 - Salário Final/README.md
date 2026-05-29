@@ -23,4 +23,4 @@ Submeta os JCLs de compilação na ordem:
 Aperte f3 até aparecer console nativo do TSO (`READY`), e digite os comandos um por um (enter em cada um separado):
 - `ALLOC FI(SYSOUT) DA(*)`
 - `ALLOC FI(SYSIN) DA(*)`
-- `CALL 'SUA.BIBLIOTECA.LOAD(SALMENU)'`
+- `CALL 'HERC01.SALARIO.LOAD(SALMENU)'`
