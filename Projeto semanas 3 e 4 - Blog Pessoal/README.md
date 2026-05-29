@@ -1,5 +1,5 @@
 
-# forma sugerida de ajustes (appsettings.json e sonar.bat(na pasta junto com README.md))
+# Forma sugerida de ajustes (appsettings.json e sonar.bat(na pasta junto com README.md))
 
 ## Ajuste na senha do Banco de Dados
 * Pesquise no Windows por "Editar as variáveis de ambiente do sistema".
