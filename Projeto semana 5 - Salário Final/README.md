@@ -6,7 +6,7 @@
 * **`SALDADOS.cbl`:** Entrada de dados utilizando comandos ACCEPT para guardar o nome, salário base e tempo de empresa.
 * **`SALBONUS.cbl`:** Calcula a porcentagem de bonus pelo tempo de empresa.
 * **`SALCALC.cbl`:** Calcula o salário final com o bonus.
-* **`EXIBERES.cbl`:** Exibe os dados com uma formatação.
+* **`SALRES.cbl`:** Exibe os dados com uma formatação.
 
 
 ## Ambiente Mainframe
