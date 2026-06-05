@@ -1,0 +1,60 @@
+ =========== DADOS DA CONTA =============
+ NUMERO DA CONTA: 00000031
+ NOME: LUIS FELIPE CRUZ
+ AGENCIA DA CONTA: 0160
+ TIPO DA CONTA: CORRENTE
+ SALDO:         980,00
+ ========================================
+ =========== DADOS DA CONTA =============
+ NUMERO DA CONTA: 00000051
+ NOME: FABIANA BRASIL
+ AGENCIA DA CONTA: 0241
+ TIPO DA CONTA: POUPANCA
+ SALDO:     105.480,20
+ ========================================
+ =========== DADOS DA CONTA =============
+ NUMERO DA CONTA: 00000015
+ NOME: ALINE DUTRA
+ AGENCIA DA CONTA: 0241
+ TIPO DA CONTA: CORRENTE
+ SALDO:       1.500,00
+ ========================================
+ =========== DADOS DA CONTA =============
+ NUMERO DA CONTA: 00000046
+ NOME: LUIS GUERREIRO
+ AGENCIA DA CONTA: 0463
+ TIPO DA CONTA: POUPANCA
+ SALDO:         305,00
+ ========================================
+ =========== DADOS DA CONTA =============
+ NUMERO DA CONTA: 00000041
+ NOME: JOAO VICTOR CRUZ
+ AGENCIA DA CONTA: 0777
+ TIPO DA CONTA: POUPANCA
+ SALDO:       2.100,50
+ ========================================
+ =========== DADOS DA CONTA =============
+ NUMERO DA CONTA: 00000022
+ NOME: MATHEUS CRUZ
+ AGENCIA DA CONTA: 0777
+ TIPO DA CONTA: CORRENTE
+ SALDO:       7.237,65
+ ========================================
+ ========= RELATORIO DO PROCESSAMENTO ==========
+ TOTAL DE CONTAS:      6
+ SALDO TOTAL:            117.603,35
+ QUANTIDADE AGENCIAS: 04
+ --------------------------------------
+ AGENCIA: 0160
+ SALDO:                980,00
+ --------------------------------------
+ AGENCIA: 0241
+ SALDO:            106.980,20
+ --------------------------------------
+ AGENCIA: 0463
+ SALDO:                305,00
+ --------------------------------------
+ AGENCIA: 0777
+ SALDO:              9.338,15
+ ================================================
+
