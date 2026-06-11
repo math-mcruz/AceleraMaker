@@ -5,6 +5,7 @@
        DATA                            DIVISION.
        WORKING-STORAGE                  SECTION.
        77  WRK-VALIDO            PIC X VALUE SPACES.
+       77  WRK-MOTIVO-ERRO       PIC X(30) VALUE SPACES.
        01  WRK-CONTROLE-ARQ
            05  WRK-LER           PIC X VALUE 'A'.
            05  WRK-EOF-CLI       PIC X VALUE 'N'.
@@ -28,21 +29,23 @@
        PROCESSAR-TRANSACOES.
            PERFORM LER-ARQUIVOS.
            IF WRK-EOF-CLI = 'N' OR WRK-EOF-TRAN = 'N'
-              PERFORM VALIDACAO-DADOS
+              PERFORM VALIDA-TRANSACAO
               IF WRK-VALIDO = 'S'
                  PERFORM REGRA-TRANSACAO
               ELSE
-      *LEMBRAR DE IMPLEMENTAR A LOGICA DE QUEM VAI ANDAR
-                 MOVE 'A' TO WRK-LER.
+                 PERFORM REGISTRAR-ERRO
+                 MOVE 'T' TO WRK-LER.
        LER-ARQUIVOS.
            CALL 'TRANREAD' USING REG-CLIENTES, REG-TRANSACOES,
                                  WRK-CONTROLE-ARQ.
-       VALIDACAO-DADOS.
-           CALL 'TRANVALD' USING REG-CLIENTES, REG-TRANSACOES,
-                                 WRK-VALIDO.
+       VALIDA-TRANSACAO.
+           CALL 'TRANVALD' USING REG-TRANSACOES, WRK-VALIDO,
+                                 WRK-CONTADORES.
        REGRA-TRANSACAO.
            CALL 'TRANRULE' USING REG-CLIENTES, REG-TRANSACOES,
                                  WRK-LER.
+       REGISTRAR-ERRO.
+           CALL 'TRANOUT' ??????
        EXIBIR-ESTATISTICA.
            CALL 'TRANOUT' USING REG-CLIENTES, REG-TRANSACOES,
                                 WRK-CONTADORES.
