@@ -10,13 +10,13 @@
            88  WRK-VALOR-VALIDO VALUE 'S'.
        LINKAGE                          SECTION.
        77  LS-VALIDO            PIC X.
-       77  LS-SAIDA-ERRO        PIC X(45).
-       01  LS-CONTADORES
-           05  LS-COUNT-ERRO    PIC 9(02).
-       01  LS-REG-CLIENTES COPY REGCLI.
+       05  LS-COUNT-ERRO        PIC 9(02).
+       01  LS-ERRO
+           05  LS-TIPO-ERRO         PIC X.
+           05  LS-SAIDA-ERRO        PIC X(45).
        01  LS-REG-TRANSACOES COPY REGTRAN.
        PROCEDURE DIVISION USING LS-REG-TRANSACOES, LS-VALIDO,
-                                LS-CONTADORES.
+                                LS-COUNT-ERRO, LS-ERRO.
        VALD-PROCEDURE.
            MOVE 'N' TO WRK-TIPO, WRK-VALOR.
            PERFORM VERIFICA-TIPO.
@@ -28,6 +28,7 @@
               MOVE 'S' TO WRK-TIPO
            ELSE
               ADD 1 TO LS-COUNT-ERRO
+              MOVE 'T' TO LS-TIPO-ERRO
               MOVE 'ERRO: TIPO DE TRANSACAO INVALIDO - '
                     TO LS-SAIDA-ERRO.
        VERIFICA-VALOR
@@ -35,6 +36,7 @@
               MOVE 'S' TO WRK-VALOR
            ELSE
               ADD 1 TO LS-COUNT-ERRO.
+              MOVE 'V' TO LS-TIPO-ERRO
               MOVE 'ERRO: VALOR DE TRANSACAO INVALIDO - '
                     TO LS-SAIDA-ERRO.
        VERIFICA-VALIDO.

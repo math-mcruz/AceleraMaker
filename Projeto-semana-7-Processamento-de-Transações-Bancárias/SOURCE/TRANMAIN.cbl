@@ -5,7 +5,9 @@
        DATA                            DIVISION.
        WORKING-STORAGE                  SECTION.
        77  WRK-VALIDO            PIC X VALUE SPACES.
-       77  WRK-MOTIVO-ERRO       PIC X(30) VALUE SPACES.
+       01  WRK-ERRO
+           05  WRK-TIPO-ERRO         PIC X VALUE SPACES.
+           05  WRK-SAIDA-ERRO        PIC X(45) VALUE SPACES.
        01  WRK-CONTROLE-ARQ
            05  WRK-LER           PIC X VALUE 'A'.
            05  WRK-EOF-CLI       PIC X VALUE 'N'.
@@ -40,10 +42,11 @@
                                  WRK-CONTROLE-ARQ.
        VALIDA-TRANSACAO.
            CALL 'TRANVALD' USING REG-TRANSACOES, WRK-VALIDO,
-                                 WRK-CONTADORES.
+                                 WRK-COUNT-ERRO, WRK-ERRO.
        REGRA-TRANSACAO.
            CALL 'TRANRULE' USING REG-CLIENTES, REG-TRANSACOES,
-                                 WRK-LER.
+                                 WRK-LER, WRK-CONTADORES,
+                                 WRK-ERRO.
        REGISTRAR-ERRO.
            CALL 'TRANOUT' ??????
        EXIBIR-ESTATISTICA.
