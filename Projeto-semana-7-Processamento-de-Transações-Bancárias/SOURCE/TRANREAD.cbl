@@ -1,0 +1,73 @@
+       IDENTIFICATION                  DIVISION.
+       PROGRAM-ID. TRANREAD.
+       AUTHOR.     MATHEUS CRUZ.
+       ENVIRONMENT                     DIVISION.
+       INPUT-OUTPUT                     SECTION.
+       FILE-CONTROL.
+           SELECT ARQ-CLI ASSIGN TO UT-S-CLIENTES
+                          FILE STATUS IS WRK-STATUS-CLI.
+           SELECT ARQ-TRAN ASSIGN TO UT-S-TRANSACOES
+                          FILE STATUS IS WRK-STATUS-TRAN.
+       DATA                            DIVISION.
+       FILE                             SECTION.
+       FD  ARQ-CLI
+           LABEL RECORDS ARE STANDARD
+           RECORD CONTAINS 80 CHARACTERS
+           BLOCK CONTAINS 0 RECORDS
+           DATA RECORD IS REG-CLI-FD.
+           01 REG-CLI-FD       PIC X(80).
+       FD  ARQ-TRAN
+           LABEL RECORDS ARE STANDARD
+           RECORD CONTAINS 80 CHARACTERS
+           BLOCK CONTAINS 0 RECORDS
+           DATA RECORD IS REG-TRAN-FD.
+           01 REG-TRAN-FD      PIC X(80).
+       WORKING-STORAGE                  SECTION.
+       77  WRK-STATUS-CLI      PIC X(02) VALUE SPACES.
+       77  WRK-STATUS-TRAN     PIC X(02) VALUE SPACES.
+       LINKAGE                          SECTION.
+       01  LS-CONTROLE-ARQ
+           05 LS-LER           PIC X.
+              88  LER-CLI      VALUE 'C'.
+              88  LER-TRAN     VALUE 'T'.
+              88  LER-AMBOS    VALUE 'A'.
+           05 LS-EOF-CLI       PIC X.
+           05 LS-EOF-TRAN      PIC X.
+           05 LS-OPEN          PIC X.
+           05 LS-CLOSE         PIC X.
+       01  LS-REG-CLIENTES COPY REGCLI.
+       01  LS-REG-TRANSACOES COPY REGTRAN.
+       PROCEDURE DIVISION USING LS-REG-CLIENTES, LS-REG-TRANSACOES,
+                                LS-CONTROLE-ARQ.
+       READ-PROCEDURE.
+           IF LS-OPEN = 'S'
+              PERFORM ABRIR-ARQUIVOS.
+           IF LS-CLOSE = 'N'
+              PERFORM LOGICA-MATCH
+           ELSE
+              PERFORM FECHAR-ARQUIVOS.
+           GOBACK.
+       ABRIR-ARQUIVOS.
+           OPEN INPUT ARQ-CLI, ARQ-TRAN.
+           IF WRK-STATUS-CLI NOT = '00' OR WRK-STATUS-TRAN NOT = '00'
+              DISPLAY 'FALHA AO ABRIR ARQUIVOS'
+              STOP RUN.
+           MOVE 'N' TO LS-OPEN.
+       LOGICA-MATCH.
+           IF LER-CLI
+              PERFORM LER-CLIENTES
+           ELSE
+              IF LER-TRAN
+                 PERFORM LER-TRANSACOES
+              ELSE
+                 IF LER-AMBOS
+                    PERFORM LER-CLIENTES
+                    PERFORM LER-TRANSACOES.
+       LER-CLIENTES.
+           READ ARQ-CLI INTO LS-REG-CLIENTES
+                        AT END MOVE 'S' TO LS-EOF-CLI.
+       LER-TRANSACOES.
+           READ ARQ-TRAN INTO LS-REG-TRANSACOES
+                        AT END MOVE 'S' TO LS-EOF-TRAN.
+       FECHAR-ARQUIVOS.
+           CLOSE ARQ-CLI, ARQ-TRAN.
