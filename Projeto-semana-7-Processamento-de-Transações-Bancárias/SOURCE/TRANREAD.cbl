@@ -26,23 +26,23 @@
        77  WRK-STATUS-CLI      PIC X(02) VALUE SPACES.
        77  WRK-STATUS-TRAN     PIC X(02) VALUE SPACES.
        LINKAGE                          SECTION.
-       01  LS-CONTROLE-ARQ
+       01  LS-CONTROLE-ARQ-READ
            05 LS-LER           PIC X.
               88  LER-CLI      VALUE 'C'.
               88  LER-TRAN     VALUE 'T'.
               88  LER-AMBOS    VALUE 'A'.
            05 LS-EOF-CLI       PIC X.
            05 LS-EOF-TRAN      PIC X.
-           05 LS-OPEN          PIC X.
-           05 LS-CLOSE         PIC X.
+           05 LS-OPEN-READ     PIC X.
+           05 LS-CLOSE-READ    PIC X.
        01  LS-REG-CLIENTES COPY REGCLI.
        01  LS-REG-TRANSACOES COPY REGTRAN.
        PROCEDURE DIVISION USING LS-REG-CLIENTES, LS-REG-TRANSACOES,
-                                LS-CONTROLE-ARQ.
+                                LS-CONTROLE-ARQ-READ.
        READ-PROCEDURE.
-           IF LS-OPEN = 'S'
+           IF LS-OPEN-READ = 'S'
               PERFORM ABRIR-ARQUIVOS.
-           IF LS-CLOSE = 'N'
+           IF LS-CLOSE-READ = 'N'
               PERFORM LOGICA-MATCH
            ELSE
               PERFORM FECHAR-ARQUIVOS.
@@ -52,7 +52,7 @@
            IF WRK-STATUS-CLI NOT = '00' OR WRK-STATUS-TRAN NOT = '00'
               DISPLAY 'FALHA AO ABRIR ARQUIVOS'
               STOP RUN.
-           MOVE 'N' TO LS-OPEN.
+           MOVE 'N' TO LS-OPEN-READ.
        LOGICA-MATCH.
            IF LER-CLI
               PERFORM LER-CLIENTES
