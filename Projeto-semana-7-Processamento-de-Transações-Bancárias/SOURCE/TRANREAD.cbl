@@ -23,6 +23,7 @@
        LINKAGE                          SECTION.
        01  LS-CONTROLE-ARQ-READ.
            05 LS-LER           PIC X.
+      *C = CLIENTE, T = TRANSACAO, A = AMBOS
               88  LER-CLI      VALUE 'C'.
               88  LER-TRAN     VALUE 'T'.
               88  LER-AMBOS    VALUE 'A'.
@@ -38,6 +39,7 @@
            IF LS-OPEN-READ = 'S'
               PERFORM ABRIR-ARQUIVOS.
            IF LS-CLOSE-READ = 'N'
+      *VAI LER ATE A MAIN MANDAR FECHAR
               PERFORM LOGICA-MATCH
            ELSE
               PERFORM FECHAR-ARQUIVOS.
@@ -55,11 +57,18 @@
                  IF LER-AMBOS
                     PERFORM LER-CLIENTES
                     PERFORM LER-TRANSACOES.
+      *QUANDO ACABAR ELE ATUALIZA O EOF DE CLI E TRAN
        LER-CLIENTES.
-           READ ARQ-CLI INTO LS-REG-CLIENTES
-                        AT END MOVE 'S' TO LS-EOF-CLI.
+           IF LS-EOF-CLI = 'N'
+              READ ARQ-CLI INTO LS-REG-CLIENTES AT END
+                        MOVE 'S' TO LS-EOF-CLI
+           ELSE
+              MOVE 'S' TO LS-EOF-CLI.
        LER-TRANSACOES.
-           READ ARQ-TRAN INTO LS-REG-TRANSACOES
-                        AT END MOVE 'S' TO LS-EOF-TRAN.
+           IF LS-EOF-TRAN = 'N'
+              READ ARQ-TRAN INTO LS-REG-TRANSACOES AT END
+                        MOVE 'S' TO LS-EOF-TRAN
+           ELSE
+              MOVE 'S' TO LS-EOF-TRAN.
        FECHAR-ARQUIVOS.
            CLOSE ARQ-CLI, ARQ-TRAN.

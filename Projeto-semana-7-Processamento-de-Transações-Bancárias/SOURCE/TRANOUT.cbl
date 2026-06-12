@@ -11,13 +11,11 @@
        FD  ARQ-CLI-ATUALIZADO
            LABEL RECORDS ARE STANDARD
            RECORD CONTAINS 80 CHARACTERS
-           BLOCK CONTAINS 0 RECORDS
            DATA RECORD IS REG-CLI-ATUALIZADO-FD.
            01 REG-CLI-ATUALIZADO-FD  PIC X(80).
        FD  ARQ-ERROS
            LABEL RECORDS ARE STANDARD
            RECORD CONTAINS 80 CHARACTERS
-           BLOCK CONTAINS 0 RECORDS
            DATA RECORD IS REG-ERROS-FD.
            01 REG-ERROS-FD               PIC X(80).
        WORKING-STORAGE                  SECTION.
@@ -27,7 +25,7 @@
                07  WRK-VALOR             PIC 9(09) VALUE ZEROS.
            05  WRK-TEXTO-FIXO            PIC X(80) VALUE 'SAIDA:'.
            05  WRK-LINHA-ID
-               07  WRK-TEXTO-ERRO        PIC X(45) VALUE SPACES.
+               07  WRK-TEXTO-ERRO        PIC X(40) VALUE SPACES.
                07  WRK-ID                PIC 9(05) VALUE ZEROS.
            05  WRK-LINHA-TRANSACAO       PIC X(20) VALUE SPACES.
        LINKAGE                          SECTION.
@@ -38,6 +36,7 @@
        01  LS-ERRO.
            05  LS-TIPO-ERRO              PIC X.
                88  SALDO-NEGATIVO        VALUE 'S'.
+               88  OUTRO-TIPO            VALUE 'O'.
            05  LS-SAIDA-ERRO             PIC X(45).
        01  LS-CONTADORES.
            05  LS-COUNT-CLI              PIC 9(02).
@@ -45,9 +44,10 @@
            05  LS-COUNT-CRED             PIC 9(02).
            05  LS-COUNT-DEB              PIC 9(02).
            05  LS-COUNT-ERRO             PIC 9(02).
-           05  LS-COUNT-TOTAL
+           05  LS-COUNT-TOTAL.
                07  LS-TOTAL-DEB          PIC 9(09).
                07  LS-TOTAL-CRED         PIC 9(09).
+      *VARIAVES DE ABRIR E FECHAR DOS ARQUIVOS DE SAIDA
        01  LS-CONTROLE-ARQ-OUT.
            05  LS-OPEN-OUT               PIC X.
            05  LS-CLOSE-OUT              PIC X.
@@ -57,6 +57,9 @@
                                 LS-CONTADORES, LS-TIPO-SAIDA,
                                 LS-ERRO, LS-CONTROLE-ARQ-OUT.
        OUT-PROCEDURE.
+      *    DISPLAY '>> ENTROU NO TRANOUT <<'.
+      *    DISPLAY 'OPEN-OUT =' LS-OPEN-OUT.
+      *    DISPLAY 'CLOSE-OUT =' LS-CLOSE-OUT.
            IF LS-OPEN-OUT = 'S'
               PERFORM ABRIR-ARQUIVOS.
            IF LS-CLOSE-OUT = 'N'
@@ -81,6 +84,8 @@
            DISPLAY 'CLIENTE:' CLI-ID OF LS-REG-CLIENTES.
            DISPLAY 'TOTAL CREDITOS: ' LS-TOTAL-CRED.
            DISPLAY 'TOTAL DEBITOS: ' LS-TOTAL-DEB.
+           MOVE ZEROS TO LS-TOTAL-CRED.
+           MOVE ZEROS TO LS-TOTAL-DEB.
        ESCREVER-ERRO.
       *MONTANDO A SAIDA DE ERROS PARA O ARQUIVO
            IF SALDO-NEGATIVO
@@ -122,3 +127,4 @@
            DISPLAY 'ERROS ENCONTRADOS..........: ' LS-COUNT-ERRO.
        FECHAR-ARQUIVOS.
            CLOSE ARQ-CLI-ATUALIZADO, ARQ-ERROS.
+           PERFORM EXIBIR-ESTATISTICA.

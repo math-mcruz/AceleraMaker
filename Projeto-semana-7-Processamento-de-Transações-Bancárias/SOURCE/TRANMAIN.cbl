@@ -6,18 +6,22 @@
        WORKING-STORAGE                  SECTION.
        77  WRK-VALIDO             PIC X VALUE SPACES.
        01  WRK-TIPO-SAIDA         PIC X VALUE SPACES.
+      *VARIAVEIS PARA ESCREVER NO ARQUIVO ERROS
        01  WRK-ERRO.
            05  WRK-TIPO-ERRO      PIC X VALUE SPACES.
-           05  WRK-SAIDA-ERRO     PIC X(45) VALUE SPACES.
+           05  WRK-SAIDA-ERRO     PIC X(40) VALUE SPACES.
+      *VARIAVEIS DE CONTROLE PARA OS ARQUIVOS DE ENTRADA
        01  WRK-CONTROLE-ARQ-READ.
            05  WRK-LER            PIC X VALUE 'A'.
            05  WRK-EOF-CLI        PIC X VALUE 'N'.
            05  WRK-EOF-TRAN       PIC X VALUE 'N'.
            05  WRK-OPEN-READ      PIC X VALUE 'S'.
            05  WRK-CLOSE-READ     PIC X VALUE 'N'.
+      *VARIAVEIS DE CONTROLE PARA OS ARQUIVOS DE SAIDA
        01  WRK-CONTROLE-ARQ-OUT.
            05  WRK-OPEN-OUT       PIC X VALUE 'S'.
            05  WRK-CLOSE-OUT      PIC X VALUE 'N'.
+      *VARIAVEIS CONTADORES PARA ESTATISTICA E RELATORIO
        01  WRK-CONTADORES.
            05  WRK-COUNT-CLI      PIC 9(02) VALUE ZEROS.
            05  WRK-COUNT-TRAN     PIC 9(02) VALUE ZEROS.
@@ -27,46 +31,85 @@
            05  WRK-COUNT-TOTAL.
                07  WRK-TOTAL-DEB  PIC 9(09) VALUE ZEROS.
                07  WRK-TOTAL-CRED PIC 9(09) VALUE ZEROS.
+      *COPYBOOKS
        01  REG-CLIENTES COPY REGCLI.
        01  REG-TRANSACOES COPY REGTRAN.
        PROCEDURE                       DIVISION.
        MAIN-PROCEDURE
+      *INICIA ABRINDO ARQUIVOS UMA VEZ
+           PERFORM ABRIR-ARQUIVOS.
+      *LOOP ATE QUE AMBOS OS ARQUIVOS TENHAM TERMINADO
            PERFORM PROCESSAR-TRANSACOES UNTIL WRK-EOF-CLI = 'S' AND
-                                      WRK-EOF-TRAN = 'S'.
-           MOVE 'F' TO WRK-TIPO-SAIDA.
-           PERFORM PROCESSAR-SAIDA.
-           MOVE 'S' TO WRK-CLOSE-READ.
-           MOVE 'S' TO WRK-CLOSE-OUT.
-           PERFORM LER-ARQUIVOS.
+                                              WRK-EOF-TRAN = 'S'.
+           PERFORM FECHAR-ARQUIVOS.
+      *    DISPLAY 'ENCERRANDO MAIN'.
            STOP RUN.
-       PROCESSAR-TRANSACOES.
+       ABRIR-ARQUIVOS.
+      *INDICA PARA O READ QUAL TIPO DE LEITURA NESSE CASO VAI LER OS
+      *DOIS ARQUIVOS PARA INICIAR AS COMPARACOES
+           MOVE 'A' TO WRK-LER.
            PERFORM LER-ARQUIVOS.
+           MOVE SPACES TO WRK-LER.
+       PROCESSAR-TRANSACOES.
+      *VERIFICA SE PELO MENOS UM ARQUIVO AINDA NAO ACABOU
            IF WRK-EOF-CLI = 'N' OR WRK-EOF-TRAN = 'N'
-              PERFORM VALIDA-TRANSACAO
-              IF WRK-VALIDO = 'S'
-                 PERFORM REGRA-TRANSACAO
-                 IF WRK-TIPO-ERRO = 'S'
-                    MOVE 'E' TO WRK-TIPO-SAIDA
-                    PERFORM PROCESSAR-SAIDA
-                 ELSE
-                    IF WRK-LER = 'C'
-                       MOVE 'R' TO WRK-TIPO-SAIDA
-                       PERFORM PROCESSAR-SAIDA
-              ELSE
+              PERFORM ANALISA-DADOS
+              PERFORM LER-ARQUIVOS.
+       ANALISA-DADOS.
+           PERFORM VALIDA-TRANSACAO.
+      *SE A ENTRADA DA TRANSACAO FOR VALIDA CHAMA A REGRA DE TRANSACAO
+           IF WRK-VALIDO = 'S'
+              PERFORM REGRA-TRANSACAO
+              PERFORM ANALISA-SAIDA
+           ELSE
+      *MANDA O ERRO DE ENTRADA PARA O ARQUIVO DE ERROS
+              IF WRK-EOF-TRAN = 'N'
                  MOVE 'E' TO WRK-TIPO-SAIDA
                  PERFORM PROCESSAR-SAIDA
-                 MOVE 'T' TO WRK-LER.
+      *LER A PROXIMA TRANSACAO
+                 MOVE 'T' TO WRK-LER
+              ELSE
+                 MOVE 'C' TO WRK-LER.
+       ANALISA-SAIDA.
+      *SE TEVE SALDO INVALIDO MANDA PRO ARQUIVO DE ERROS
+           IF WRK-TIPO-ERRO = 'S'
+              MOVE 'E' TO WRK-TIPO-SAIDA
+              PERFORM PROCESSAR-SAIDA
+           ELSE
+      *SE TERMINOU DE LER O CLIENTE MANDA PARA IMPRIMIR NO RELATORIO
+              IF WRK-LER = 'C' OR WRK-LER = 'A'
+                 MOVE 'R' TO WRK-TIPO-SAIDA
+                 PERFORM PROCESSAR-SAIDA
+              ELSE
+                 IF WRK-LER = 'F'
+                    MOVE 'S' TO WRK-CLOSE-READ.
+       FECHAR-ARQUIVOS.
+      *FECHA TODOS ARQUIVOS
+           MOVE 'F' TO WRK-TIPO-SAIDA.
+           MOVE 'S' TO WRK-CLOSE-READ.
+           MOVE 'S' TO WRK-CLOSE-OUT.
+           PERFORM PROCESSAR-SAIDA.
+           PERFORM LER-ARQUIVOS.
+      *ONDE FICAM AS CHAMADAS DOS OUTROS MODULOS
        LER-ARQUIVOS.
+      *    DISPLAY 'CHAMANDO READ'.
            CALL 'TRANREAD' USING REG-CLIENTES, REG-TRANSACOES,
                                  WRK-CONTROLE-ARQ-READ.
+      *    DISPLAY 'VOLTANDO READ'.
        VALIDA-TRANSACAO.
+      *    DISPLAY 'CHAMANDO VALD'.
            CALL 'TRANVALD' USING REG-TRANSACOES, WRK-VALIDO,
                                  WRK-COUNT-ERRO, WRK-ERRO.
+      *    DISPLAY 'VOLTANDO VALD'.
        REGRA-TRANSACAO.
+      *    DISPLAY 'CHAMANDO RULE'.
            CALL 'TRANRULE' USING REG-CLIENTES, REG-TRANSACOES,
                                  WRK-LER, WRK-CONTADORES,
                                  WRK-ERRO.
+      *    DISPLAY 'VOLTANDO RULE'.
        PROCESSAR-SAIDA.
+      *    DISPLAY 'CHAMANDO OUT'.
            CALL 'TRANOUT' USING REG-CLIENTES, REG-TRANSACOES,
                                 WRK-CONTADORES, WRK-TIPO-SAIDA,
-                                WRK-ERRO, WRK-CONTROLE-ARQ-READ.
+                                WRK-ERRO, WRK-CONTROLE-ARQ-OUT.
+      *    DISPLAY 'VOLTANDO OUT'.
