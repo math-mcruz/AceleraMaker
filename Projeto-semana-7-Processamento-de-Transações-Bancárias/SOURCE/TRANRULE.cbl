@@ -5,13 +5,14 @@
        DATA                            DIVISION.
        WORKING-STORAGE                  SECTION.
        LINKAGE                          SECTION.
-       01  LS-CONTADORES
+       77  LS-LER               PIC X.
+       01  LS-CONTADORES.
            05  LS-COUNT-CLI     PIC 9(02).
            05  LS-COUNT-TRAN    PIC 9(02).
            05  LS-COUNT-CRED    PIC 9(02).
            05  LS-COUNT-DEB     PIC 9(02).
            05  LS-COUNT-ERRO    PIC 9(02).
-       01  LS-ERRO
+       01  LS-ERRO.
            05  LS-TIPO-ERRO         PIC X.
            05  LS-SAIDA-ERRO        PIC X(45).
        01  LS-REG-CLIENTES COPY REGCLI.

@@ -10,8 +10,8 @@
            88  WRK-VALOR-VALIDO VALUE 'S'.
        LINKAGE                          SECTION.
        77  LS-VALIDO            PIC X.
-       05  LS-COUNT-ERRO        PIC 9(02).
-       01  LS-ERRO
+       77  LS-COUNT-ERRO        PIC 9(02).
+       01  LS-ERRO.
            05  LS-TIPO-ERRO         PIC X.
            05  LS-SAIDA-ERRO        PIC X(45).
        01  LS-REG-TRANSACOES COPY REGTRAN.

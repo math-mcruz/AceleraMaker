@@ -4,10 +4,8 @@
        ENVIRONMENT                     DIVISION.
        INPUT-OUTPUT                     SECTION.
        FILE-CONTROL.
-           SELECT ARQ-CLI ASSIGN TO UT-S-CLIENTES
-                          FILE STATUS IS WRK-STATUS-CLI.
-           SELECT ARQ-TRAN ASSIGN TO UT-S-TRANSACOES
-                          FILE STATUS IS WRK-STATUS-TRAN.
+           SELECT ARQ-CLI ASSIGN TO UT-S-CLIENTES.
+           SELECT ARQ-TRAN ASSIGN TO UT-S-TRANSAC.
        DATA                            DIVISION.
        FILE                             SECTION.
        FD  ARQ-CLI
@@ -22,11 +20,8 @@
            BLOCK CONTAINS 0 RECORDS
            DATA RECORD IS REG-TRAN-FD.
            01 REG-TRAN-FD      PIC X(80).
-       WORKING-STORAGE                  SECTION.
-       77  WRK-STATUS-CLI      PIC X(02) VALUE SPACES.
-       77  WRK-STATUS-TRAN     PIC X(02) VALUE SPACES.
        LINKAGE                          SECTION.
-       01  LS-CONTROLE-ARQ-READ
+       01  LS-CONTROLE-ARQ-READ.
            05 LS-LER           PIC X.
               88  LER-CLI      VALUE 'C'.
               88  LER-TRAN     VALUE 'T'.
@@ -49,9 +44,6 @@
            GOBACK.
        ABRIR-ARQUIVOS.
            OPEN INPUT ARQ-CLI, ARQ-TRAN.
-           IF WRK-STATUS-CLI NOT = '00' OR WRK-STATUS-TRAN NOT = '00'
-              DISPLAY 'FALHA AO ABRIR ARQUIVOS'
-              STOP RUN.
            MOVE 'N' TO LS-OPEN-READ.
        LOGICA-MATCH.
            IF LER-CLI
