@@ -42,11 +42,9 @@
            PERFORM PROCESSAR-TRANSACOES UNTIL WRK-EOF-CLI = 'S' AND
                                               WRK-EOF-TRAN = 'S'.
            PERFORM FECHAR-ARQUIVOS.
-      *    DISPLAY 'ENCERRANDO MAIN'.
            STOP RUN.
        ABRIR-ARQUIVOS.
-      *INDICA PARA O READ QUAL TIPO DE LEITURA NESSE CASO VAI LER OS
-      *DOIS ARQUIVOS PARA INICIAR AS COMPARACOES
+      *READ QUAL TIPO DE LEITURA VAI LER OS ARQUIVOS COMECA COM AMBOS
            MOVE 'A' TO WRK-LER.
            PERFORM LER-ARQUIVOS.
            MOVE SPACES TO WRK-LER.
@@ -66,9 +64,9 @@
               IF WRK-EOF-TRAN = 'N'
                  MOVE 'E' TO WRK-TIPO-SAIDA
                  PERFORM PROCESSAR-SAIDA
-      *LER A PROXIMA TRANSACAO
                  MOVE 'T' TO WRK-LER
               ELSE
+      *AVANCA PRA PROXIMA CONTA
                  MOVE 'C' TO WRK-LER.
        ANALISA-SAIDA.
       *SE TEVE SALDO INVALIDO MANDA PRO ARQUIVO DE ERROS
@@ -90,26 +88,19 @@
            MOVE 'S' TO WRK-CLOSE-OUT.
            PERFORM PROCESSAR-SAIDA.
            PERFORM LER-ARQUIVOS.
+      *
       *ONDE FICAM AS CHAMADAS DOS OUTROS MODULOS
        LER-ARQUIVOS.
-      *    DISPLAY 'CHAMANDO READ'.
            CALL 'TRANREAD' USING REG-CLIENTES, REG-TRANSACOES,
                                  WRK-CONTROLE-ARQ-READ.
-      *    DISPLAY 'VOLTANDO READ'.
        VALIDA-TRANSACAO.
-      *    DISPLAY 'CHAMANDO VALD'.
            CALL 'TRANVALD' USING REG-TRANSACOES, WRK-VALIDO,
                                  WRK-COUNT-ERRO, WRK-ERRO.
-      *    DISPLAY 'VOLTANDO VALD'.
        REGRA-TRANSACAO.
-      *    DISPLAY 'CHAMANDO RULE'.
            CALL 'TRANRULE' USING REG-CLIENTES, REG-TRANSACOES,
                                  WRK-LER, WRK-CONTADORES,
                                  WRK-ERRO.
-      *    DISPLAY 'VOLTANDO RULE'.
        PROCESSAR-SAIDA.
-      *    DISPLAY 'CHAMANDO OUT'.
            CALL 'TRANOUT' USING REG-CLIENTES, REG-TRANSACOES,
                                 WRK-CONTADORES, WRK-TIPO-SAIDA,
                                 WRK-ERRO, WRK-CONTROLE-ARQ-OUT.
-      *    DISPLAY 'VOLTANDO OUT'.

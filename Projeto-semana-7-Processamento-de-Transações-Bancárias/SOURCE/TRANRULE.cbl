@@ -37,13 +37,15 @@
       *FAZER A ULTIMA LEITURA
               MOVE 'F' TO LS-LER
            ELSE
-      *ID DO CLIENTE E DA TRANSACAO IGUAL CALCULA CREDITO OU DEBITO
+      *SE TRANSACAO ACABOU SO LE CLIENTE
               IF LS-EOF-TRAN = 'S'
                  MOVE 'C' TO LS-LER
               ELSE
+      *SE TIVER TRANSACAO E FOR MENOR QUE CLIENTE PASSA PARA A PROX
                  IF LS-EOF-CLI = 'S'
                     PERFORM TRANSACAO-MENOR
                  ELSE
+      *SE FOR IGUAL FAZ A TRANSACAO
                     IF CLI-ID OF LS-REG-CLIENTES =
                        CLI-ID OF LS-REG-TRANSACOES
                        PERFORM PROCESSA-TRANSACAO
@@ -75,6 +77,7 @@
                     TO LS-SAIDA-ERRO.
            MOVE 'T' TO LS-LER.
        CALCULA-DEBITO.
+      *SE SALDO MAIOR QUE VALOR AI FAZ O DEBITO
            IF CLI-SALDO > TRX-VALOR OR CLI-SALDO = TRX-VALOR
               SUBTRACT TRX-VALOR FROM CLI-SALDO
               ADD 1 TO LS-COUNT-DEB
