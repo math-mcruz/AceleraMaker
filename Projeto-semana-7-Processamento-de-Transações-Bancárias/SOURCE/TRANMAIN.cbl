@@ -36,9 +36,7 @@
        01  REG-TRANSACOES COPY REGTRAN.
        PROCEDURE                       DIVISION.
        MAIN-PROCEDURE
-      *INICIA ABRINDO ARQUIVOS UMA VEZ
            PERFORM ABRIR-ARQUIVOS.
-      *LOOP ATE QUE AMBOS OS ARQUIVOS TENHAM TERMINADO
            PERFORM PROCESSAR-TRANSACOES UNTIL WRK-EOF-CLI = 'S' AND
                                               WRK-EOF-TRAN = 'S'.
            PERFORM FECHAR-ARQUIVOS.
@@ -47,43 +45,51 @@
       *READ QUAL TIPO DE LEITURA VAI LER OS ARQUIVOS COMECA COM AMBOS
            MOVE 'A' TO WRK-LER.
            PERFORM LER-ARQUIVOS.
-           MOVE SPACES TO WRK-LER.
-       PROCESSAR-TRANSACOES.
-      *VERIFICA SE PELO MENOS UM ARQUIVO AINDA NAO ACABOU
-           IF WRK-EOF-CLI = 'N' OR WRK-EOF-TRAN = 'N'
-              PERFORM ANALISA-DADOS
-              PERFORM LER-ARQUIVOS.
-       ANALISA-DADOS.
            PERFORM VALIDA-TRANSACAO.
-      *SE A ENTRADA DA TRANSACAO FOR VALIDA CHAMA A REGRA DE TRANSACAO
            IF WRK-VALIDO = 'S'
               PERFORM REGRA-TRANSACAO
               PERFORM ANALISA-SAIDA
            ELSE
-      *MANDA O ERRO DE ENTRADA PARA O ARQUIVO DE ERROS
+              PERFORM ANALISA-SAIDA.
+       PROCESSAR-TRANSACOES.
+              IF WRK-EOF-TRAN = 'S' AND WRK-EOF-CLI = 'S'
+                 MOVE 'S' TO WRK-CLOSE-OUT
+              ELSE
+                 IF WRK-EOF-TRAN = 'N' AND WRK-EOF-CLI = 'S'
+                    MOVE 'T' TO WRK-LER
+                    PERFORM LOGICA-TRANSACAO
+                 ELSE
+                    IF WRK-EOF-CLI = 'N' AND WRK-EOF-TRAN = 'S'
+                       MOVE 'C' TO WRK-LER
+                       PERFORM LOGICA-CLIENTE
+                    ELSE
+                       IF WRK-LER = 'T'
+                          PERFORM LOGICA-TRANSACAO
+                       ELSE
+                          PERFORM LOGICA-CLIENTE.
+       LOGICA-TRANSACAO.
+           PERFORM LER-ARQUIVOS.
+           IF WRK-EOF-TRAN = 'N'
+              PERFORM VALIDA-TRANSACAO
+              IF WRK-VALIDO = 'S'
+                 PERFORM REGRA-TRANSACAO
+                 PERFORM ANALISA-SAIDA
+              ELSE
+                 MOVE 'O' TO WRK-TIPO-ERRO
+                 PERFORM ANALISA-SAIDA.
+       LOGICA-CLIENTE.
+              MOVE 'R' TO WRK-TIPO-SAIDA.
+              PERFORM PROCESSAR-SAIDA.
+              PERFORM LER-ARQUIVOS.
               IF WRK-EOF-TRAN = 'N'
-                 MOVE 'E' TO WRK-TIPO-SAIDA
-                 PERFORM PROCESSAR-SAIDA
-                 MOVE 'T' TO WRK-LER
-              ELSE
-      *AVANCA PRA PROXIMA CONTA
-                 MOVE 'C' TO WRK-LER.
+                 PERFORM REGRA-TRANSACAO
+                 PERFORM ANALISA-SAIDA.
        ANALISA-SAIDA.
-      *SE TEVE SALDO INVALIDO MANDA PRO ARQUIVO DE ERROS
-           IF WRK-TIPO-ERRO = 'S'
-              MOVE 'E' TO WRK-TIPO-SAIDA
-              PERFORM PROCESSAR-SAIDA
-           ELSE
-      *SE TERMINOU DE LER O CLIENTE MANDA PARA IMPRIMIR NO RELATORIO
-              IF WRK-LER = 'C' OR WRK-LER = 'A'
-                 MOVE 'R' TO WRK-TIPO-SAIDA
-                 PERFORM PROCESSAR-SAIDA
-              ELSE
-                 IF WRK-LER = 'F'
-                    MOVE 'S' TO WRK-CLOSE-READ.
+              IF WRK-TIPO-ERRO = 'S' OR WRK-TIPO-ERRO = 'O'
+                 MOVE 'E' TO WRK-TIPO-SAIDA
+                 PERFORM PROCESSAR-SAIDA.
        FECHAR-ARQUIVOS.
       *FECHA TODOS ARQUIVOS
-           MOVE 'F' TO WRK-TIPO-SAIDA.
            MOVE 'S' TO WRK-CLOSE-READ.
            MOVE 'S' TO WRK-CLOSE-OUT.
            PERFORM PROCESSAR-SAIDA.
@@ -95,11 +101,12 @@
                                  WRK-CONTROLE-ARQ-READ.
        VALIDA-TRANSACAO.
            CALL 'TRANVALD' USING REG-TRANSACOES, WRK-VALIDO,
-                                 WRK-COUNT-ERRO, WRK-ERRO.
+                                 WRK-COUNT-ERRO, WRK-ERRO,
+                                 WRK-CONTROLE-ARQ-READ.
        REGRA-TRANSACAO.
            CALL 'TRANRULE' USING REG-CLIENTES, REG-TRANSACOES,
-                                 WRK-LER, WRK-CONTADORES,
-                                 WRK-ERRO.
+                                 WRK-CONTROLE-ARQ-READ,
+                                 WRK-CONTADORES, WRK-ERRO.
        PROCESSAR-SAIDA.
            CALL 'TRANOUT' USING REG-CLIENTES, REG-TRANSACOES,
                                 WRK-CONTADORES, WRK-TIPO-SAIDA,

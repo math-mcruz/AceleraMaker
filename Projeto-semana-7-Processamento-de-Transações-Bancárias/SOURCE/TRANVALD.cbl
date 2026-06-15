@@ -16,9 +16,12 @@
        01  LS-ERRO.
            05  LS-TIPO-ERRO         PIC X.
            05  LS-SAIDA-ERRO        PIC X(40).
+       01  LS-CONTROLE-ARQ-READ.
+           05  LS-LER           PIC X.
        01  LS-REG-TRANSACOES COPY REGTRAN.
        PROCEDURE DIVISION USING LS-REG-TRANSACOES, LS-VALIDO,
-                                LS-CONTADORES, LS-ERRO.
+                                LS-CONTADORES, LS-ERRO,
+                                LS-CONTROLE-ARQ-READ.
        VALIDATION-PROCEDURE.
       *LIMPEZA
            MOVE 'N' TO LS-VALIDO.
@@ -35,7 +38,8 @@
               ADD 1 TO LS-COUNT-ERRO
               MOVE 'O' TO LS-TIPO-ERRO
               MOVE 'ERRO: TIPO DE TRANSACAO INVALIDO -  ID'
-                    TO LS-SAIDA-ERRO.
+                    TO LS-SAIDA-ERRO
+              MOVE 'T' TO LS-LER.
        VERIFICA-VALOR.
       *SE TRANSACAO FOR 0 COLOCA NO ARQUIVO ERROS
            IF TRX-VALOR NOT = 0
@@ -44,7 +48,8 @@
               ADD 1 TO LS-COUNT-ERRO
               MOVE 'O' TO LS-TIPO-ERRO
               MOVE 'ERRO: VALOR DE TRANSACAO INVALIDO - ID'
-                    TO LS-SAIDA-ERRO.
+                    TO LS-SAIDA-ERRO
+              MOVE 'T' TO LS-LER.
        VERIFICA-VALIDO.
       *SE NAO TIVER ERROS A TRANSACAO FICA VALIDA
            IF WRK-TIPO-VALIDO AND WRK-VALOR-VALIDO

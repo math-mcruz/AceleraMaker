@@ -24,7 +24,7 @@
                07  WRK-TEXTO-VARIADO     PIC X(15) VALUE SPACES.
                07  WRK-VALOR             PIC 9(09) VALUE ZEROS.
            05  WRK-TEXTO-FIXO            PIC X(80) VALUE 'SAIDA:'.
-           05  WRK-LINHA-ID
+           05  WRK-LINHA-ID.
                07  WRK-TEXTO-ERRO        PIC X(40) VALUE SPACES.
                07  WRK-ID                PIC 9(05) VALUE ZEROS.
            05  WRK-LINHA-TRANSACAO       PIC X(20) VALUE SPACES.
@@ -32,12 +32,11 @@
        01  LS-TIPO-SAIDA                 PIC X.
            88  TIPO-RELATORIO            VALUE 'R'.
            88  TIPO-ERRO                 VALUE 'E'.
-           88  TIPO-FIM                  VALUE 'F'.
        01  LS-ERRO.
            05  LS-TIPO-ERRO              PIC X.
                88  SALDO-NEGATIVO        VALUE 'S'.
                88  OUTRO-TIPO            VALUE 'O'.
-           05  LS-SAIDA-ERRO             PIC X(45).
+           05  LS-SAIDA-ERRO             PIC X(40).
        01  LS-CONTADORES.
            05  LS-COUNT-CLI              PIC 9(02).
            05  LS-COUNT-TRAN             PIC 9(02).
@@ -71,14 +70,12 @@
            IF TIPO-RELATORIO
               PERFORM ATUALIZAR-CLIENTE
            ELSE
-              IF TIPO-ERRO
-                 PERFORM ESCREVER-ERRO
-              ELSE
-                 PERFORM EXIBIR-ESTATISTICA.
+              PERFORM ESCREVER-ERRO.
        ATUALIZAR-CLIENTE.
       *RELATORIO
+           ADD 1 TO LS-COUNT-CLI.
            WRITE REG-CLI-ATUALIZADO-FD FROM LS-REG-CLIENTES.
-           DISPLAY '======================'.
+           DISPLAY '==========================='.
            DISPLAY 'CLIENTE:' CLI-ID OF LS-REG-CLIENTES.
            DISPLAY 'TOTAL CREDITOS: ' LS-TOTAL-CRED.
            DISPLAY 'TOTAL DEBITOS: ' LS-TOTAL-DEB.
@@ -115,6 +112,7 @@
               MOVE CLI-ID OF LS-REG-TRANSACOES TO WRK-ID
               WRITE REG-ERROS-FD FROM WRK-LINHA-ID
               MOVE SPACES TO WRK-TEXTO-ERRO.
+           MOVE SPACES TO LS-TIPO-ERRO.
        EXIBIR-ESTATISTICA.
            DISPLAY '============================'.
            DISPLAY 'ESTATISTICA DE PROCESSAMENTO'.

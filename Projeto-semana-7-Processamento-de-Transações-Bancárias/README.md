@@ -17,9 +17,9 @@ Crie os datasets:
 - `HERC01.TRANBANC.COPYLIB`
 
 ## JCLs
-- Primeiro submeta (SUB) o `CONTCOMP` para compilar o projeto(todos os membros cobol(steps) são compilados no mesmo jcl).
-- Em seguida submeta os arquivos de GDG e Molde caso ainda não possua no seu ambiente.
-- Depois submeta o `CONTEXE` para executar o projeto, e para que funcione deve ter os arquivos CLIENTES.TXT e TRANSACOES.TXT (HERC01.TRANBANC.CLIENTES e HERC01.TRANBANC.TRANSAC)
+- Primeiro submeta (SUB) o `TRANCOMP` para compilar o projeto(todos os membros cobol(steps) são compilados no mesmo jcl).
+- Em seguida submeta o arquivos `TRANGDG` e o `TRANMOLD` caso ainda não possua no seu ambiente.
+- Depois submeta o `TRANEXEC` para executar o projeto, e para que funcione deve ter os arquivos CLIENTES.TXT e TRANSACOES.TXT (HERC01.TRANBANC.CLIENTES e HERC01.TRANBANC.TRANSAC)
 
 ## Observações 
 Deixei os arquivos usados como exemplo na pasta `ARQUIVOS(CONTAS)` e as prints da execução no TSO na pasta `Execução do programa`.                                                                                   

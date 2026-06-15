@@ -62,13 +62,9 @@
            IF LS-EOF-CLI = 'N'
               READ ARQ-CLI INTO LS-REG-CLIENTES AT END
                         MOVE 'S' TO LS-EOF-CLI
-           ELSE
-              MOVE 'S' TO LS-EOF-CLI.
        LER-TRANSACOES.
            IF LS-EOF-TRAN = 'N'
               READ ARQ-TRAN INTO LS-REG-TRANSACOES AT END
                         MOVE 'S' TO LS-EOF-TRAN
-           ELSE
-              MOVE 'S' TO LS-EOF-TRAN.
        FECHAR-ARQUIVOS.
            CLOSE ARQ-CLI, ARQ-TRAN.

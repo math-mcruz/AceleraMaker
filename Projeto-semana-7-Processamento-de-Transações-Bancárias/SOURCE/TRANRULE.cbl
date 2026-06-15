@@ -33,29 +33,16 @@
            GOBACK.
       *LOGICA PRICIPAL PARA FAZER AS OPERACOES
        COMPARA-IDS.
-           IF LS-EOF-CLI = 'S' AND LS-EOF-TRAN = 'S'
-      *FAZER A ULTIMA LEITURA
-              MOVE 'F' TO LS-LER
+           IF CLI-ID OF LS-REG-CLIENTES =
+              CLI-ID OF LS-REG-TRANSACOES
+              PERFORM PROCESSA-TRANSACAO
            ELSE
-      *SE TRANSACAO ACABOU SO LE CLIENTE
-              IF LS-EOF-TRAN = 'S'
-                 MOVE 'C' TO LS-LER
-              ELSE
-      *SE TIVER TRANSACAO E FOR MENOR QUE CLIENTE PASSA PARA A PROX
-                 IF LS-EOF-CLI = 'S'
-                    PERFORM TRANSACAO-MENOR
-                 ELSE
-      *SE FOR IGUAL FAZ A TRANSACAO
-                    IF CLI-ID OF LS-REG-CLIENTES =
-                       CLI-ID OF LS-REG-TRANSACOES
-                       PERFORM PROCESSA-TRANSACAO
-                    ELSE
       *ID DO CLIENTE MENOR TROCA CLIENTE
-                       IF CLI-ID OF LS-REG-CLIENTES <
-                          CLI-ID OF LS-REG-TRANSACOES
-                          PERFORM CLIENTE-MENOR
-                       ELSE
-                          PERFORM TRANSACAO-MENOR.
+              IF CLI-ID OF LS-REG-CLIENTES <
+                 CLI-ID OF LS-REG-TRANSACOES
+                 PERFORM CLIENTE-MENOR
+              ELSE
+                 PERFORM TRANSACAO-MENOR.
        PROCESSA-TRANSACAO.
       *SE FOR CREDITO ADICIONA NO SALDO E ACRECENTA OS CONTADORES
            IF TIPO-CREDITO
@@ -68,7 +55,6 @@
               PERFORM CALCULA-DEBITO.
            MOVE 'T' TO LS-LER.
        CLIENTE-MENOR.
-           ADD 1 TO LS-COUNT-CLI.
            MOVE 'C' TO LS-LER.
        TRANSACAO-MENOR.
            ADD 1 TO LS-COUNT-ERRO.

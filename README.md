@@ -10,7 +10,7 @@ Treinamento com projetos semanais voltados ao desenvolvimento de habilidades pro
 
 - [ ] `Projeto 4: Processamento de Contas Bancárias` processamento em Mainframe, união de bases de dados (Merge), realização ordenação por agência (SORT), executa a leitura de arquivos via COBOL, e geração de relatório final de saldos bancários e suas agências, utilizando chamadas de subprogramas para modularizar o código.
 
-- [ ] `Projeto 5: Processamento de Transações Bancárias` ...
+- [ ] `Projeto 5: Processamento de Transações Bancárias` processamento em Batch de rotinas de leitura de arquivos, regras de manipulação e validação de transações, gravação de erros e atualização de clientes em arquivos GDG, e exibição de relatório e estatística de processamento.
 
 
 ## Tecnologias
