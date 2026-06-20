@@ -12,10 +12,13 @@ Treinamento com projetos semanais voltados ao desenvolvimento de habilidades pro
 
 - [ ] `Projeto 5: Processamento de Transações Bancárias` processamento em Batch de rotinas de leitura de arquivos, regras de manipulação e validação de transações, gravação de erros e atualização de clientes em arquivos GDG, e exibição de relatório e estatística de processamento.
 
+- [ ] `Projeto 6: Sistema de Contas Bancárias` ...
+
 
 ## Tecnologias
 - COBOL (TK4 e TK5)
 - JCL
+- DB2
 - C#
 - .NET 10.0
 - ASP.NET Core Web API
