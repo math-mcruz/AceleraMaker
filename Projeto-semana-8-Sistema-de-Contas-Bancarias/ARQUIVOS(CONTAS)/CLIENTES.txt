@@ -1,5 +1,5 @@
-00010JOAO DA SILVA                 000001000                           
-00020MARIA OLIVEIRA                000005000                           
-00030CARLOS PEREIRA                000000100                           
-00040ANA SOUZA                     000000000                           
-00050MATHEUS CRUZ                  000007000
+00001JOAO DA SILVA                 000001500                                    
+00002MARIA OLIVEIRA                000008350                                    
+00003CARLOS PEREIRA                000000100                                    
+00004ANA SOUZA                     000012000                                    
+00005MATHEUS CRUZ                  000007000

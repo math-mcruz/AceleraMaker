@@ -12,7 +12,7 @@ Treinamento com projetos semanais voltados ao desenvolvimento de habilidades pro
 
 - [ ] `Projeto 5: Processamento de Transações Bancárias` processamento em Batch de rotinas de leitura de arquivos, regras de manipulação e validação de transações, gravação de erros e atualização de clientes em arquivos GDG, e exibição de relatório e estatística de processamento.
 
-- [ ] `Projeto 6: Sistema de Contas Bancárias` ...
+- [ ] `Projeto 6: Sistema de Contas Bancárias` Persistência de dados utilizando DB2, desenvolvimento de aplicação em COBOL no ambiente Gix_IDE(baseada em GixSQL), conexão via driver ODBC, para processamento de transações bancárias, e exibição de LOGs de processamento em arquivo e erros.
 
 
 ## Tecnologias
