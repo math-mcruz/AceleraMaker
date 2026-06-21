@@ -95,7 +95,8 @@
            05  WRK-COUNT-SUB      PIC 9(03) VALUE ZEROS. 
            05  WRK-COUNT-REG      PIC 9(03) VALUE ZEROS.
            05  WRK-COUNT-TRAN     PIC 9(02) VALUE ZEROS.
-           05  WRK-COUNT-ERRO     PIC 9(02) VALUE ZEROS.               
+           05  WRK-COUNT-ERRO     PIC 9(02) VALUE ZEROS. 
+           05  WRK-COUNT-COMMIT   PIC 9(03) VALUE ZEROS.              
  
       *        VARIAVEIS PARA A MANIPULACAO DO BANCO DE DADOS 
        EXEC SQL INCLUDE SQLCA END-EXEC.
@@ -108,12 +109,12 @@
       *DBCLI  
        01  HV-CLI-ID    PIC S9(9).
        01  HV-CLI-NOME  PIC X(32).
-       01  HV-CLI-SALDO PIC S9(9).
+       01  HV-CLI-SALDO PIC S9(9) COMP-3.
       *DBTRAN  
        01  TRX-CLI-ID   PIC S9(9).
        01  HV-TRX-ID    PIC S9(9). 
        01  HV-TRX-TIPO  PIC X(1).
-       01  HV-TRX-VALOR PIC S9(9). 
+       01  HV-TRX-VALOR PIC S9(9) COMP-3. 
 
        01  WRK-LAST-ID   PIC S9(9) VALUE ZEROS.
        01  WRK-PROX-ID   PIC S9(9) VALUE ZEROS. 
@@ -172,12 +173,20 @@
            END-IF. 
 
        VERIFICA-TABELAS. 
+      *LIMPANDO TABELAS  
+           EXEC SQL DROP TABLE CLIENTES END-EXEC. 
+           EXEC SQL DROP TABLE TRANSACOES END-EXEC. 
+           EXEC SQL DROP TABLE ERROS_PROCESSAMENTO END-EXEC.
+           EXEC SQL COMMIT END-EXEC.
+      *CRIACAO TABELA CLIENTES     
            EXEC SQL 
-               CREATE TABLE CLIENTES (
-                   CLI_ID INT NOT NULL, 
-                   CLI_NOME VARCHAR(30),
-                   CLI_SALDO INT
-               ) 
+               CREATE TABLE CLIENTES ( 
+                   CLI_ID INTEGER NOT NULL, 
+                   CLI_NOME VARCHAR(30) NOT NULL, 
+                   CLI_SALDO DECIMAL(9,0) NOT NULL, 
+                   DT_ATUALIZACAO DATE, 
+                   PRIMARY KEY (CLI_ID) 
+               )
            END-EXEC.
            
            EVALUATE SQLCODE
@@ -190,12 +199,15 @@
                    PERFORM MOSTRA-ERRO
                    STOP RUN
            END-EVALUATE.
+      *CRIACAO TABELA TRANSACOES     
            EXEC SQL 
-               CREATE TABLE TRANSACOES (
-                   CLI_ID INT NOT NULL,
-                   TRX_ID INT NOT NULL,
-                   TRX_TIPO VARCHAR(1),
-                   TRX_VALOR INT
+               CREATE TABLE TRANSACOES ( 
+                   TRX_ID INTEGER NOT NULL, 
+                   CLI_ID INTEGER NOT NULL, 
+                   TRX_TIPO CHAR(1) NOT NULL, 
+                   TRX_VALOR DECIMAL(9,0) NOT NULL, 
+                   DT_PROCESSAMENTO DATE, 
+                   PRIMARY KEY (TRX_ID) 
                ) 
            END-EXEC.
            EVALUATE SQLCODE
@@ -207,7 +219,28 @@
                    DISPLAY "ERRO AO CRIAR TABELA."
                    PERFORM MOSTRA-ERRO
                    STOP RUN
+           END-EVALUATE.   
+      
+      *CRIACAO TABELA ERROS
+           EXEC SQL 
+               CREATE TABLE ERROS_PROCESSAMENTO (  
+                   ID_ERRO INTEGER GENERATED ALWAYS AS IDENTITY, 
+                   CLI_ID INTEGER, 
+                   DESCRICAO_ERRO VARCHAR(100), 
+                   DT_OCORRENCIA TIMESTAMP 
+               )
+           END-EXEC.
+           EVALUATE SQLCODE
+               WHEN 0
+                   DISPLAY "TABELA CRIADA COM SUCESSO."
+               WHEN -601
+                   DISPLAY "TABELA JA EXISTE. IGNORANDO CRIACAO."
+               WHEN OTHER
+                   DISPLAY "ERRO AO CRIAR TABELA."
+                   PERFORM MOSTRA-ERRO
+                   STOP RUN
            END-EVALUATE.
+           EXEC SQL COMMIT END-EXEC.
 
        PROCESSA-ARQCLI.
       *PASSA OS DADOS DO ARQUIVO PARA O BANCO  
@@ -234,8 +267,10 @@
        CRIAR-CLIENTE.
       *INSERE OS CLIENTES NA PRIMEIRA FASE  
            EXEC SQL 
-               INSERT INTO CLIENTES (CLI_ID, CLI_NOME, CLI_SALDO) 
-               VALUES (:HV-CLI-ID, :HV-CLI-NOME, :HV-CLI-SALDO) 
+               INSERT INTO CLIENTES 
+               (CLI_ID, CLI_NOME, CLI_SALDO, DT_ATUALIZACAO) 
+               VALUES 
+               (:HV-CLI-ID, :HV-CLI-NOME, :HV-CLI-SALDO, CURRENT DATE) 
            END-EXEC.
            EXEC SQL COMMIT END-EXEC.
 
@@ -245,10 +280,20 @@
            END-IF.       
 
        MOSTRA-ERRO.
-           DISPLAY "ERRO ".
-           DISPLAY "SQLCODE: " SQLCODE.
+           DISPLAY "--- ERRO NO BANCO DE DADOS ---".
+           DISPLAY "SQLCODE : " SQLCODE.
            DISPLAY "SQLSTATE: " SQLSTATE.
-           DISPLAY "MENSAGEM: " SQLERRMC. 
+           DISPLAY "MENSAGEM: " SQLERRMC.
+      *SE DER ERRO FAZ O ROLLBACK PARA EVITAR CONFLITOS     
+           IF SQLCODE < 0
+              EXEC SQL ROLLBACK END-EXEC
+              EXEC SQL 
+                  INSERT INTO ERROS_PROCESSAMENTO 
+                  (CLI_ID, DESCRICAO_ERRO, DT_OCORRENCIA)
+                  VALUES (:HV-CLI-ID, 'FALHA BD', CURRENT TIMESTAMP)
+              END-EXEC
+              EXEC SQL COMMIT END-EXEC
+           END-IF.
       
       *             USO DO BANCO NA SEGUNDA FASE  
 
@@ -269,11 +314,12 @@
            END-IF. 
            
        ATUALIZAR-CLIENTE.
-        
+      *FAZ A ATUALIZACAO DO CLIENTE NO BANCO  
            EXEC SQL
                UPDATE CLIENTES
                   SET CLI_NOME  = :HV-CLI-NOME,
-                      CLI_SALDO = :HV-CLI-SALDO
+                      CLI_SALDO = :HV-CLI-SALDO,
+                      DT_ATUALIZACAO = CURRENT DATE
                 WHERE CLI_ID    = :HV-CLI-ID
            END-EXEC.
            EXEC SQL COMMIT END-EXEC.
@@ -284,15 +330,16 @@
            END-IF.
         
        INSERIR-TRANSACAO.
+      *GRAVA A TRANSACAO NO BANCO  
            MOVE CLI-ID OF REG-TRANSACAO TO TRX-CLI-ID.
            MOVE TRX-ID  TO HV-TRX-ID.
            MOVE TRX-TIPO  TO HV-TRX-TIPO.
            MOVE TRX-VALOR TO HV-TRX-VALOR. 
            EXEC SQL 
                INSERT INTO TRANSACOES 
-               (CLI_ID, TRX_ID, TRX_TIPO, TRX_VALOR) 
-               VALUES (:TRX-CLI-ID, :HV-TRX-ID, 
-               :HV-TRX-TIPO, :HV-TRX-VALOR) 
+               (TRX_ID, CLI_ID, TRX_TIPO, TRX_VALOR, DT_PROCESSAMENTO) 
+               VALUES (:HV-TRX-ID, :TRX-CLI-ID, :HV-TRX-TIPO, 
+                       :HV-TRX-VALOR, CURRENT DATE) 
            END-EXEC.
            EXEC SQL COMMIT END-EXEC.
 
@@ -302,11 +349,12 @@
            END-IF. 
          
        MOSTRAR-CLIENTES.
-           DISPLAY "--------- LISTA DE CLIENTES ATUALIZADO --------".
+      *CURSOR MANUAL POIS ESSA IDE NAO ACEITOU  
+           DISPLAY '-------- LISTA DE CLIENTES ATUALIZADO ---------'.
            MOVE 0 TO WRK-LAST-ID.
            MOVE 'N' TO FIM-CURSOR. 
            PERFORM LER-MANUAL UNTIL FIM-CURSOR = 'S'.
-           DISPLAY "-----------------------------------------------".
+           DISPLAY '-----------------------------------------------'.
 
        LER-MANUAL.
            EXEC SQL 
@@ -328,10 +376,9 @@
       *ATUALIZA AS VARIAVEIS
                MOVE WRK-PROX-ID TO HV-CLI-ID
                MOVE WRK-PROX-ID TO WRK-LAST-ID
-               
-               DISPLAY "ID: " HV-CLI-ID 
-                       " | NOME: " HV-CLI-NOME 
-                       " | SALDO: " HV-CLI-SALDO
+               DISPLAY 'ID: ' HV-CLI-ID 
+                       '| NOME: ' HV-CLI-NOME 
+                       '| SALDO: ' HV-CLI-SALDO
            ELSE
                MOVE 'S' TO FIM-CURSOR
            END-IF.              
@@ -379,6 +426,9 @@
            
       *        MANDA FECHAR O ARQUIVO TRANSACOES E OS DE SAIDA   
        FECHAR-ARQUIVOS. 
+           IF WRK-COUNT-COMMIT > 0
+              EXEC SQL COMMIT END-EXEC
+           END-IF. 
            PERFORM RELATORIO-PROCESSAMENTO.
               
        
@@ -398,6 +448,12 @@
               ELSE
                  MOVE 'O' TO WRK-TIPO-ERRO
                  PERFORM ANALISA-SAIDA
+              END-IF
+      *FAZ O COMMIT SE CHEGAR EM 100 TRANSACOES       
+              ADD 1 TO WRK-COUNT-COMMIT
+              IF WRK-COUNT-COMMIT = 100
+                 EXEC SQL COMMIT END-EXEC
+                 MOVE 0 TO WRK-COUNT-COMMIT
               END-IF
               PERFORM LER-ARQTRAN
            END-IF.     
@@ -587,7 +643,14 @@
               MOVE CLI-ID OF REG-TRANSACAO TO WRK-ID
               WRITE REG-ERROS-FD FROM WRK-LINHA-ID
               MOVE SPACES TO WRK-TEXTO-ERRO
-           END-IF.   
+           END-IF.
+      *INSERE O ERRO NO BANCO      
+           EXEC SQL 
+               INSERT INTO ERROS_PROCESSAMENTO 
+               (CLI_ID, DESCRICAO_ERRO, DT_OCORRENCIA)
+               VALUES (:HV-CLI-ID, :WRK-STATUS-ERRO, CURRENT TIMESTAMP)
+           END-EXEC
+           EXEC SQL COMMIT END-EXEC.  
            MOVE SPACES TO WRK-TIPO-ERRO.
            PERFORM RELATORIO-CLIENTE.
                     

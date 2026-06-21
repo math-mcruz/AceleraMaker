@@ -1,0 +1,15 @@
+00001JOAO DA SILVA                 000001000                                    
+00002MARIA OLIVEIRA                000005000                                    
+00003CARLOS PEREIRA                000000100                                    
+00004ANA SOUZA                     000010000                                    
+00005MATHEUS CRUZ                  000000200                                    
+00006ALINE DUTRA                   000003500                                    
+00007LUIS GUERREIRO                000000050                                    
+00008LUIS CRUZ                     000008900                                    
+00009JOAO CRUZ                     000001250                                    
+00010NELIO CRUZ                    000004000                                    
+00011CRISTIANO RONALDO             000000750                                    
+00012LIONEL MESSI                  000002100                                    
+00013RONALDO                       000009500                                    
+00014RONALDINHO                    000000300                                    
+00015PELE                          000006000
