@@ -14,7 +14,7 @@ Treinamento com projetos semanais voltados ao desenvolvimento de habilidades pro
 
 - [ ] `Projeto 6: Sistema de Contas Bancárias` persistência de dados utilizando DB2, desenvolvimento de aplicação em COBOL no ambiente Gix_IDE(baseada em GixSQL), conexão via driver ODBC, para processamento de transações bancárias, e exibição de LOGs de processamento em arquivo e erros.
 
-- [ ] `Projeto 7: Sistema de Consulta e Atualização de Clientes` desenvolvimento de programa online(CICS) em COBOL no ambiente KICKS/Mainframe, armazenamento de dados utilizando VSAM, processamento de transações CICS, e interação com usuário através da tela contruida por mapas.
+- [ ] `Projeto 7: Sistema de Consulta e Atualização de Clientes` desenvolvimento de programa online(CICS) em COBOL no ambiente KICKS/Mainframe, armazenamento de dados utilizando VSAM, processamento de transações CICS, e interação com usuário através da tela contruida por BMS.
 
 ## Tecnologias
 - COBOL (TK4 e TK5)

@@ -40,6 +40,10 @@
                 SEND MAP('MAP1') MAPSET('MAPSET1') ERASE
            END-EXEC.
        RESPOSTA-CLIENTE.
+      *IGNORA PARA NAO DERRUBAR SE MANDAR O DADOS FOREM VAZIOS
+           EXEC CICS IGNORE CONDITION
+                MAPFAIL
+           END-EXEC.
            EXEC CICS
                 RECEIVE MAP('MAP1') MAPSET('MAPSET1')
            END-EXEC.
@@ -60,7 +64,11 @@
                     MOVE CODCLII TO COMM-CODCLI
                     MOVE FONEI   TO COMM-TELEFONE
                     MOVE CITYI   TO COMM-CIDADE
-                    PERFORM LOGICA-VSAM.
+                    PERFORM LOGICA-VSAM
+                 ELSE
+      *SE APERTAR ESPACO LIMPA A TELA
+                    IF EIBAID = DFHENTER
+                       PERFORM LIMPA-TELA.
        RETORNO-VSAM.
       *ANALISA RETORNO DO VSAM
            IF COMM-RETORNO = 00
@@ -81,4 +89,11 @@
                 PROGRAM('CLIVSAM')
                 COMMAREA(DFHCOMMAREA)
                 LENGTH(74)
+           END-EXEC.
+       LIMPA-TELA.
+      *MOVE VALORES NULOS PARA O MAPA
+           MOVE LOW-VALUES TO MAP1O.
+           EXEC CICS SEND MAP('MAP1')
+                MAPSET('MAPSET1')
+                ERASE
            END-EXEC.

@@ -8,13 +8,13 @@
 ## Ambiente Mainframe
 
 Crie os datasets(simulando mainframe):
-- `HERC01.SISCLI.SOURCE`
-- `HERC01.SISCLI.JCL`
-- `HERC01.SISCLI.LOADLIB`
-- `HERC01.SISCLI.COPYLIB`
+- `HERC01.SUABIBLIOTECA.SOURCE`
+- `HERC01.SUABIBLIOTECA.JCL`
+- `HERC01.SUABIBLIOTECA.LOADLIB`
+- `HERC01.SUABIBLIOTECA.COPYLIB`
 
 ## JCLs
-- Primeiro JCL a submeter é o `MAPCLI` é o mais importante, sua função é criar o mapa de tela do programa, que será utilizado pelo `CLIPMG` e `CLIVSAM`.
+- Primeiro JCL a submeter é o `MAPCLI` é o mais importante, sua função é criar o mapa de tela do programa(o mapa esta na pasta BMS), que será utilizado pelo `CLIPMG` e `CLIVSAM`.
 - Segundo JCL a submeter é o `CLIPMG` e o terceiro JCL a submeter é o `CLIVSAM`, que são os programas que irão executar as funções de consulta e atualização dos clientes.
 - O quarto é o `CRIVSAM` que é o JCL responsável por criar o VSAM, onde os dados dos clientes serão armazenados, mas só é necessário submeter se não tiver um arquivo VSAM já criado.
 
