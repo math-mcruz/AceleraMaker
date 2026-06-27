@@ -25,7 +25,7 @@ Crie os datasets(simulando mainframe):
 - Foi feito apenas uma simulação do JCL, este projeto foi compilado por GnuCOBOL.
 
 ## Observações 
-- Deixei os arquivos usados como exemplo na pasta `ARQUIVOS(CONTAS)` e as prints da execução no TSO na pasta `Execução do programa`.
+- Deixei os arquivos usados como exemplo na pasta `ARQUIVOS(CONTAS)` e as prints da execução na pasta `Execução do programa`.
 - Não consegui configurar a IDE para deixar o sistema mais modulado com submodulos recebendo os dados pela LINKAGE SECTION, não descobri o motivo e deixei em uma ssó arquivo que funcionou, mas o código está todo comentado e organizado para facilitar a leitura e entendimento do programa. 
 - Algumas limitações não consegui resolver, como usar o COPY do DBCLI e DBTRAN e usar o Cursor (tive que simular fazendo manualmente)                                                                                 
 
