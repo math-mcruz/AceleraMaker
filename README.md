@@ -16,10 +16,14 @@ Treinamento com projetos semanais voltados ao desenvolvimento de habilidades pro
 
 - [ ] `Projeto 7: Sistema de Consulta e Atualização de Clientes` desenvolvimento de programa online(CICS) em COBOL no ambiente KICKS/Mainframe, armazenamento de dados utilizando VSAM, processamento de transações CICS, e interação com usuário através da tela contruida por BMS.
 
+- [ ] `Projeto Final: Modernização de um Sistema Legado` ...
+
 ## Tecnologias
 - COBOL (TK4 e TK5)
+- GnuCOBOL
 - JCL
 - DB2 
+- VSAM
 - CICS (KICKS)
 - C#
 - .NET 10.0
