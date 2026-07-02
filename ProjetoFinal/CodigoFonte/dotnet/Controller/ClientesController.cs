@@ -1,8 +1,9 @@
+using dotnet.DTOs.Clientes;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace dotnet.Controllers
+namespace dotnet.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -15,8 +16,8 @@ namespace dotnet.Controllers
         [DllImport("libcob-4.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void cob_init(int argc, IntPtr argv);
 
-        [HttpGet("{id}")]
-        public IActionResult ConsultarCliente(int id)
+        [HttpGet("{id:int}")]
+        public IActionResult GET(int id)
         {
             //formata o ID para 5 posições e preenche os 37 bytes com espaços
             string idFormatado = id.ToString("D5");
@@ -57,5 +58,20 @@ namespace dotnet.Controllers
                 return StatusCode(500, new { erro = "Falha no .dll: " + ex.Message });
             }
         }
-    }
+        [HttpPost]
+        public IActionResult Post(ClienteRequestDTO cliente)
+        {
+           
+        }
+        [HttpPut("{id:int}")]
+        public IActionResult Post(int id, ClienteUpdateDTO cliente)
+        {
+           
+        }
+        /*[HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
+        {
+           
+        }*/
+    }    
 }
