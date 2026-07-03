@@ -5,20 +5,20 @@ namespace BlogPessoal.DTOs.Mappings;
 public static class ClientesDTOMappings
 {
     //entrada dos dados para mandar pro banco
-    public static ClienteResponseDTO? ToResponse(this ClienteRequestDTO? clienteRequestDTO, string statusRetorno)
+    public static ClienteResponseDTO? RequestToResponse(this ClienteRequestDTO? clienteRequestDTO, string statusRetorno)
     {
         if (clienteRequestDTO == null) return null;
 
         return new ClienteResponseDTO
         {
-            CLI_Id = clienteRequestDTO.CLI_Id,
-            CLI_Nome = clienteRequestDTO.CLI_Nome,
+            Cli_Id = clienteRequestDTO.CLI_Id,
+            Cli_Nome = clienteRequestDTO.CLI_Nome,
             Telefone = clienteRequestDTO.Telefone,
             Email = clienteRequestDTO.Email,
             StatusRetorno = statusRetorno
         };
     }
-    public static ClienteUpdateDTO? ToUpdate(this ClienteRequestDTO? clienteRequestDTO, string statusRetorno)
+    public static ClienteUpdateDTO? RequestToUpdate(this ClienteRequestDTO? clienteRequestDTO, string statusRetorno)
     {
         if (clienteRequestDTO == null) return null;
 
@@ -36,7 +36,7 @@ public static class ClientesDTOMappings
 
         return new ClienteResponseDTO
         {
-            CLI_Id = clienteUpdatetDTO.CLI_Id,
+            Cli_Id = clienteUpdatetDTO.CLI_Id,
             Telefone = clienteUpdatetDTO.Telefone,
             Email = clienteUpdatetDTO.Email,
             StatusRetorno = statusRetorno
