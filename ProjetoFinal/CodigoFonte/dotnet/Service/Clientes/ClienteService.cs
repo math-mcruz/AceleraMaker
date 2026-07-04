@@ -1,3 +1,4 @@
+using BlogPessoal.DTOs.Mappings;
 using dotnet.Config.DllConfig;
 using dotnet.DTOs.Clientes;
 using dotnet.Infrastructure;
@@ -26,13 +27,8 @@ public class ClienteService : IClienteService
 
         if (statusRetorno == "00")
         {
-            return new ClienteResponseDTO
-            {
-                Cli_Id = cliId,
-                Cli_Nome = cliNome,
-                Telefone = telefone,
-                Email = email,
-            };
+            var cliente = ClientesDTOMappings.ToResponse(cliId, cliNome, telefone, email);
+            return cliente;
         }
         else if (statusRetorno == "44")
         {
@@ -64,21 +60,12 @@ public class ClienteService : IClienteService
 
         if (statusRetorno == "00")
         {
-            return new ClienteResponseDTO
-            {
-                Cli_Id = cliId,
-                Cli_Nome = cliNome,
-                Telefone = telefone,
-                Email = email,
-            };
-        }
-        else if (statusRetorno == "44")
-        {
-            throw new KeyNotFoundException("Cliente não encontrado, status do retorno:" + statusRetorno);
+            var cliente = ClientesDTOMappings.ToResponse(cliId, cliNome, telefone, email);
+            return cliente;
         }
         else
         {
-                throw new Exception("Não foi possível cadastrar, status do retorno:" + statusRetorno);
+            throw new Exception("Não foi possível cadastrar, status do retorno:" + statusRetorno);
         }
     }
 
@@ -102,13 +89,8 @@ public class ClienteService : IClienteService
 
         if (statusRetorno == "00")
         {
-            return new ClienteResponseDTO
-            {
-                Cli_Id = cliId,
-                Cli_Nome = cliNome,
-                Telefone = telefone,
-                Email = email,
-            };
+            var cliente = ClientesDTOMappings.ToResponse(cliId, cliNome, telefone, email);
+            return cliente;
         }
         else if (statusRetorno == "44")
         {
