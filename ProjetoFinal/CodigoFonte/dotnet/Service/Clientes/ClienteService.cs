@@ -13,39 +13,39 @@ public class ClienteService : IClienteService
         var wrapper = new CopybookWrapper(parser);
             
             // 3. Monta o payload (ID, Nome vazio, Status vazio)
-        wrapper.PayloadCobol(id.ToString(), "", "");
-        try
-            {
-                DllConfig.cob_init(0, IntPtr.Zero);
-                //executa o arquivo .dll na memoria da API
-                DllConfig.CONSCLI(wrapper.BufferMemoria);
-                int cliId = Convert.ToInt32(wrapper.ExtrairCampo(0));
-                string cliNome = wrapper.ExtrairCampo(1);
-                string statusRetorno = wrapper.ExtrairCampo(2);
+        wrapper.PayloadCobol(id.ToString(), "", "", "", "");
 
-                if (statusRetorno == "00")
-                {
-                    return new ClienteResponseDTO
-                    {
-                        Cli_Id = cliId,
-                        Cli_Nome = cliNome,
-                        StatusRetorno = statusRetorno
-                    };
-                }
-                else if (statusRetorno == "44")
-                {
-                    throw new KeyNotFoundException("Não existem temas criados");
-                }
-                else
-                {
-                    throw new Exception("Erro ao consultar o cliente: " + statusRetorno);
-                }
-            }
-            catch (Exception)
+        DllConfig.cob_init(0, IntPtr.Zero);
+                //executa o arquivo .dll na memoria da API
+        DllConfig.CONSCLI(wrapper.BufferMemoria);
+                
+        int cliId = Convert.ToInt32(wrapper.ExtrairCampo(0));
+        string cliNome = wrapper.ExtrairCampo(1);
+        string telefone = wrapper.ExtrairCampo(2);
+        string email = wrapper.ExtrairCampo(3);    
+        string statusRetorno = wrapper.ExtrairCampo(4);
+
+        if (statusRetorno == "00")
+        {
+            return new ClienteResponseDTO
             {
-                throw new Exception("Erro interno");
-            }
+                Cli_Id = cliId,
+                Cli_Nome = cliNome,
+                Telefone = telefone,
+                Email = email,
+                StatusRetorno = statusRetorno
+            };
+        }
+        else if (statusRetorno == "44")
+        {
+            throw new KeyNotFoundException("Cliente não encontrado: " + statusRetorno);
+        }
+        else
+        {
+                throw new Exception("Erro ao consultar o cliente: " + statusRetorno);
+        }
     }
+    
 
     public ClienteResponseDTO Cadastrar(ClienteRequestDTO cliRequestDto)
     {

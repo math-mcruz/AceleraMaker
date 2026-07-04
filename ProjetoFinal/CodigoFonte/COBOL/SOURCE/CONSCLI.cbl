@@ -14,44 +14,43 @@
        DATA DIVISION.
        FILE SECTION.
        FD  ARQ-CLIENTES.
-       01  REG-CLIENTE-ARQ.
-           05 REG-ID         PIC 9(05).
-           05 REG-NOME       PIC X(30).
-           05 REG-STATUS-ARQ PIC X(02).
+       COPY FDCLI.
+           
        WORKING-STORAGE SECTION.
-       01  WRK-FILE-STATUS    PIC X(02).
+       01  WRK-FILE-STATUS   PIC X(02).
        LINKAGE SECTION.
-       01  LS-ARGUMENTO.
-           05 LS-ID-REQ      PIC X(05).
-           05 LS-NOME        PIC X(30).
-           05 LS-STATUS      PIC X(02).
+       COPY REGCLI.
 
-       PROCEDURE DIVISION USING LS-ARGUMENTO.
+       PROCEDURE DIVISION USING REG-CLIENTE.
        MAIN-PROCEDURE.
-           IF LS-ID-REQ = SPACES OR LS-ID-REQ = ZEROS
-               MOVE "ID REQUISICAO INVALIDO        " TO LS-NOME
-               MOVE "99"             TO LS-STATUS
+      * Como CLI-ID é numérico PIC 9(05), verificamos apenas ZEROS
+           IF CLI-ID = ZEROS
+               MOVE "ID REQUISICAO INVALIDO      " TO CLI-NOME
+               MOVE "99"             TO STATUS-RETORNO
                GOBACK
            END-IF.
 
            OPEN INPUT ARQ-CLIENTES.
            
            IF WRK-FILE-STATUS NOT = "00"
-               MOVE "ERRO AO ABRIR O ARQUIVO VSAM" TO LS-NOME
-               MOVE "30" TO LS-STATUS
+               MOVE "ERRO AO ABRIR O ARQUIVO VSAM" TO CLI-NOME
+               MOVE "30" TO STATUS-RETORNO
                GOBACK
            END-IF.
 
-           MOVE LS-ID-REQ TO REG-ID.
+           MOVE CLI-ID TO REG-ID.
            
            READ ARQ-CLIENTES
                INVALID KEY
-                   MOVE "CLIENTE NAO ENCONTRADO" TO LS-NOME
-                   MOVE "44" TO LS-STATUS
+                   MOVE "CLIENTE NAO ENCONTRADO" TO CLI-NOME
+                   MOVE "44" TO STATUS-RETORNO
                NOT INVALID KEY
-                   MOVE REG-NOME TO LS-NOME
-                   MOVE "00" TO LS-STATUS
+                   MOVE REG-NOME     TO CLI-NOME
+                   MOVE REG-TELEFONE TO TELEFONE
+                   MOVE REG-EMAIL    TO EMAIL
+                   MOVE "00"         TO STATUS-RETORNO
            END-READ.
+           
            CLOSE ARQ-CLIENTES.
            GOBACK.
            

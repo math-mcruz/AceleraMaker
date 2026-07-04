@@ -1,9 +1,5 @@
-using dotnet.DTOs.Clientes;
-using dotnet.Infrastructure;
 using dotnet.Service.Clientes;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace dotnet.Controller
 {
@@ -22,8 +18,19 @@ namespace dotnet.Controller
         [HttpGet("{id:int}")]
         public IActionResult GET(int id)
         {
-            var cliResponseDto =  _cliService.Consultar(id);
-            return Ok(cliResponseDto);
+            try
+            {
+                var cliente =  _cliService.Consultar(id);
+                return Ok(cliente);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { erro = "Cliente não encontrado" });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { erro = "Ocorreu um erro inesperado no servidor."});
+            }
         }
            
         /*

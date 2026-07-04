@@ -1,4 +1,5 @@
 using System.Text;
+
 namespace dotnet.Infrastructure
 {
     public class CopybookWrapper
@@ -13,45 +14,50 @@ namespace dotnet.Infrastructure
             BufferMemoria = new byte[_parser.TamanhoBuffer];
         }
 
-        // ESCRITA: Converte os dados do C# para os bytes do COBOL
-        public void PayloadCobol(string id, string nome, string status)
+        //converte os dados do C# para os bytes do COBOL
+        public void PayloadCobol(params string[] valores)
         {
             StringBuilder payload = new StringBuilder();
 
-            // Formata cada campo com base na regra que o Parser descobriu
-            payload.Append(FormatarCampo(id, _parser.Campos[0]));
-            payload.Append(FormatarCampo(nome, _parser.Campos[1]));
-            payload.Append(FormatarCampo(status, _parser.Campos[2]));
+            //percorre todos os campos que o Parser mapeou no Copybook
+            for (int i = 0; i < _parser.Campos.Count; i++)
+            {
+                string valorParaFormatar = i < valores.Length ? valores[i] : "";
+                payload.Append(FormatarCampo(valorParaFormatar, _parser.Campos[i]));
+            }
 
             BufferMemoria = Encoding.ASCII.GetBytes(payload.ToString());
         }
 
-        // Função auxiliar para aplicar Zeros ou Espaços
+        //função auxiliar para aplicar Zeros ou Espaços
         private string FormatarCampo(string valor, Copybook campo)
         {
-            valor = valor ?? ""; // Se for nulo, vira string vazia
+            valor = valor ?? ""; //se for nulo vira string vazia
 
             if (campo.Tipo == "9") 
             {
-                return valor.PadLeft(campo.Tamanho, '0'); // Numérico: 00005
+                //limita o tamanho da string de entrada para não estourar o buffer caso venha maior
+                if (valor.Length > campo.Tamanho) valor = valor.Substring(0, campo.Tamanho);
+                
+                return valor.PadLeft(campo.Tamanho, '0'); //numerico: 00005
             }
             else 
             {
-                return valor.PadRight(campo.Tamanho, ' '); // String: NOME      
+                if (valor.Length > campo.Tamanho) valor = valor.Substring(0, campo.Tamanho);
+                
+                return valor.PadRight(campo.Tamanho, ' '); //string: NOME      
             }
         }
 
-        // LEITURA: Lê o array de bytes e extrai os valores
+        //le o array de bytes e extrai os valores
         public string ExtrairCampo(int indiceCampo)
         {
-            int offset = 0; // Ponto de partida
-            
-            // Calcula onde o campo começa somando o tamanho dos anteriores
+            int offset = 0;
+            //calcula onde o campo começa somando o tamanho dos anteriores
             for (int i = 0; i < indiceCampo; i++)
             {
                 offset += _parser.Campos[i].Tamanho;
             }
-
             string textoCompleto = Encoding.ASCII.GetString(BufferMemoria);
             return textoCompleto.Substring(offset, _parser.Campos[indiceCampo].Tamanho).Trim();
         }
