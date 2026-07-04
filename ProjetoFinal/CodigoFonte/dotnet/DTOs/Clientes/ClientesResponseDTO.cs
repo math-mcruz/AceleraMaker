@@ -6,6 +6,5 @@ namespace dotnet.DTOs.Clientes
         public string? Cli_Nome { get; set; }
         public string? Telefone { get; set; }
         public string? Email { get; set; }
-        public string? StatusRetorno { get; set; }
     }
 }

@@ -7,5 +7,5 @@ public interface IClienteService
     ClienteResponseDTO Consultar(int id);
     ClienteResponseDTO Cadastrar(ClienteRequestDTO cliRequestDto);
     ClienteResponseDTO Atualizar(int id, ClienteUpdateDTO cliUpdateDto);
-    void Excluir(int id);
+    void Deletar(int id);
 }

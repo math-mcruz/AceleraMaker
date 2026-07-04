@@ -9,14 +9,13 @@ public class ClienteService : IClienteService
     public ClienteResponseDTO Consultar(int id)
     {
         var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
-            // 2. Inicia o Wrapper
+
         var wrapper = new CopybookWrapper(parser);
             
-            // 3. Monta o payload (ID, Nome vazio, Status vazio)
         wrapper.PayloadCobol(id.ToString(), "", "", "", "");
 
         DllConfig.cob_init(0, IntPtr.Zero);
-                //executa o arquivo .dll na memoria da API
+
         DllConfig.CONSCLI(wrapper.BufferMemoria);
                 
         int cliId = Convert.ToInt32(wrapper.ExtrairCampo(0));
@@ -33,32 +32,115 @@ public class ClienteService : IClienteService
                 Cli_Nome = cliNome,
                 Telefone = telefone,
                 Email = email,
-                StatusRetorno = statusRetorno
             };
         }
         else if (statusRetorno == "44")
         {
-            throw new KeyNotFoundException("Cliente não encontrado: " + statusRetorno);
+            throw new KeyNotFoundException("Cliente não encontrado, status do retorno:" + statusRetorno);
         }
         else
         {
-                throw new Exception("Erro ao consultar o cliente: " + statusRetorno);
+                throw new Exception("Erro ao consultar o cliente, status do retorno:" + statusRetorno);
         }
     }
     
-
     public ClienteResponseDTO Cadastrar(ClienteRequestDTO cliRequestDto)
     {
-        throw new NotImplementedException();
+        var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
+
+        var wrapper = new CopybookWrapper(parser);
+            
+        wrapper.PayloadCobol("0", cliRequestDto.Cli_Nome, cliRequestDto.Telefone, cliRequestDto.Email, "");
+
+        DllConfig.cob_init(0, IntPtr.Zero);
+        //executa o arquivo .dll na memoria da API
+        DllConfig.CADASCLI(wrapper.BufferMemoria);
+                
+        int cliId = Convert.ToInt32(wrapper.ExtrairCampo(0));
+        string cliNome = wrapper.ExtrairCampo(1);
+        string telefone = wrapper.ExtrairCampo(2);
+        string email = wrapper.ExtrairCampo(3);    
+        string statusRetorno = wrapper.ExtrairCampo(4);
+
+        if (statusRetorno == "00")
+        {
+            return new ClienteResponseDTO
+            {
+                Cli_Id = cliId,
+                Cli_Nome = cliNome,
+                Telefone = telefone,
+                Email = email,
+            };
+        }
+        else if (statusRetorno == "44")
+        {
+            throw new KeyNotFoundException("Cliente não encontrado, status do retorno:" + statusRetorno);
+        }
+        else
+        {
+                throw new Exception("Não foi possível cadastrar, status do retorno:" + statusRetorno);
+        }
     }
 
     public ClienteResponseDTO Atualizar(int id, ClienteUpdateDTO cliUpdateDto)
     {
-        throw new NotImplementedException();
+        var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
+
+        var wrapper = new CopybookWrapper(parser);
+            
+        wrapper.PayloadCobol(id.ToString(), "", cliUpdateDto.Telefone, cliUpdateDto.Email, "");
+
+        DllConfig.cob_init(0, IntPtr.Zero);
+        //executa o arquivo .dll na memoria da API
+        DllConfig.ATUACLI(wrapper.BufferMemoria);
+                
+        int cliId = Convert.ToInt32(wrapper.ExtrairCampo(0));
+        string cliNome = wrapper.ExtrairCampo(1);
+        string telefone = wrapper.ExtrairCampo(2);
+        string email = wrapper.ExtrairCampo(3);    
+        string statusRetorno = wrapper.ExtrairCampo(4);
+
+        if (statusRetorno == "00")
+        {
+            return new ClienteResponseDTO
+            {
+                Cli_Id = cliId,
+                Cli_Nome = cliNome,
+                Telefone = telefone,
+                Email = email,
+            };
+        }
+        else if (statusRetorno == "44")
+        {
+            throw new KeyNotFoundException("Cliente não encontrado, status do retorno:" + statusRetorno);
+        }
+        else
+        {
+                throw new Exception($"Erro ao atualizar cliente, status do retorno:" + statusRetorno);
+        }
     }
 
-    public void Excluir(int id)
+    public void Deletar(int id)
     {
-        throw new NotImplementedException();
+        var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
+
+        var wrapper = new CopybookWrapper(parser);
+            
+        wrapper.PayloadCobol(id.ToString(), "", "", "", "");
+
+        DllConfig.cob_init(0, IntPtr.Zero);
+        //executa o arquivo .dll na memoria da API
+        DllConfig.DELECLI(wrapper.BufferMemoria);
+                
+        string statusRetorno = wrapper.ExtrairCampo(4);
+
+        if (statusRetorno == "44")
+        {
+           throw new KeyNotFoundException("Cliente não encontrado, status do retorno:" + statusRetorno);
+        }
+        else if (statusRetorno != "00")
+        {
+            throw new Exception("Erro ao deletar o cliente, status do retorno:" + statusRetorno);
+        }
     }
 }

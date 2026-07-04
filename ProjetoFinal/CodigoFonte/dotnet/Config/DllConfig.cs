@@ -10,4 +10,13 @@ public class DllConfig
 
     [DllImport(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\SOURCE\CONSCLI.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
      public static extern void CONSCLI(byte[] argumento);
+
+    [DllImport(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\SOURCE\CADASCLI.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+     public static extern void CADASCLI(byte[] argumento);
+
+    [DllImport(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\SOURCE\ATUACLI.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+     public static extern void ATUACLI(byte[] argumento);
+     
+    [DllImport(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\SOURCE\DELECLI.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+     public static extern void DELECLI(byte[] argumento);
 }     

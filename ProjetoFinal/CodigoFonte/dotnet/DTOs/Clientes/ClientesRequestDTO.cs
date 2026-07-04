@@ -6,7 +6,7 @@ namespace dotnet.DTOs.Clientes
     {
         [Required(ErrorMessage = "Nome é obrigatório.")]
         [StringLength(30)]
-        public string? CLI_Nome { get; set; }
+        public string? Cli_Nome { get; set; }
         public string? Telefone { get; set; }
         public string? Email { get; set; }
     }

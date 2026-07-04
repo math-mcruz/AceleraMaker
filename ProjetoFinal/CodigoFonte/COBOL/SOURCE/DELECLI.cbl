@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CONSCLI.
+       PROGRAM-ID. DELECLI.
        AUTHOR. MATHEUS CRUZ.
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
@@ -30,7 +30,7 @@
                GOBACK
            END-IF.
 
-           OPEN INPUT ARQ-CLIENTES.
+           OPEN I-O ARQ-CLIENTES.
            
            IF WRK-FILE-STATUS NOT = "00"
                MOVE "ERRO AO ABRIR O ARQUIVO VSAM" TO CLI-NOME
@@ -40,16 +40,12 @@
 
            MOVE CLI-ID TO REG-ID.
            
-           READ ARQ-CLIENTES
+           DELETE ARQ-CLIENTES
                INVALID KEY
-                   MOVE "CLIENTE NAO ENCONTRADO" TO CLI-NOME
                    MOVE "44" TO STATUS-RETORNO
                NOT INVALID KEY
-                   MOVE REG-NOME     TO CLI-NOME
-                   MOVE REG-TELEFONE TO TELEFONE
-                   MOVE REG-EMAIL    TO EMAIL
                    MOVE "00"         TO STATUS-RETORNO
-           END-READ.
+           END-DELETE.
            
            CLOSE ARQ-CLIENTES.
            GOBACK.
