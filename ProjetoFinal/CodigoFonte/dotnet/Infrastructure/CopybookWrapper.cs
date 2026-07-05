@@ -7,7 +7,7 @@ namespace dotnet.Infrastructure
         private readonly CopybookParser _parser;
         public byte[] BufferMemoria { get; private set; }
 
-        // Construtor recebe o Parser já carregado
+        //recebe a leitura do COPYBOOK e cria o buffer de memoria com o tamanho total
         public CopybookWrapper(CopybookParser parser)
         {
             _parser = parser;
@@ -22,8 +22,8 @@ namespace dotnet.Infrastructure
             //percorre todos os campos que o Parser mapeou no Copybook
             for (int i = 0; i < _parser.Campos.Count; i++)
             {
-                string valorParaFormatar = i < valores.Length ? valores[i] : "";
-                payload.Append(FormatarCampo(valorParaFormatar, _parser.Campos[i]));
+                string valorFormatar = i < valores.Length ? valores[i] : "";
+                payload.Append(FormatarCampo(valorFormatar, _parser.Campos[i]));
             }
 
             BufferMemoria = Encoding.ASCII.GetBytes(payload.ToString());

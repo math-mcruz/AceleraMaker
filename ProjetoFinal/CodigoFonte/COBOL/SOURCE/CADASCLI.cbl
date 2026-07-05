@@ -66,7 +66,7 @@
                ELSE
                    MOVE ZEROS TO WRK-MAX-ID
                END-IF
-      *PASSA I ID DO PROXIMO CLIENTE QUE VAI SER CADASTRADO         
+      *PASSA O ID DO PROXIMO CLIENTE QUE VAI SER CADASTRADO         
                OPEN OUTPUT ARQ-CONTROLE
                MOVE WRK-MAX-ID TO ULTIMO-ID
                WRITE REG-CONTROLE

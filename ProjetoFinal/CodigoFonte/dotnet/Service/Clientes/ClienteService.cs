@@ -32,11 +32,11 @@ public class ClienteService : IClienteService
         }
         else if (statusRetorno == "44")
         {
-            throw new KeyNotFoundException("Cliente não encontrado, status do retorno:" + statusRetorno);
+            throw new KeyNotFoundException("Cliente não encontrado.");
         }
         else
         {
-                throw new Exception("Erro ao consultar o cliente, status do retorno:" + statusRetorno);
+                throw new Exception("Erro ao consultar o cliente.");
         }
     }
     
@@ -65,7 +65,7 @@ public class ClienteService : IClienteService
         }
         else
         {
-            throw new Exception("Não foi possível cadastrar, status do retorno:" + statusRetorno);
+            throw new Exception("Não foi possível cadastrar.");
         }
     }
 
@@ -94,11 +94,11 @@ public class ClienteService : IClienteService
         }
         else if (statusRetorno == "44")
         {
-            throw new KeyNotFoundException("Cliente não encontrado, status do retorno:" + statusRetorno);
+            throw new KeyNotFoundException("Cliente não encontrado.");
         }
         else
         {
-                throw new Exception($"Erro ao atualizar cliente, status do retorno:" + statusRetorno);
+            throw new Exception("Erro ao atualizar cliente.");
         }
     }
 
@@ -118,11 +118,11 @@ public class ClienteService : IClienteService
 
         if (statusRetorno == "44")
         {
-           throw new KeyNotFoundException("Cliente não encontrado, status do retorno:" + statusRetorno);
+           throw new KeyNotFoundException("Cliente não encontrado.");
         }
         else if (statusRetorno != "00")
         {
-            throw new Exception("Erro ao deletar o cliente, status do retorno:" + statusRetorno);
+            throw new Exception("Erro ao deletar o cliente.");
         }
     }
 }

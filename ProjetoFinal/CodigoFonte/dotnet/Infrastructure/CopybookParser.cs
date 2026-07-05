@@ -17,40 +17,43 @@ namespace dotnet.Infrastructure
         public List<Copybook> Campos { get; private set; } = new List<Copybook>();
         public int TamanhoBuffer { get; private set; } = 0;
 
-        // O construtor lê o ficheiro e faz a magia do Split
+        //faz o Split
         public CopybookParser(string caminhoCpy)
         {
-            // Lê todas as linhas do ficheiro .cpy
+            //le as linhas COPYBOOK
             string[] linhas = File.ReadAllLines(caminhoCpy);
 
             foreach (string linha in linhas)
             {
-                // Limpa os espaços em branco para criar um array perfeito
+                //deixa sem os espaços
                 string[] partes = linha.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-                // Procura onde está a palavra "PIC" no array
+                //procura o "PIC" no array
                 int indexPic = Array.IndexOf(partes, "PIC");
 
-                // Se encontrou "PIC" e ainda há texto depois dele...
+                //se encontrou "PIC" e exite mais partes
                 if (indexPic != -1 && partes.Length > indexPic + 1)
                 {
-                    string nomeCampo = partes[indexPic - 1]; // O texto antes de "PIC" (ex: LK-NOME)
-                    string tipoETamanho = partes[indexPic + 1]; // O texto depois de "PIC" (ex: X(30).)
+                    //antes do PIC é o nome do campo
+                    string nomeCampo = partes[indexPic - 1]; 
+                    //depois do PIC é o tipo e tamanho
+                    string tipoETamanho = partes[indexPic + 1]; 
 
-                    // A primeira letra é o tipo (X ou 9)
+                    //primeira letra é o tipo (X ou 9)
                     string tipo = tipoETamanho.Substring(0, 1);
 
-                    // Apanha o que está entre parênteses para saber o tamanho
+                    //verifica o que esta entre os parenteses para pegar o tamanho
                     int startIndex = tipoETamanho.IndexOf('(') + 1;
                     int endIndex = tipoETamanho.IndexOf(')');
 
+                    //se encontrou os parenteses e o tamanho é maior que 0
                     if (startIndex > 0 && endIndex > startIndex)
                     {
                         string tamanhoStr = tipoETamanho.Substring(startIndex, endIndex - startIndex);
                         
                         if (int.TryParse(tamanhoStr, out int tamanho))
                         {
-                            // Adiciona à nossa lista de campos!
+                            //adiciona o campo na lista de campos
                             Campos.Add(new Copybook 
                             { 
                                 Nome = nomeCampo, 
