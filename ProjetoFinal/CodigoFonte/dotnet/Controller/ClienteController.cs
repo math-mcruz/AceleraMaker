@@ -7,17 +7,17 @@ namespace dotnet.Controller
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
-    public class ClientesController : ControllerBase
+    public class ClienteController : ControllerBase
     {
         private readonly IClienteService _cliService;
 
-        public ClientesController(IClienteService cliService)
+        public ClienteController(IClienteService cliService)
         {
             _cliService = cliService;
         }
 
         [HttpGet("{id:int}")]
-        public IActionResult GET(int id)
+        public IActionResult Get(int id)
         {
             try
             {

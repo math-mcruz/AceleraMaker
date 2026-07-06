@@ -4,9 +4,7 @@
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT ARQ-CLIENTES ASSIGN TO 
-           "D:/AceleraMaker/projetosAceleraMaker/ProjetoFinal/CodigoFont
-      -    "e/COBOL/DATA/CLIENTES.dat"
+           SELECT ARQ-CLIENTES ASSIGN TO WRK-ARQ
            ORGANIZATION IS INDEXED
            ACCESS MODE IS RANDOM
            RECORD KEY IS REG-ID
@@ -18,22 +16,37 @@
            
        WORKING-STORAGE SECTION.
        01  WRK-FILE-STATUS   PIC X(02).
+       01  WRK-ARQ   PIC X(100).
        LINKAGE SECTION.
        COPY REGCLI.
 
        PROCEDURE DIVISION USING REG-CLIENTE.
        MAIN-PROCEDURE.
+      *SE FOR TS ABRE O ARQUIVO DE TESTES AUTOMATIZADOS 
+           IF STATUS-RETORNO = "TS"
+               STRING
+                   "D:/AceleraMaker/projetosAceleraMaker/"
+                   "ProjetoFinal/CodigoFonte/COBOL/"
+                   "DATATEST/CLITESTS.dat"
+                   DELIMITED BY SIZE INTO WRK-ARQ
+               END-STRING
+           ELSE
+               STRING
+                   "../COBOL/DATA/CLIENTES.dat"
+                   DELIMITED BY SIZE INTO WRK-ARQ
+               END-STRING
+           END-IF.
+      *LIMPA A VARIAVEL DE STATUS
+           MOVE SPACES TO STATUS-RETORNO.
       *VERIFICA SE O ID E SO ZEROS
            IF CLI-ID = ZEROS
-               MOVE "ID REQUISICAO INVALIDO      " TO CLI-NOME
-               MOVE "99"             TO STATUS-RETORNO
+               MOVE "99" TO STATUS-RETORNO
                GOBACK
            END-IF.
 
            OPEN INPUT ARQ-CLIENTES.
            
            IF WRK-FILE-STATUS NOT = "00"
-               MOVE "ERRO AO ABRIR O ARQUIVO VSAM" TO CLI-NOME
                MOVE "30" TO STATUS-RETORNO
                GOBACK
            END-IF.
@@ -42,7 +55,6 @@
            
            READ ARQ-CLIENTES
                INVALID KEY
-                   MOVE "CLIENTE NAO ENCONTRADO" TO CLI-NOME
                    MOVE "44" TO STATUS-RETORNO
                NOT INVALID KEY
                    MOVE REG-NOME     TO CLI-NOME

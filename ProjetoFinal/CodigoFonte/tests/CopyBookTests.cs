@@ -3,7 +3,7 @@
 
 namespace ProjetoFinal.Testes;
 
-public class ClienteTests
+public class CopyBookTests
 {
     [Fact] 
     public void PayloadCobol_PreencheEspacos()
@@ -12,12 +12,12 @@ public class ClienteTests
         var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
         var wrapper = new CopybookWrapper(parser);
             
-        string nomePequeno = "MATHEUS";
+        string nome = "MATHEUS";
         string telefone = "11999999999";
         string email = "teste@teste.com";
 
         //ACT
-        wrapper.PayloadCobol("0", nomePequeno, telefone, email, "");
+        wrapper.PayloadCobol("0", nome, telefone, email, "");
             
         //ASSERT
         string nomeLimpo = wrapper.ExtrairCampo(1);

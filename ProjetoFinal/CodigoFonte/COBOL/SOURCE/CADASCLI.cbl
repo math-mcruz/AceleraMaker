@@ -4,17 +4,13 @@
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT ARQ-CLIENTES ASSIGN TO 
-           "D:/AceleraMaker/projetosAceleraMaker/ProjetoFinal/CodigoFont
-      -    "e/COBOL/DATA/CLIENTES.dat"
+           SELECT ARQ-CLIENTES ASSIGN TO WRK-ARQ
            ORGANIZATION IS INDEXED
            ACCESS MODE IS DYNAMIC
            RECORD KEY IS REG-ID
            FILE STATUS IS WRK-FILE-STATUS.
 
-           SELECT ARQ-CONTROLE ASSIGN TO
-           "D:/AceleraMaker/projetosAceleraMaker/ProjetoFinal/CodigoFont
-      -    "e/COBOL/DATA/CONTROLE.dat"
+           SELECT ARQ-CONTROLE ASSIGN TO WRK-CTRL
            ORGANIZATION IS LINE SEQUENTIAL
            FILE STATUS IS WRK-CTRL-STATUS.
        DATA DIVISION.
@@ -31,11 +27,40 @@
        01  WRK-CTRL-STATUS   PIC X(02).
        01  WRK-MAX-ID        PIC 9(05) VALUE ZEROS.
        01  WRK-EOF           PIC X(01) VALUE 'N'.
+       01  WRK-ARQ           PIC X(100).
+       01  WRK-CTRL          PIC X(100).
        LINKAGE SECTION.
        COPY REGCLI.
 
        PROCEDURE DIVISION USING REG-CLIENTE.
        MAIN-PROCEDURE.
+      *SE FOR TS ABRE O ARQUIVO DE TESTES AUTOMATIZADOS 
+           IF STATUS-RETORNO = "TS"
+               STRING
+                   "D:/AceleraMaker/projetosAceleraMaker/"
+                   "ProjetoFinal/CodigoFonte/COBOL/"
+                   "DATATEST/CLITESTS.dat"
+                   DELIMITED BY SIZE INTO WRK-ARQ
+               END-STRING
+               STRING
+                   "D:/AceleraMaker/projetosAceleraMaker/"
+                   "ProjetoFinal/CodigoFonte/COBOL/"
+                   "DATATEST/CTRLTESTS.dat"
+                   DELIMITED BY SIZE INTO WRK-CTRL
+               END-STRING
+           ELSE
+               STRING
+                   "../COBOL/DATA/CLIENTES.dat"
+                   DELIMITED BY SIZE INTO WRK-ARQ
+               END-STRING
+               STRING
+                   "../COBOL/DATA/CONTROLE.dat"
+                   DELIMITED BY SIZE INTO WRK-CTRL
+               END-STRING
+           END-IF.
+      *LIMPA A VARIAVEL DE STATUS
+           MOVE SPACES TO STATUS-RETORNO.
+            
       *ABRE O ARQUIVO DE CONTROLE PARA LER O ULTIMO ID
       *SE O ARQUIVO NAO FOI ENCONTRADO, VAI LER O ARQUIVO DE CLIENTE
       *PARA ENCONTRAR O MAIOR ID 
@@ -90,9 +115,13 @@
            OPEN I-O ARQ-CLIENTES.
            
            IF WRK-FILE-STATUS NOT = "00"
-               MOVE "ERRO AO ABRIR O ARQUIVO VSAM" TO CLI-NOME
                MOVE "30" TO STATUS-RETORNO
                GOBACK
+           END-IF.
+      *NOME E OBRIGAORIO PARA CADASTRAR UM CLIENTE     
+           IF CLI-NOME = SPACES
+           MOVE "99" TO STATUS-RETORNO
+           GOBACK
            END-IF.
 
            MOVE CLI-NOME TO REG-NOME.
