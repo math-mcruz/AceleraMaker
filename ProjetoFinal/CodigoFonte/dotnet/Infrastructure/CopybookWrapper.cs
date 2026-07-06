@@ -5,7 +5,7 @@ namespace dotnet.Infrastructure
     public class CopybookWrapper
     {
         private readonly CopybookParser _parser;
-        public byte[] BufferMemoria { get; private set; }
+        public byte[] BufferMemoria { get; internal set; }
 
         //recebe a leitura do COPYBOOK e cria o buffer de memoria com o tamanho total
         public CopybookWrapper(CopybookParser parser)
