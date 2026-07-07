@@ -2,14 +2,14 @@ using dotnet.Config.DllConfig;
 using dotnet.Infrastructure;
 
 
-namespace ProjetoFinal.Testes;
+namespace tests;
 
 public class ClienteServiceTests : IDisposable
 {
     public ClienteServiceTests()
         { }
 
-        //DISPOSE
+        //DISPOSE para limpar o arquivo de controle de testes
         public void Dispose()
         {
             string pathCtrlTeste = @"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\DATATEST\CTRLTESTS.dat";
@@ -20,7 +20,7 @@ public class ClienteServiceTests : IDisposable
             }
             catch (Exception e)
             {
-                Console.WriteLine("Erro ao acessar os arquivos DLL: " + e.Message);
+                Console.WriteLine($"Erro ao acessar os arquivos DLL: {e.Message}");
             }
         }
     [Fact]
@@ -36,9 +36,11 @@ public class ClienteServiceTests : IDisposable
         DllConfig.CADASCLI(wrapper.BufferMemoria);
 
         //ASSERT
+        //00 - sucesso
         string statusRetorno = wrapper.ExtrairCampo(4).Trim();
         Assert.Equal("00", statusRetorno);
     }
+
     [Fact]
     public void Cadastar_Cliente_Invalido()
     {
@@ -46,16 +48,18 @@ public class ClienteServiceTests : IDisposable
         var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
         var wrapper = new CopybookWrapper(parser);
         wrapper.PayloadCobol("0", " ", "(11) 98888-7777", "luis@email.com", "TS");
-    //*************************************************************************************!!!!!!    
+        //enviado sem o nome
 
         //ACT
         DllConfig.cob_init(0, IntPtr.Zero);
         DllConfig.CADASCLI(wrapper.BufferMemoria);
 
         //ASSERT
+        //99 - erro nome é obrigattório
         string statusRetorno = wrapper.ExtrairCampo(4).Trim();
         Assert.Equal("99", statusRetorno);
     }
+
     [Fact]
     public void Consultar_Cliente_Valido()
     {
@@ -63,15 +67,18 @@ public class ClienteServiceTests : IDisposable
         var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
         var wrapper = new CopybookWrapper(parser);
         wrapper.PayloadCobol("1", "", "", "", "TS");
+        //vai consultar o cliente de id 1(Aline), que foi cadastrada no teste anterior
 
         //ACT
         DllConfig.cob_init(0, IntPtr.Zero);
         DllConfig.CONSCLI(wrapper.BufferMemoria);
 
         //ASSERT
+        //00 - sucesso
         string statusRetorno = wrapper.ExtrairCampo(4).Trim();
         Assert.Equal("00", statusRetorno);
     }
+
     [Fact]
     public void Consultar_Cliente_Invalido()
     {
@@ -85,9 +92,11 @@ public class ClienteServiceTests : IDisposable
         DllConfig.CONSCLI(wrapper.BufferMemoria);
 
         //ASSERT
+        //44 - cliente não encontrado no arquivo
         string statusRetorno = wrapper.ExtrairCampo(4).Trim();
         Assert.Equal("44", statusRetorno);
     }
+
     [Fact]
     public void Atualizar_Cliente_Valido()
     {
@@ -101,9 +110,11 @@ public class ClienteServiceTests : IDisposable
         DllConfig.ATUACLI(wrapper.BufferMemoria);
 
         //ASSERT
+        //00 - sucesso
         string statusRetorno = wrapper.ExtrairCampo(4).Trim();
         Assert.Equal("00", statusRetorno);
     }
+
     [Fact]
     public void Atualizar_Cliente_Invalido()
     {
@@ -117,9 +128,11 @@ public class ClienteServiceTests : IDisposable
         DllConfig.ATUACLI(wrapper.BufferMemoria);
 
         //ASSERT
+        //44 - cliente não encontrado no arquivo
         string statusRetorno = wrapper.ExtrairCampo(4).Trim();
         Assert.Equal("44", statusRetorno);
     }
+
     [Fact]
     public void Deletar_Cliente_Valido()
     {
@@ -133,9 +146,11 @@ public class ClienteServiceTests : IDisposable
         DllConfig.DELECLI(wrapper.BufferMemoria);
 
         //ASSERT
+        //00 - sucesso
         string statusRetorno = wrapper.ExtrairCampo(4).Trim();
         Assert.Equal("00", statusRetorno);
     }
+
     [Fact]
     public void Deletar_Cliente_Invalido()
     {
@@ -149,6 +164,7 @@ public class ClienteServiceTests : IDisposable
         DllConfig.DELECLI(wrapper.BufferMemoria);
 
         //ASSERT
+        //44 - cliente não encontrado no arquivo
         string statusRetorno = wrapper.ExtrairCampo(4).Trim();
         Assert.Equal("44", statusRetorno);
     }

@@ -57,9 +57,18 @@
                INVALID KEY
                    MOVE "44" TO STATUS-RETORNO
                NOT INVALID KEY
+      *FAZ A ATUALIZACAO SÓ DO QUE VEIO DA REQUISICAO         
+                   IF TELEFONE = SPACES
+                      MOVE REG-TELEFONE TO TELEFONE
+                   ELSE
+                      MOVE TELEFONE TO REG-TELEFONE
+                   END-IF   
+                   IF EMAIL = SPACES
+                      MOVE REG-EMAIL TO EMAIL
+                   ELSE
+                      MOVE EMAIL TO REG-EMAIL
+                   END-IF                         
                    MOVE REG-NOME TO CLI-NOME
-                   MOVE TELEFONE TO REG-TELEFONE
-                   MOVE EMAIL    TO REG-EMAIL
                    MOVE "00"     TO STATUS-RETORNO
                    REWRITE REG-CLIENTE-ARQ
            END-READ.

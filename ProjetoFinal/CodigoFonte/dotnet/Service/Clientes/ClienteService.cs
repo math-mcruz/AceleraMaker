@@ -36,7 +36,7 @@ public class ClienteService : IClienteService
         }
         else
         {
-                throw new Exception("Erro ao consultar o cliente.");
+            throw new Exception("Erro ao consultar o cliente.");
         }
     }
     
@@ -62,6 +62,10 @@ public class ClienteService : IClienteService
         {
             var cliente = ClientesDTOMappings.ToResponse(cliId, cliNome, telefone, email);
             return cliente;
+        }
+        else if (statusRetorno == "31")
+        {
+            throw new Exception("ID de cliente já cadastrado.");
         }
         else
         {
