@@ -38,8 +38,12 @@ jobs:
       - name: compila COBOL
         shell: pwsh
         run: |
-          cd ProjetoFinal/CodigoFonte/COBOL/SOURCE
+          $msys2Root = $env:MSYS2_BIN_PATH.Replace("\bin", "")
+          $env:COB_CONFIG_DIR = Join-Path $msys2Root "share\gnucobol\config"
 
+          $env:PATH = "$env:MSYS2_BIN_PATH;" + $env:PATH
+          
+          cd ProjetoFinal/CodigoFonte/COBOL/SOURCE
           $cobcExe = Join-Path $env:MSYS2_BIN_PATH "cobc.exe"
           
           & $cobcExe -m -I "../COPYLIB" CADASCLI.cbl
