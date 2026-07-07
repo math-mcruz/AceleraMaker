@@ -1,0 +1,41 @@
+name: CI/CD - Projeto Final
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: baixa o código fonte
+      uses: actions/checkout@v3
+
+    - name: instala o Compilador GnuCOBOL
+      run: sudo apt-get update && sudo apt-get install -y gnucobol
+
+    - name: configura o .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: compila os programas COBOL dinâmicos (.so / .dll)
+      run: |
+        cd ProjetoFinal/CodigoFonte/COBOL/SOURCE
+        cobc -m -I ../COPYLIB CADASCLI.cbl
+        cobc -m -I ../COPYLIB CONSCLI.cbl
+        cobc -m -I ../COPYLIB ATUACLI.cbl
+        cobc -m -I ../COPYLIB DELELI.cbl
+        echo "compilação COBOL executada com sucesso!"
+
+    - name: compilar a API
+      run: |
+        cd ProjetoFinal/CodigoFonte/dotnet
+        dotnet build --configuration Release
+
+    - name: executa testes automatizados
+      run: |
+        cd ProjetoFinal/CodigoFonte/tests
+        dotnet test --verbosity normal
