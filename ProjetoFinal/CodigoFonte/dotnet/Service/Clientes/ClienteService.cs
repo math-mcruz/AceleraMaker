@@ -7,9 +7,15 @@ namespace dotnet.Service.Clientes;
 
 public class ClienteService : IClienteService
 {
+    private readonly string _caminhoCopybook;
+
+    public ClienteService()
+    {
+        _caminhoCopybook = Path.Combine(AppContext.BaseDirectory, "REGCLI.cpy");
+    }
     public ClienteResponseDTO Consultar(int id)
     {
-        var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
+        var parser = new CopybookParser(_caminhoCopybook);
 
         var wrapper = new CopybookWrapper(parser);
             
@@ -42,7 +48,7 @@ public class ClienteService : IClienteService
     
     public ClienteResponseDTO Cadastrar(ClienteRequestDTO cliRequestDto)
     {
-        var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
+        var parser = new CopybookParser(_caminhoCopybook);
 
         var wrapper = new CopybookWrapper(parser);
             
@@ -75,7 +81,7 @@ public class ClienteService : IClienteService
 
     public ClienteResponseDTO Atualizar(int id, ClienteUpdateDTO cliUpdateDto)
     {
-        var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
+        var parser = new CopybookParser(_caminhoCopybook);
 
         var wrapper = new CopybookWrapper(parser);
             
@@ -108,7 +114,7 @@ public class ClienteService : IClienteService
 
     public void Deletar(int id)
     {
-        var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
+        var parser = new CopybookParser(_caminhoCopybook);
 
         var wrapper = new CopybookWrapper(parser);
             

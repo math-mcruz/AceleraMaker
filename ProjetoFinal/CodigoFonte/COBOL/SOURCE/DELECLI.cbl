@@ -25,9 +25,7 @@
       *SE FOR TS ABRE O ARQUIVO DE TESTES AUTOMATIZADOS 
            IF STATUS-RETORNO = "TS"
                STRING
-                   "D:/AceleraMaker/projetosAceleraMaker/"
-                   "ProjetoFinal/CodigoFonte/COBOL/"
-                   "DATATEST/CLITESTS.dat"
+                   "../../../../COBOL/DATATEST/CLITESTS.dat"
                    DELIMITED BY SIZE INTO WRK-ARQ
                END-STRING
            ELSE

@@ -22,4 +22,10 @@
     <ProjectReference Include="..\dotnet\dotnet.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\COBOL\COPYLIB\REGCLI.cpy">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

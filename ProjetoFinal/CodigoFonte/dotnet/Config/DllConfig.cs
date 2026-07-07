@@ -8,15 +8,15 @@ public class DllConfig
     [DllImport("libcob-4.dll", CallingConvention = CallingConvention.Cdecl)]
     public static extern void cob_init(int argc, IntPtr argv);
 
-    [DllImport(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\SOURCE\CONSCLI.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+    [DllImport(@"..\COBOL\SOURCE\CONSCLI.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
      public static extern void CONSCLI(byte[] argumento);
 
-    [DllImport(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\SOURCE\CADASCLI.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+    [DllImport(@"..\COBOL\SOURCE\CADASCLI.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
      public static extern void CADASCLI(byte[] argumento);
 
-    [DllImport(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\SOURCE\ATUACLI.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+    [DllImport(@"..\COBOL\SOURCE\ATUACLI.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
      public static extern void ATUACLI(byte[] argumento);
      
-    [DllImport(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\SOURCE\DELECLI.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+    [DllImport(@"..\COBOL\SOURCE\DELECLI.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
      public static extern void DELECLI(byte[] argumento);
 }     

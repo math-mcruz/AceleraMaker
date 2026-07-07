@@ -4,11 +4,18 @@ namespace tests;
 
 public class CopyBookTests
 {
+    private readonly string _caminhoCopybook;
+
+    public CopyBookTests()
+    {
+        _caminhoCopybook = Path.Combine(AppContext.BaseDirectory, "REGCLI.cpy");
+    }
+
     [Fact] 
     public void PayloadCobol_PreencheEspacos()
     {
         //ARRANGE
-        var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
+        var parser = new CopybookParser(_caminhoCopybook);
         var wrapper = new CopybookWrapper(parser);
         //simulando a requisição enviada pelo usuario    
         string nome = "MATHEUS";
@@ -33,7 +40,7 @@ public class CopyBookTests
     public void ExtrairCampo_RemoveEspacos()
     {
         //ARRANGE
-        var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
+        var parser = new CopybookParser(_caminhoCopybook);
         var wrapper = new CopybookWrapper(parser);
         
         //simulando a memoria que o COBOL acabou de devolver
@@ -56,7 +63,7 @@ public class CopyBookTests
     public void PayloadCobol_PreencheZeros()
     {
         //ARRANGE
-        var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
+        var parser = new CopybookParser(_caminhoCopybook);
         var wrapper = new CopybookWrapper(parser);
 
         //ACT
@@ -74,7 +81,7 @@ public class CopyBookTests
     public void PayloadCobol_CortaString()
     {
         //ARRANGE
-        var parser = new CopybookParser(@"D:\AceleraMaker\projetosAceleraMaker\ProjetoFinal\CodigoFonte\COBOL\COPYLIB\REGCLI.cpy");
+        var parser = new CopybookParser(_caminhoCopybook);
         var wrapper = new CopybookWrapper(parser);
 
         string nomeMaior = "Matheus Cruz Testando com tamanho maior que 30 caracteres"; 

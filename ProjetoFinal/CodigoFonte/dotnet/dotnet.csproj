@@ -15,6 +15,8 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
     <_Parameter1>tests</_Parameter1>
     </AssemblyAttribute>
+    <None Include="..\COBOL\COPYLIB\REGCLI.cpy">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-
 </Project>
