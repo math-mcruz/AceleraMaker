@@ -27,7 +27,7 @@ jobs:
         cobc -m -I ../COPYLIB CADASCLI.cbl
         cobc -m -I ../COPYLIB CONSCLI.cbl
         cobc -m -I ../COPYLIB ATUACLI.cbl
-        cobc -m -I ../COPYLIB DELELI.cbl
+        cobc -m -I ../COPYLIB DELECLI.cbl
         echo "compilação COBOL executada com sucesso!"
 
     - name: compilar a API
