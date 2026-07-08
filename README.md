@@ -16,7 +16,7 @@ Treinamento com projetos semanais voltados ao desenvolvimento de habilidades pro
 
 - [ ] `Projeto 7: Sistema de Consulta e Atualização de Clientes` desenvolvimento de programa online(CICS) em COBOL no ambiente KICKS/Mainframe, armazenamento de dados utilizando VSAM, processamento de transações CICS, e interação com usuário através da tela contruida por BMS.
 
-- [ ] `Projeto Final: Modernização de um Sistema Legado` ...
+- [ ] `Projeto Final: Modernização de um Sistema Legado` integração .NET e COBOL feita por invocações de arquivos dinâmicos (.dll) pelo P/Invoke, tradução automática de Copybook(parser) para compatibilidade de dados C# e COBOL, documentação completa da construção da arquitetura e testes.
 
 ## Tecnologias
 - COBOL (TK4 e TK5)
@@ -28,6 +28,7 @@ Treinamento com projetos semanais voltados ao desenvolvimento de habilidades pro
 - C#
 - .NET 10.0
 - ASP.NET Core Web API
+- P/Invoke
 - MySQL
 - Visual Studio
 - Gemini API

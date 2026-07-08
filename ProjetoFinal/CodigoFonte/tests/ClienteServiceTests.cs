@@ -59,7 +59,7 @@ public class ClienteServiceTests : IDisposable
         DllConfigTests.CADASCLI(wrapper.BufferMemoria);
 
         //ASSERT
-        //99 - erro nome é obrigattório
+        //99 - erro nome é obrigatório
         string statusRetorno = wrapper.ExtrairCampo(4).Trim();
         Assert.Equal("99", statusRetorno);
     }

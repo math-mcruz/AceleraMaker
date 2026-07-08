@@ -65,8 +65,8 @@ namespace dotnet.Controller
         ///     POST /api/clientes
         ///     {
         ///        "cli_Nome": "Aline Dutra",
-        ///        "email": "aline@aceleramaker.com.br",
         ///        "telefone": "(34) 97777-2222" 
+        ///        "email": "aline@aceleramaker.com.br",
         ///     }
         ///
         /// </remarks>
@@ -107,8 +107,8 @@ namespace dotnet.Controller
         ///     PATCH /api/clientes/id
         ///     {
         ///        "cli_Id": 1,
-        ///        "email": "luisguerreiro@aceleramaker.com.br",
         ///        "telefone": "(11) 98888-1111" 
+        ///        "email": "luisguerreiro@aceleramaker.com.br",
         ///     }
         /// 
         /// </remarks>
